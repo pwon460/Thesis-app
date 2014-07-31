@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="colorArray">
+        <item>White on Black</item>
+        <item>Black on White</item>
+        <item>White on Purple</item>
+        <item>Yellow on Black</item>
+    </string-array>
+    <string-array name="colorValues">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+        <string-array name="textSizeArray">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+    </string-array>
+    <string-array name="textSizeValues">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    
+
+</resources>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:key="pref_accessibility_key"
+        android:title="@string/pref_accessibility" >
+        <ListPreference
+            android:defaultValue="@integer/first"
+            android:entries="@array/colorArray"
+            android:entryValues="@array/colorValues"
+            android:key="pref_color_key"
+            android:summary="@string/colors_settings"
+            android:title="@string/colors_settings" />
+        <ListPreference
+            android:defaultValue="@integer/first"
+            android:entries="@array/textSizeArray"
+            android:entryValues="@array/textSizeValues"
+            android:key="pref_text_size_key"
+            android:summary="@string/text_settings"
+            android:title="@string/text_settings" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_other_key"
+        android:title="@string/pref_others" >
+        <Preference android:title="@string/pref_gps" >
+            <intent
+                android:action="android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS"/>
+        </Preference>
+    </PreferenceCategory>
+
+</PreferenceScreen>

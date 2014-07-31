@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SimoTransportApp</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="btn_settings">Settings</string>
+    <string name="btn_transport">Transportation</string>
+    <string name="text_style">bold</string>
+    <string name="small">Small text</string>
+    <string name="medium">Medium text</string>
+    <string name="large">Large text</string>
+    <string name="title_activity_settings_">Settings_Activity</string>
+    <string name="pref_accessibility">Accessibility</string>
+    <string name="pref_others">Extras</string>
+    <string name="colors_settings">Choose a color:</string>
+    <string name="text_settings">Choose a text size:</string>
+    <string name="pref_gps">GPS Settings</string>
+
+</resources>
