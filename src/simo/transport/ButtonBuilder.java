@@ -1,14 +1,18 @@
 package simo.transport;
 
 import android.content.Context;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 
 public class ButtonBuilder {
+
+	private static final int BORDER_WIDTH = 2;
 	
-	public static Drawable makeBorder (Context ctx, int textColor) {
-		Drawable border = ctx.getResources().getDrawable(R.drawable.button).mutate();
-		border.setColorFilter(textColor, Mode.MULTIPLY);
-		return border;
+	public static GradientDrawable getBorderedRectangle (Context ctx, int textColor) {
+		GradientDrawable drawable = new GradientDrawable();
+		drawable.setShape(GradientDrawable.RECTANGLE);
+		drawable.setColor(ctx.getResources().getColor(R.color.transparent));
+		drawable.setStroke(BORDER_WIDTH, textColor);
+		
+		return drawable;
 	}
 }

@@ -7,16 +7,17 @@
     tools:context="simo.transport.MainActivity" >
 
     <Button
-        android:id="@+id/button1"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:text="@string/btn_settings"
-        android:onClick="goSettings"/>
-
-    <Button
         android:id="@+id/button2"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:text="@string/btn_transport" />
+        android:text="@string/btn_transport"
+        android:layout_marginBottom="5dp" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:onClick="goSettings"
+        android:text="@string/btn_settings" />
 
 </LinearLayout>

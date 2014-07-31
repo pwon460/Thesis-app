@@ -1101,10 +1101,24 @@ containing a value of this type.
         public static final int abc_textfield_searchview_holo_light=0x7f020054;
         public static final int abc_textfield_searchview_right_holo_dark=0x7f020055;
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
-        public static final int button=0x7f020057;
-        public static final int ic_launcher=0x7f020058;
+        public static final int ic_launcher=0x7f020057;
+        public static final int metallic_colour=0x7f020058;
     }
     public static final class id {
+        public static final int Button01=0x7f06004c;
+        public static final int Button02=0x7f06004b;
+        public static final int Button03=0x7f06004a;
+        public static final int Button04=0x7f060049;
+        public static final int Button05=0x7f060048;
+        public static final int Button06=0x7f060047;
+        public static final int Button07=0x7f060046;
+        public static final int Button08=0x7f060045;
+        public static final int Button09=0x7f060044;
+        public static final int Button1=0x7f06004d;
+        public static final int Button10=0x7f060043;
+        public static final int Button11=0x7f060042;
+        public static final int Button12=0x7f060041;
+        public static final int Button13=0x7f060040;
         public static final int action_bar=0x7f06001c;
         public static final int action_bar_activity_content=0x7f060015;
         public static final int action_bar_container=0x7f06001b;
@@ -1116,12 +1130,12 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f060016;
         public static final int action_menu_presenter=0x7f060017;
         public static final int action_mode_close_button=0x7f060024;
-        public static final int action_settings=0x7f06003e;
+        public static final int action_settings=0x7f06004e;
         public static final int activity_chooser_view_content=0x7f060025;
         public static final int always=0x7f06000b;
         public static final int beginning=0x7f060011;
-        public static final int button1=0x7f06003c;
-        public static final int button2=0x7f06003d;
+        public static final int button1=0x7f06003d;
+        public static final int button2=0x7f06003c;
         public static final int checkbox=0x7f06002d;
         public static final int collapseActionView=0x7f06000d;
         public static final int default_activity_button=0x7f060028;
@@ -1146,6 +1160,7 @@ containing a value of this type.
         public static final int progress_circular=0x7f060018;
         public static final int progress_horizontal=0x7f060019;
         public static final int radio=0x7f06002f;
+        public static final int scrollView1=0x7f06003f;
         public static final int search_badge=0x7f060032;
         public static final int search_bar=0x7f060031;
         public static final int search_button=0x7f060033;
@@ -1156,6 +1171,7 @@ containing a value of this type.
         public static final int search_plate=0x7f060036;
         public static final int search_src_text=0x7f060037;
         public static final int search_voice_btn=0x7f06003b;
+        public static final int settings=0x7f06003e;
         public static final int shortcut=0x7f06002e;
         public static final int showCustom=0x7f060007;
         public static final int showHome=0x7f060004;
@@ -1223,6 +1239,7 @@ containing a value of this type.
         public static final int activity_main=0x7f030018;
         public static final int activity_settings=0x7f030019;
         public static final int support_simple_spinner_dropdown_item=0x7f03001a;
+        public static final int transport_layout=0x7f03001b;
     }
     public static final class menu {
         public static final int main=0x7f0e0000;
@@ -1273,16 +1290,18 @@ containing a value of this type.
         public static final int app_name=0x7f0b000d;
         public static final int btn_settings=0x7f0b0010;
         public static final int btn_transport=0x7f0b0011;
+        public static final int colors=0x7f0b001a;
         public static final int colors_settings=0x7f0b0019;
         public static final int hello_world=0x7f0b000e;
         public static final int large=0x7f0b0015;
         public static final int medium=0x7f0b0014;
         public static final int pref_accessibility=0x7f0b0017;
-        public static final int pref_gps=0x7f0b001b;
+        public static final int pref_gps=0x7f0b001d;
         public static final int pref_others=0x7f0b0018;
         public static final int small=0x7f0b0013;
-        public static final int text_settings=0x7f0b001a;
+        public static final int text_settings=0x7f0b001b;
         public static final int text_style=0x7f0b0012;
+        public static final int textsize=0x7f0b001c;
         public static final int title_activity_settings_=0x7f0b0016;
     }
     public static final class style {
@@ -1295,11 +1314,13 @@ containing a value of this type.
 
 
 
+
     
 
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
+
         
 
         Base application theme for API 11+. This theme completely replaces
@@ -1320,6 +1341,7 @@ containing a value of this type.
         public static final int BlackOnWhite=0x7f0c008e;
         public static final int LargeText=0x7f0c0093;
         public static final int MediumText=0x7f0c0092;
+        public static final int MyPreferenceTheme=0x7f0c0094;
         public static final int SmallText=0x7f0c0091;
         /**  Mimic text appearance in select_dialog_item.xml 
          */

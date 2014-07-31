@@ -13,8 +13,10 @@
     <string name="title_activity_settings_">Settings_Activity</string>
     <string name="pref_accessibility">Accessibility</string>
     <string name="pref_others">Extras</string>
-    <string name="colors_settings">Choose a color:</string>
-    <string name="text_settings">Choose a text size:</string>
+    <string name="colors_settings">Choose a color</string>
+    <string name="colors">Colours</string>
+    <string name="text_settings">Choose a text size</string>
+    <string name="textsize">Text Size</string>
     <string name="pref_gps">GPS Settings</string>
 
 </resources>

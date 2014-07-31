@@ -10,14 +10,14 @@
             android:entryValues="@array/colorValues"
             android:key="pref_color_key"
             android:summary="@string/colors_settings"
-            android:title="@string/colors_settings" />
+            android:title="@string/colors" />
         <ListPreference
             android:defaultValue="@integer/first"
             android:entries="@array/textSizeArray"
             android:entryValues="@array/textSizeValues"
             android:key="pref_text_size_key"
             android:summary="@string/text_settings"
-            android:title="@string/text_settings" />
+            android:title="@string/textsize" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_other_key"
