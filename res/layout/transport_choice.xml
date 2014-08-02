@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pick_transport"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/train_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_custom_margin"
+        android:layout_marginRight="@dimen/activity_custom_margin"
+        android:layout_marginTop="@dimen/activity_custom_margin"
+        android:layout_weight="1"
+        android:onClick="goTrainActivity"
+        android:text="@string/train" />
+
+    <Button
+        android:id="@+id/bus_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_custom_margin"
+        android:layout_weight="1"
+        android:onClick="goBusActivity"
+        android:text="@string/bus" />
+
+    <Button
+        android:id="@+id/ferry_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_custom_margin"
+        android:layout_weight="1"
+        android:onClick="goFerryActivity"
+        android:text="@string/ferry" />
+
+    <Button
+        android:id="@+id/light_rail_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/activity_custom_margin"
+        android:layout_marginLeft="@dimen/activity_custom_margin"
+        android:layout_marginBottom="@dimen/activity_custom_margin"
+        android:layout_weight="1"
+        android:onClick="goLightRailActivity"
+        android:text="@string/light_rail" />
+
+</LinearLayout>

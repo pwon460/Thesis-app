@@ -18,5 +18,13 @@
     <string name="text_settings">Choose a text size</string>
     <string name="textsize">Text Size</string>
     <string name="pref_gps">GPS Settings</string>
+    <string name="blank" />
+    <string name="train">Train</string>
+    <string name="bus">Bus</string>
+    <string name="ferry">Ferry</string>
+    <string name="light_rail">Light Rail</string>
+    <string name="title_activity_pick_trip">PickTripActivity</string>
+    <string name="default_colorscheme">White on Black</string>
+    <string name="default_textsize">Small</string>
 
 </resources>

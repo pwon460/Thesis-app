@@ -12,11 +12,10 @@ public class SettingsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
-		SettingsFragment settingsFragment = new SettingsFragment();
+		setTitle("Settings");
 		// Display the fragment as the main content.
 		getFragmentManager().beginTransaction()
-				.replace(android.R.id.content, settingsFragment).commit();
-
+				.replace(android.R.id.content, new SettingsFragment()).commit();
 	}
 
 }

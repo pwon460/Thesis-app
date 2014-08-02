@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
         android:key="pref_accessibility_key"
@@ -9,14 +9,14 @@
             android:entries="@array/colorArray"
             android:entryValues="@array/colorValues"
             android:key="pref_color_key"
-            android:summary="@string/colors_settings"
+            android:summary="%s"
             android:title="@string/colors" />
         <ListPreference
             android:defaultValue="@integer/first"
             android:entries="@array/textSizeArray"
             android:entryValues="@array/textSizeValues"
             android:key="pref_text_size_key"
-            android:summary="@string/text_settings"
+            android:summary="%s"
             android:title="@string/textsize" />
     </PreferenceCategory>
     <PreferenceCategory
