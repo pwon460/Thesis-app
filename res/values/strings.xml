@@ -26,5 +26,9 @@
     <string name="title_activity_pick_trip">PickTripActivity</string>
     <string name="default_colorscheme">White on Black</string>
     <string name="default_textsize">Small</string>
+    <string name="title_activity_trip_template">TripTemplate</string>
+    <string name="title_activity_train_trip">TrainTripActivity</string>
+    <string name="handedness">Handedness</string>
+    <string name="accessibilitySettings">Accessibility Settings</string>
 
 </resources>

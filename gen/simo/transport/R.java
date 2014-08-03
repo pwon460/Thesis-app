@@ -19,6 +19,8 @@ public final class R {
     public static final class array {
         public static final int colorArray=0x7f0d0000;
         public static final int colorValues=0x7f0d0001;
+        public static final int mainHandArray=0x7f0d0004;
+        public static final int mainHandValues=0x7f0d0005;
         public static final int textSizeArray=0x7f0d0002;
         public static final int textSizeValues=0x7f0d0003;
     }
@@ -978,6 +980,7 @@ containing a value of this type.
          */
         public static final int activity_horizontal_margin=0x7f090015;
         public static final int activity_vertical_margin=0x7f090016;
+        public static final int btn_size=0x7f09001b;
         /**  The platform's desired fixed height for a dialog along the major axis
          (the screen is in portrait). This may be either a fraction or a dimension.
  The platform's desired fixed height for a dialog along the major axis
@@ -1010,6 +1013,7 @@ containing a value of this type.
          (the screen is in portrait). This may be either a fraction or a dimension.
          */
         public static final int dialog_fixed_width_minor=0x7f090012;
+        public static final int scrollbarSize=0x7f09001c;
         public static final int text_size_large=0x7f09001a;
         public static final int text_size_medium=0x7f090019;
         public static final int text_size_small=0x7f090018;
@@ -1107,6 +1111,19 @@ containing a value of this type.
         public static final int selector=0x7f020059;
     }
     public static final class id {
+        public static final int Button1=0x7f06004b;
+        public static final int Button10=0x7f060054;
+        public static final int Button11=0x7f060055;
+        public static final int Button12=0x7f060056;
+        public static final int Button13=0x7f060057;
+        public static final int Button2=0x7f06004c;
+        public static final int Button3=0x7f06004d;
+        public static final int Button4=0x7f06004e;
+        public static final int Button5=0x7f06004f;
+        public static final int Button6=0x7f060050;
+        public static final int Button7=0x7f060051;
+        public static final int Button8=0x7f060052;
+        public static final int Button9=0x7f060053;
         public static final int action_bar=0x7f06001c;
         public static final int action_bar_activity_content=0x7f060015;
         public static final int action_bar_container=0x7f06001b;
@@ -1118,22 +1135,26 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f060016;
         public static final int action_menu_presenter=0x7f060017;
         public static final int action_mode_close_button=0x7f060024;
+        public static final int action_settings=0x7f06005f;
         public static final int activity_chooser_view_content=0x7f060025;
         public static final int always=0x7f06000b;
         public static final int beginning=0x7f060011;
-        public static final int bus_btn=0x7f06004c;
+        public static final int bus_btn=0x7f06005c;
         public static final int button1=0x7f06003d;
-        public static final int button10=0x7f060049;
+        public static final int button10=0x7f060047;
+        public static final int button14=0x7f060058;
         public static final int button2=0x7f06003c;
-        public static final int button3=0x7f060042;
-        public static final int button4=0x7f060043;
-        public static final int button5=0x7f060044;
-        public static final int button6=0x7f060045;
-        public static final int button7=0x7f060046;
-        public static final int button8=0x7f060047;
-        public static final int button9=0x7f060048;
+        public static final int button3=0x7f060040;
+        public static final int button4=0x7f060041;
+        public static final int button5=0x7f060042;
+        public static final int button6=0x7f060043;
+        public static final int button7=0x7f060044;
+        public static final int button8=0x7f060045;
+        public static final int button9=0x7f060046;
         public static final int checkbox=0x7f06002d;
         public static final int collapseActionView=0x7f06000d;
+        public static final int customTextView=0x7f060059;
+        public static final int custom_layout_view=0x7f06004a;
         public static final int default_activity_button=0x7f060028;
         public static final int dialog=0x7f06000e;
         public static final int disableHome=0x7f060008;
@@ -1142,23 +1163,23 @@ containing a value of this type.
         public static final int end=0x7f060013;
         public static final int expand_activities_button=0x7f060026;
         public static final int expanded_menu=0x7f06002c;
-        public static final int ferry_btn=0x7f06004d;
+        public static final int ferry_btn=0x7f06005d;
         public static final int home=0x7f060014;
         public static final int homeAsUp=0x7f060005;
         public static final int icon=0x7f06002a;
         public static final int ifRoom=0x7f06000a;
         public static final int image=0x7f060027;
-        public static final int index_view=0x7f060041;
-        public static final int light_rail_btn=0x7f06004e;
+        public static final int index_view=0x7f06003f;
+        public static final int light_rail_btn=0x7f06005e;
         public static final int listMode=0x7f060001;
         public static final int list_item=0x7f060029;
-        public static final int list_view=0x7f060040;
-        public static final int mainview=0x7f06003f;
+        public static final int list_view=0x7f060049;
+        public static final int mainview=0x7f060048;
         public static final int middle=0x7f060012;
         public static final int never=0x7f060009;
         public static final int none=0x7f060010;
         public static final int normal=0x7f060000;
-        public static final int pick_transport=0x7f06004a;
+        public static final int pick_transport=0x7f06005a;
         public static final int progress_circular=0x7f060018;
         public static final int progress_horizontal=0x7f060019;
         public static final int radio=0x7f06002f;
@@ -1182,7 +1203,7 @@ containing a value of this type.
         public static final int tabMode=0x7f060002;
         public static final int title=0x7f06002b;
         public static final int top_action_bar=0x7f060020;
-        public static final int train_btn=0x7f06004b;
+        public static final int train_btn=0x7f06005b;
         public static final int up=0x7f060021;
         public static final int useLogo=0x7f060003;
         public static final int withText=0x7f06000c;
@@ -1240,14 +1261,18 @@ containing a value of this type.
         public static final int abc_simple_decor=0x7f030017;
         public static final int activity_main=0x7f030018;
         public static final int activity_settings=0x7f030019;
-        public static final int custom_layout=0x7f03001a;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001b;
-        public static final int transport_choice=0x7f03001c;
+        public static final int custom_lefthand_layout=0x7f03001a;
+        public static final int custom_righthand_layout=0x7f03001b;
+        public static final int list_row=0x7f03001c;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001d;
+        public static final int transport_choice=0x7f03001e;
     }
     public static final class menu {
         public static final int main=0x7f0e0000;
         public static final int pick_trip=0x7f0e0001;
         public static final int settings_=0x7f0e0002;
+        public static final int train_trip=0x7f0e0003;
+        public static final int trip_template=0x7f0e0004;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1290,6 +1315,7 @@ containing a value of this type.
         /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0b000b;
+        public static final int accessibilitySettings=0x7f0b0029;
         public static final int action_settings=0x7f0b000f;
         public static final int app_name=0x7f0b000d;
         public static final int blank=0x7f0b001e;
@@ -1301,6 +1327,7 @@ containing a value of this type.
         public static final int default_colorscheme=0x7f0b0024;
         public static final int default_textsize=0x7f0b0025;
         public static final int ferry=0x7f0b0021;
+        public static final int handedness=0x7f0b0028;
         public static final int hello_world=0x7f0b000e;
         public static final int large=0x7f0b0015;
         public static final int light_rail=0x7f0b0022;
@@ -1314,6 +1341,8 @@ containing a value of this type.
         public static final int textsize=0x7f0b001c;
         public static final int title_activity_pick_trip=0x7f0b0023;
         public static final int title_activity_settings_=0x7f0b0016;
+        public static final int title_activity_train_trip=0x7f0b0027;
+        public static final int title_activity_trip_template=0x7f0b0026;
         public static final int train=0x7f0b001f;
     }
     public static final class style {

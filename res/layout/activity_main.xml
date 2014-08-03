@@ -4,12 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="simo.transport.MainActivity" >
+    tools:context="simo.transport.ui.MainActivity" >
 
     <Button
         android:id="@+id/button2"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="@dimen/btn_size"
         android:text="@string/btn_transport"
         android:onClick="goPickTrip"
         android:layout_marginLeft="@dimen/activity_custom_margin"
@@ -19,7 +19,7 @@
     <Button
         android:id="@+id/button1"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="@dimen/btn_size"
         android:onClick="goSettings"
         android:text="@string/btn_settings"
         android:layout_margin="@dimen/activity_custom_margin" />

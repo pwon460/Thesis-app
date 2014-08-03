@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory
         android:key="pref_accessibility_key"
@@ -18,13 +18,25 @@
             android:key="pref_text_size_key"
             android:summary="%s"
             android:title="@string/textsize" />
+        <ListPreference
+            android:defaultValue="@integer/first"
+            android:entries="@array/mainHandArray"
+            android:entryValues="@array/mainHandValues"
+            android:key="pref_main_hand_key"
+            android:summary="%s"
+            android:title="@string/handedness" />
+
+        <Preference
+            android:summary="%s"
+            android:title="@string/accessibilitySettings" >
+            <intent android:action="android.provider.Settings.ACCESSIBILITY_SETTINGS" />
+        </Preference>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_other_key"
         android:title="@string/pref_others" >
         <Preference android:title="@string/pref_gps" >
-            <intent
-                android:action="android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS"/>
+            <intent android:action="android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS" />
         </Preference>
     </PreferenceCategory>
 

@@ -7,5 +7,7 @@
     <dimen name="text_size_small">18sp</dimen>
     <dimen name="text_size_medium">30sp</dimen>
     <dimen name="text_size_large">42sp</dimen>
+    <dimen name="btn_size">100dp</dimen>
+    <dimen name="scrollbarSize">20dip</dimen>
 
 </resources>
