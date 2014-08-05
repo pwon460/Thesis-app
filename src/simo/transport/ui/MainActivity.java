@@ -1,7 +1,7 @@
 package simo.transport.ui;
 
-import simo.transport.ButtonBuilder;
 import simo.transport.R;
+import simo.transport.helpers.ButtonBuilder;
 import simo.transport.templates.SettingsListenerActivity;
 import android.annotation.TargetApi;
 import android.content.Intent;

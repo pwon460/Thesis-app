@@ -1,7 +1,7 @@
 package simo.transport.templates;
 
-import simo.transport.ButtonBuilder;
 import simo.transport.R;
+import simo.transport.helpers.ButtonBuilder;
 import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -101,7 +101,7 @@ public class SettingsListenerActivity extends ActionBarActivity implements
 
 	}
 	
-	private void setTextSettings(Button btn) {
+	public void setTextSettings(Button btn) {
 		btn.setGravity(Gravity.CENTER);
 		if (textSettings == 2) {
 			btn.setTextAppearance(getApplicationContext(), R.style.MediumText);
@@ -148,6 +148,11 @@ public class SettingsListenerActivity extends ActionBarActivity implements
 	
 	public void setID (int layoutID) {
 		this.id = layoutID;
+	}
+	
+	public int getHandedness() {
+		return Integer.valueOf(prefs.getString("pref_main_hand_key",
+				DEFAULT_PREF_VALUE));	
 	}
 
 }

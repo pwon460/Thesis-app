@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="simo.transport.ui.MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,28 +23,76 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="simo.transport.ui.SettingsActivity"
+            android:name=".ui.SettingsActivity"
             android:label="@string/title_activity_settings_"
-            android:parentActivityName="simo.transport.ui.MainActivity" >
+            android:parentActivityName=".ui.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="simo.transport.MainActivity" />
         </activity>
         <activity
-            android:name="simo.transport.ui.SelectTripActivity"
+            android:name=".ui.SelectTripActivity"
             android:label="@string/title_activity_pick_trip"
-            android:parentActivityName="simo.transport.ui.MainActivity" >
+            android:parentActivityName=".ui.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="simo.transport.MainActivity" />
         </activity>
         <activity
-            android:name="simo.transport.ui.TrainTripActivity"
+            android:name=".ui.TrainTripActivity"
             android:label="@string/title_activity_train_trip"
-            android:parentActivityName="simo.transport.ui.SelectTripActivity" >
+            android:parentActivityName=".ui.SelectTripActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="simo.transport.SelectTripActivity" />
+        </activity>
+        <activity
+            android:name=".ui.SelectRouteTypeActivity"
+            android:label="@string/title_activity_select_route_type"
+            android:parentActivityName=".ui.SelectTripActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="simo.transport.ui.SelectTripActivity" />
+        </activity>
+        <activity
+            android:name="simo.transport.ui.ViewTripActivity"
+            android:label="@string/title_activity_view_trip"
+            android:parentActivityName=".ui.SelectTripActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="simo.transport.ui.SelectTripActivity" />
+        </activity>
+        <activity
+            android:name=".ui.TrainTripActivity"
+            android:label="@string/title_activity_train_origin"
+            android:parentActivityName=".ui.SelectTripActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="simo.transport.ui.SelectTripActivity" />
+        </activity>
+        <activity
+            android:name=".ui.ShowTripActivity"
+            android:label="@string/title_activity_show_trip"
+            android:parentActivityName=".ui.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="simo.transport.ui.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.FerryTripActivity"
+            android:label="@string/title_activity_ferry_trip"
+            android:parentActivityName=".ui.SelectTripActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="simo.transport.ui.SelectTripActivity" />
+        </activity>
+        <activity
+            android:name="simo.transport.ui.LightRailTripActivity"
+            android:label="@string/title_activity_light_rail_trip"
+            android:parentActivityName=".ui.SelectTripActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="simo.transport.ui.SelectTripActivity" />
         </activity>
     </application>
 

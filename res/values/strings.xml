@@ -30,5 +30,13 @@
     <string name="title_activity_train_trip">TrainTripActivity</string>
     <string name="handedness">Handedness</string>
     <string name="accessibilitySettings">Accessibility Settings</string>
+    <string name="title_activity_select_route_type">SelectRouteTypeActivity</string>
+    <string name="btn_route">Route</string>
+    <string name="btn_suburb">Suburb</string>
+    <string name="title_activity_view_trip">ViewTripActivity</string>
+    <string name="title_activity_train_origin">TrainOriginActivity</string>
+    <string name="title_activity_show_trip">ShowTripActivity</string>
+    <string name="title_activity_ferry_trip">FerryTripActivity</string>
+    <string name="title_activity_light_rail_trip">LightRailTripActivity</string>
 
 </resources>

@@ -1,7 +1,7 @@
 package simo.transport.ui;
 
-import simo.transport.ButtonBuilder;
 import simo.transport.R;
+import simo.transport.helpers.ButtonBuilder;
 import simo.transport.templates.SettingsListenerActivity;
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class SelectTripActivity extends SettingsListenerActivity {
@@ -18,8 +19,9 @@ public class SelectTripActivity extends SettingsListenerActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.transport_choice);
-		getActionBar().setTitle("Select Trip");   
-		getSupportActionBar().setTitle("Select Trip");  // provide compatibility to all the versions
+		getActionBar().setTitle("Select Trip");
+		getSupportActionBar().setTitle("Select Trip"); // provide compatibility
+														// to all the versions
 		setID(R.id.pick_transport);
 		applySettings();
 	}
@@ -36,27 +38,42 @@ public class SelectTripActivity extends SettingsListenerActivity {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-//		int id = item.getItemId();
-//		if (id == R.id.action_settings) {
-//			return true;
-//		}
+		// int id = item.getItemId();
+		// if (id == R.id.action_settings) {
+		// return true;
+		// }
 		return super.onOptionsItemSelected(item);
 	}
-	
-	public void goTrainActivity (View view) {
+
+	public void goSelectTrip(View view) {
 		setViewClickedBackground(view);
-		Intent intent = new Intent(this, TrainTripActivity.class);
+		Button temp = (Button) view;
+		String text = temp.getText().toString();
+		Intent intent;
+
+		if (text.equals(getResources().getString(R.string.train))) {
+			intent = new Intent(this, TrainTripActivity.class);
+		} else if (text.equals(getResources().getString(R.string.ferry))) {
+			intent = new Intent(this, FerryTripActivity.class);
+		} else if (text.equals(getResources().getString(R.string.light_rail))) {
+			intent = new Intent(this, LightRailTripActivity.class);
+		} else {
+			intent = new Intent(this, SelectRouteTypeActivity.class);
+		}
+
 		startActivity(intent);
 	}
-	
+
 	private void setViewClickedBackground(View view) {
 		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 		if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
 			view.setBackground(ButtonBuilder.getHighlightedRectangle(
-					getApplicationContext(), getTextColor(), getBackgroundColor()));
+					getApplicationContext(), getTextColor(),
+					getBackgroundColor()));
 		} else {
 			view.setBackgroundDrawable(ButtonBuilder.getHighlightedRectangle(
-					getApplicationContext(), getTextColor(), getBackgroundColor()));
+					getApplicationContext(), getTextColor(),
+					getBackgroundColor()));
 		}
 	}
 

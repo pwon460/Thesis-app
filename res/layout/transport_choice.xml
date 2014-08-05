@@ -13,7 +13,7 @@
         android:layout_marginRight="@dimen/activity_custom_margin"
         android:layout_marginTop="@dimen/activity_custom_margin"
         android:layout_weight="1"
-        android:onClick="goTrainActivity"
+        android:onClick="goSelectTrip"
         android:text="@string/train" />
 
     <Button
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_custom_margin"
         android:layout_weight="1"
-        android:onClick="goBusActivity"
+        android:onClick="goSelectRouteActivity"
         android:text="@string/bus" />
 
     <Button
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_custom_margin"
         android:layout_weight="1"
-        android:onClick="goFerryActivity"
+        android:onClick="goSelectRouteActivity"
         android:text="@string/ferry" />
 
     <Button
@@ -42,7 +42,7 @@
         android:layout_marginLeft="@dimen/activity_custom_margin"
         android:layout_marginBottom="@dimen/activity_custom_margin"
         android:layout_weight="1"
-        android:onClick="goLightRailActivity"
+        android:onClick="goSelectRouteActivity"
         android:text="@string/light_rail" />
 
 </LinearLayout>
