@@ -2,7 +2,7 @@ package simo.transport.ui;
 
 import simo.transport.R;
 import simo.transport.helpers.ButtonBuilder;
-import simo.transport.templates.SettingsListenerActivity;
+import simo.transport.templates.ListenerActivity;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
@@ -13,11 +13,12 @@ import android.view.View;
 import android.widget.Button;
 
 @TargetApi(Build.VERSION_CODES.KITKAT)
-public class SelectTripActivity extends SettingsListenerActivity {
+public class SelectTripActivity extends ListenerActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setGestureOverlayView(R.layout.transport_choice);
 		setContentView(R.layout.transport_choice);
 		getActionBar().setTitle("Select Trip");
 		getSupportActionBar().setTitle("Select Trip"); // provide compatibility
@@ -67,11 +68,11 @@ public class SelectTripActivity extends SettingsListenerActivity {
 	private void setViewClickedBackground(View view) {
 		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 		if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-			view.setBackground(ButtonBuilder.getHighlightedRectangle(
+			view.setBackground(ButtonBuilder.getHighlightedBorderedRectangle(
 					getApplicationContext(), getTextColor(),
 					getBackgroundColor()));
 		} else {
-			view.setBackgroundDrawable(ButtonBuilder.getHighlightedRectangle(
+			view.setBackgroundDrawable(ButtonBuilder.getHighlightedBorderedRectangle(
 					getApplicationContext(), getTextColor(),
 					getBackgroundColor()));
 		}

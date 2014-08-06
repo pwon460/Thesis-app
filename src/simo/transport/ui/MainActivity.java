@@ -2,7 +2,7 @@ package simo.transport.ui;
 
 import simo.transport.R;
 import simo.transport.helpers.ButtonBuilder;
-import simo.transport.templates.SettingsListenerActivity;
+import simo.transport.templates.ListenerActivity;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 @TargetApi(Build.VERSION_CODES.KITKAT)
-public class MainActivity extends SettingsListenerActivity {
+public class MainActivity extends ListenerActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +58,10 @@ public class MainActivity extends SettingsListenerActivity {
 	private void setViewClickedBackground(View view) {
 		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 		if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-			view.setBackground(ButtonBuilder.getHighlightedRectangle(
+			view.setBackground(ButtonBuilder.getHighlightedBorderedRectangle(
 					getApplicationContext(), getTextColor(), getBackgroundColor()));
 		} else {
-			view.setBackgroundDrawable(ButtonBuilder.getHighlightedRectangle(
+			view.setBackgroundDrawable(ButtonBuilder.getHighlightedBorderedRectangle(
 					getApplicationContext(), getTextColor(), getBackgroundColor()));
 		}
 	}

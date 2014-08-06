@@ -50,7 +50,7 @@ public class TrainTripActivity extends TripActivityTemplate {
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		super.onItemClick(parent, view, position, id);
+		super.onItemClick(parent, view, position, id); 
 		ViewHolder holder = (ViewHolder) view.getTag();
 		TextView tv = holder.getTextView();
 		if (startingPoint == null) {
@@ -62,7 +62,8 @@ public class TrainTripActivity extends TripActivityTemplate {
 			Log.d("debug", "removed " + startingPoint + " from the list");
 			setTitle("Select destination station");
 			// reset the list back to normal for person to choose destination
-			ArrayList<String> listToDisplay = getDataAccessObject().getStations();
+			ArrayList<String> listToDisplay = getDataAccessObject()
+					.getStations();
 			// remove starting point from the list
 			listToDisplay.remove(startingPoint);
 			setListToDisplay(listToDisplay);

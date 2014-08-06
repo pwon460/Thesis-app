@@ -1,13 +1,8 @@
 package simo.transport.helpers;
 
 import simo.transport.R;
-import simo.transport.R.color;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.view.View;
 
 public class ButtonBuilder {
 
@@ -31,7 +26,7 @@ public class ButtonBuilder {
 		return drawable;
 	}
 
-	public static GradientDrawable getHighlightedRectangle(Context ctx,
+	public static GradientDrawable getHighlightedBorderedRectangle(Context ctx,
 			int textColor, int backgroundColor) {
 		GradientDrawable drawable = new GradientDrawable();
 		drawable.setShape(GradientDrawable.RECTANGLE);
@@ -47,8 +42,4 @@ public class ButtonBuilder {
 		return drawable;
 	}
 
-	public static Drawable getColoredArrow(View button, int textColor) {
-		Drawable drawable = button.getBackground();
-		return drawable;
-	}
 }

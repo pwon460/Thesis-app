@@ -12,6 +12,7 @@ import simo.transport.helpers.IndexButtonHandler;
 import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,7 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class TripActivityTemplate extends SettingsListenerActivity implements
+public class TripActivityTemplate extends ListenerActivity implements
 		OnItemClickListener, OnSharedPreferenceChangeListener {
 
 	private TransportDAO transportDAO = new MockInformationExtractor();
@@ -58,18 +59,7 @@ public class TripActivityTemplate extends SettingsListenerActivity implements
 
 		prevListStates = new ArrayList<ArrayList<String>>();
 		stack = new ArrayList<String>();
-		// setArrowColor();
 	}
-
-	// private void setArrowColor() {
-	// Button upArrow = (Button) findViewById(R.id.rButtonUp);
-	// Drawable drawable = ButtonBuilder.getColoredArrow(upArrow,
-	// getTextColor());
-	// setBtnBackground(upArrow, drawable);
-	// Button downArrow = (Button) findViewById(R.id.rButtonDown);
-	// drawable = ButtonBuilder.getColoredArrow(upArrow, getTextColor());
-	// setBtnBackground(upArrow, drawable);
-	// }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -96,18 +86,19 @@ public class TripActivityTemplate extends SettingsListenerActivity implements
 		applySettings();
 	}
 
+	// default behaviour all subclasses of this template should do:
+	// add to stack and reset filter
+	// by default, listview will highlight items clicked so no need to do
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		stack.add("listview");
 		handler.resetFilter();
-	}
 
-	public TransportDAO getDataAccessObject() {
-		return transportDAO;
 	}
 
 	// filter list of stations/routes/suburbs/etc in the listview
+	// also highlight button to indicate it's been clicked
 	public void onIndexButtonClick(View view) {
 		if (view.getId() == R.id.rButtonUp || view.getId() == R.id.lButtonUp) {
 			Log.d("debug", "up button pressed");
@@ -166,6 +157,7 @@ public class TripActivityTemplate extends SettingsListenerActivity implements
 		getColorsFromPrefs();
 		getTextSettingsFromPrefs();
 		setIndexButtons();
+		setArrowColor();
 		adapter.setTextColor(getTextColor());
 		Log.d("debug", "setting text color for adapter to " + getTextColor());
 		adapter.setTextSettings(getTextSettings());
@@ -198,18 +190,42 @@ public class TripActivityTemplate extends SettingsListenerActivity implements
 				setBtnBackground(temp, ButtonBuilder.getBorderedRectangle(this,
 						getTextColor()));
 			}
-
 		}
 	}
 
-	public void setBtnBackground(Button toReplace, Drawable replaceWith) {
+	private void setArrowColor() {
+		// color the up button
+		Button upArrow;
+		if (getHandedness() == 1) {
+			upArrow = (Button) findViewById(R.id.rButtonUp);
+		} else {
+			upArrow = (Button) findViewById(R.id.lButtonUp);
+		}
+		Drawable d = upArrow.getBackground();
+		d.setColorFilter(getTextColor(), Mode.MULTIPLY);
+
+		// color the down button
+		Button downArrow;
+		if (getHandedness() == 1) {
+			downArrow = (Button) findViewById(R.id.rButtonDown);
+		} else {
+			downArrow = (Button) findViewById(R.id.lButtonDown);
+		}
+		d = downArrow.getBackground();
+		d.setColorFilter(getTextColor(), Mode.MULTIPLY);
+	}
+
+	public void setBtnBackground(View toReplace, Drawable replaceWith) {
 		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 		if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
 			toReplace.setBackground(replaceWith);
 		} else {
 			toReplace.setBackgroundDrawable(replaceWith);
 		}
+	}
 
+	public TransportDAO getDataAccessObject() {
+		return transportDAO;
 	}
 
 	public void setListToDisplay(ArrayList<String> listToDisplay) {
