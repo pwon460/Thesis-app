@@ -9,5 +9,5 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     android:background="@drawable/metallic_colour"
-    tools:context="simo.transport.ui.SettingsActivity" />
+    tools:context="simo.transport.activities.SettingsActivity" />
 

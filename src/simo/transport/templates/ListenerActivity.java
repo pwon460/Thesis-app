@@ -45,15 +45,21 @@ public class ListenerActivity extends ActionBarActivity implements
 		gestureOverlayView.addOnGesturePerformedListener(this);
 		gestureLib = GestureLibraries.fromRawResource(this, R.raw.gestures);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		prefs.registerOnSharedPreferenceChangeListener(this);
 	}
 
-	// used to revert the button colour back to original un-highlighted state
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		applySettings();
+		applySettings(); // revert colour back to normal state
+		prefs.registerOnSharedPreferenceChangeListener(this);
 	}
+	
+    @Override
+	public void onPause() {
+        super.onPause();
+        prefs.unregisterOnSharedPreferenceChangeListener(this);
+    }
 
 	protected void applySettings() {
 		// grab current color setting
