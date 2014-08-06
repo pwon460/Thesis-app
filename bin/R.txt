@@ -451,13 +451,12 @@ int string small 0x7f0c0013
 int string text_settings 0x7f0c001b
 int string text_style 0x7f0c0012
 int string textsize 0x7f0c001c
-int string title_activity_ferry_trip 0x7f0c0030
-int string title_activity_light_rail_trip 0x7f0c0031
+int string title_activity_ferry_trip 0x7f0c002f
+int string title_activity_light_rail_trip 0x7f0c0030
 int string title_activity_pick_trip 0x7f0c0023
 int string title_activity_select_route_type 0x7f0c002a
 int string title_activity_settings_ 0x7f0c0016
-int string title_activity_show_trip 0x7f0c002f
-int string title_activity_train_origin 0x7f0c002e
+int string title_activity_show_trip 0x7f0c002e
 int string title_activity_train_trip 0x7f0c0027
 int string title_activity_trip_template 0x7f0c0026
 int string title_activity_view_trip 0x7f0c002d

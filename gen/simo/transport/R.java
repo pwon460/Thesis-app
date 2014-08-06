@@ -1357,13 +1357,12 @@ containing a value of this type.
         public static final int text_settings=0x7f0c001b;
         public static final int text_style=0x7f0c0012;
         public static final int textsize=0x7f0c001c;
-        public static final int title_activity_ferry_trip=0x7f0c0030;
-        public static final int title_activity_light_rail_trip=0x7f0c0031;
+        public static final int title_activity_ferry_trip=0x7f0c002f;
+        public static final int title_activity_light_rail_trip=0x7f0c0030;
         public static final int title_activity_pick_trip=0x7f0c0023;
         public static final int title_activity_select_route_type=0x7f0c002a;
         public static final int title_activity_settings_=0x7f0c0016;
-        public static final int title_activity_show_trip=0x7f0c002f;
-        public static final int title_activity_train_origin=0x7f0c002e;
+        public static final int title_activity_show_trip=0x7f0c002e;
         public static final int title_activity_train_trip=0x7f0c0027;
         public static final int title_activity_trip_template=0x7f0c0026;
         public static final int title_activity_view_trip=0x7f0c002d;
