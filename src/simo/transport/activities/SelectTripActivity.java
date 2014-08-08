@@ -18,7 +18,6 @@ public class SelectTripActivity extends ListenerActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setGestureOverlayView(R.layout.transport_choice);
 		setContentView(R.layout.transport_choice);
 		getActionBar().setTitle("Select Trip");
 		getSupportActionBar().setTitle("Select Trip"); // provide compatibility

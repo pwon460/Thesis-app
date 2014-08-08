@@ -8,7 +8,7 @@ import android.util.Log;
 
 public class IndexButtonHandler {
 
-	private static final int NUM_BUTTONS = 8;
+	private int numBtns = 8;
 	private ArrayList<String> allIndexBtns;
 	private String filter = "";
 	private int startIndex;
@@ -16,21 +16,25 @@ public class IndexButtonHandler {
 
 	public void setListToIndex(ArrayList<String> toIndex) {
 		Log.d("debug", "list to turn into indices: " + toIndex.toString());
-		startIndex = 0;
-		endIndex = startIndex + NUM_BUTTONS - 1;
 		allIndexBtns = new ArrayList<String>();
-		for (int i = 0; i < toIndex.size(); i++) {
-			int index = filter.length();
-			Log.d("debug", "index looked at = " + index);
-			if (index >= toIndex.get(i).length()) {
-				continue;
+		if (filter.length() < 2) {
+			startIndex = 0;
+			endIndex = startIndex + numBtns - 1;
+			for (int i = 0; i < toIndex.size(); i++) {
+				int index = filter.length();
+				// Log.d("debug", "index looked at = " + index);
+				if (index >= toIndex.get(i).length()) {
+					continue;
+				}
+				// String temp = toIndex.get(i).charAt(index) + "";
+				String temp = toIndex.get(i).substring(0, index + 1);
+				Log.d("debug", "temp = " + temp);
+				if (!allIndexBtns.contains(temp)) {
+					allIndexBtns.add(temp);
+				}
 			}
-			String temp = toIndex.get(i).charAt(index) + "";
-			if (!allIndexBtns.contains(temp)) {
-				allIndexBtns.add(temp);
-			}
+			Collections.sort(allIndexBtns);
 		}
-		Collections.sort(allIndexBtns);
 	}
 
 	// used for grabbing a 12 item 'chunk' of the list to show to the user
@@ -44,7 +48,7 @@ public class IndexButtonHandler {
 		if (endIndex >= allIndexBtns.size()) {
 			Log.d("debug", "smaller sublist");
 			for (int i = startIndex; i < allIndexBtns.size(); i++) {
-				Log.d("debug", "adding to sublist: " + allIndexBtns.get(i));
+				// Log.d("debug", "adding to sublist: " + allIndexBtns.get(i));
 				subList.add(allIndexBtns.get(i));
 			}
 		} else {
@@ -59,9 +63,9 @@ public class IndexButtonHandler {
 	}
 
 	public void handleUpClick() {
-		if (startIndex >= NUM_BUTTONS) {
+		if (startIndex >= numBtns) {
 			endIndex = startIndex - 1;
-			startIndex -= NUM_BUTTONS;
+			startIndex -= numBtns;
 		}
 
 	}
@@ -69,7 +73,7 @@ public class IndexButtonHandler {
 	public void handleDownClick() {
 		if (endIndex + 1 < allIndexBtns.size()) {
 			startIndex = endIndex + 1;
-			endIndex += NUM_BUTTONS;
+			endIndex += numBtns;
 		}
 	}
 
@@ -94,5 +98,9 @@ public class IndexButtonHandler {
 
 	public void resetFilter() {
 		filter = "";
+	}
+
+	public void setNumBtns(int num) {
+		numBtns = num;
 	}
 }

@@ -3,16 +3,17 @@ package simo.transport.helpers;
 import java.util.ArrayList;
 
 import simo.transport.R;
-import simo.transport.R.id;
-import simo.transport.R.style;
-
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
@@ -24,12 +25,16 @@ public class CustomAdapter extends ArrayAdapter<String> {
 	private int resource;
 	private int textColor;
 	private int textSettings;
+	private int background;
+	private boolean isInverted;
+	private int listViewHeight;
 
 	public CustomAdapter(Context context, int resource, ArrayList<String> values) {
 		super(context, resource, values);
 		this.resource = resource;
 		this.context = context;
 		this.values = values;
+		this.isInverted = false;
 	}
 
 	@Override
@@ -40,6 +45,9 @@ public class CustomAdapter extends ArrayAdapter<String> {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			rowView = inflater.inflate(resource, parent, false);
+			// override the size of the item in the listview
+			rowView.setLayoutParams(new AbsListView.LayoutParams(
+					LayoutParams.MATCH_PARENT, 280));
 			// configure view holder
 			ViewHolder viewHolder = new ViewHolder();
 			viewHolder.setTextView((TextView) rowView
@@ -52,29 +60,36 @@ public class CustomAdapter extends ArrayAdapter<String> {
 		String s = values.get(position);
 		TextView tv = holder.getTextView();
 		tv.setText(s);
-		tv.setTextColor(textColor);
 		tv.setGravity(Gravity.CENTER);
 		setTextSettings(tv);
-		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-		if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-			tv.setBackground(ButtonBuilder.getBorderedRectangle(context,
-					textColor));
+		tv.setTextColor(textColor);
+		if (isInverted) {
+			setTextViewBackgroundColor(tv, ButtonBuilder.getBorderedRectangle(
+					context, textColor, background));
 		} else {
-			tv.setBackgroundDrawable(ButtonBuilder.getBorderedRectangle(
-					context, textColor));
+			setTextViewBackgroundColor(tv,
+					ButtonBuilder.getBorderedRectangle(context, textColor));
 		}
 
 		return rowView;
 	}
-	
+
+	private void setTextViewBackgroundColor(TextView tv,
+			GradientDrawable drawable) {
+		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+			tv.setBackground(drawable);
+		} else {
+			tv.setBackgroundDrawable(drawable);
+		}
+	}
+
 	private void setTextSettings(TextView tv) {
 		tv.setGravity(Gravity.CENTER);
-		if (textSettings == 2) {
-			tv.setTextAppearance(context, R.style.MediumText);
-		} else if (textSettings == 3) {
+		if (textSettings == 3) {
 			tv.setTextAppearance(context, R.style.LargeText);
 		} else {
-			tv.setTextAppearance(context, R.style.SmallText);
+			tv.setTextAppearance(context, R.style.MediumText);
 		}
 	}
 
@@ -84,6 +99,18 @@ public class CustomAdapter extends ArrayAdapter<String> {
 
 	public void setTextSettings(int textSettings) {
 		this.textSettings = textSettings;
+	}
+
+	public void setInverseMode(boolean isInverted) {
+		this.isInverted = isInverted;
+	}
+
+	public void setBackgroundColor(int color) {
+		this.background = color;
+	}
+
+	public void setListViewHeight(int height) {
+		listViewHeight = height;
 	}
 
 }

@@ -1,19 +1,11 @@
 package simo.transport.templates;
 
-import java.util.ArrayList;
-
 import simo.transport.R;
 import simo.transport.helpers.ButtonBuilder;
 import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.TypedArray;
-import android.gesture.Gesture;
-import android.gesture.GestureLibraries;
-import android.gesture.GestureLibrary;
-import android.gesture.GestureOverlayView;
-import android.gesture.GestureOverlayView.OnGesturePerformedListener;
-import android.gesture.Prediction;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,45 +13,41 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class ListenerActivity extends ActionBarActivity implements
-		OnSharedPreferenceChangeListener, OnGesturePerformedListener {
+		OnSharedPreferenceChangeListener {
 
 	private static final String DEFAULT_PREF_VALUE = "1";
+	private static final String DEFAULT_NUM_BTN_PREF_VALUE = "5";
+	private static final int NUM_ARROW_BTNS = 2;
 	private SharedPreferences prefs; // the preferences in the xml file
 	private int textColor; // text color currently selected by user
 	private int background; // background color selected by user
 	private int textSettings;
 	private int id;
-	private GestureLibrary gestureLib;
-	private GestureOverlayView gestureOverlayView;
+	private int numBtns;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		gestureOverlayView = new GestureOverlayView(this);
-		gestureOverlayView.addOnGesturePerformedListener(this);
-		gestureLib = GestureLibraries.fromRawResource(this, R.raw.gestures);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 	}
 
-	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		applySettings(); // revert colour back to normal state
 		prefs.registerOnSharedPreferenceChangeListener(this);
 	}
-	
-    @Override
+
+	@Override
 	public void onPause() {
-        super.onPause();
-        prefs.unregisterOnSharedPreferenceChangeListener(this);
-    }
+		super.onPause();
+		prefs.unregisterOnSharedPreferenceChangeListener(this);
+	}
 
 	protected void applySettings() {
 		// grab current color setting
@@ -121,15 +109,25 @@ public class ListenerActivity extends ActionBarActivity implements
 
 	}
 
+	public void getNumIndexBtnsFromPrefs() {
+		int tempVal = Integer.valueOf(prefs.getString("pref_index_btns_key",
+				DEFAULT_NUM_BTN_PREF_VALUE));
+		if (tempVal == 1) {
+			numBtns = 4 + NUM_ARROW_BTNS;
+		} else if (tempVal == 2) {
+			numBtns = 5 + NUM_ARROW_BTNS;
+		} else if (tempVal == 3) {
+			numBtns = 6 + NUM_ARROW_BTNS;
+		} else if (tempVal == 4) {
+			numBtns = 7 + NUM_ARROW_BTNS;
+		} else {
+			numBtns = 8 + NUM_ARROW_BTNS;
+		}
+	}
+
 	public void setTextSettings(Button btn) {
 		btn.setGravity(Gravity.CENTER);
-		if (textSettings == 2) {
-			btn.setTextAppearance(getApplicationContext(), R.style.MediumText);
-		} else if (textSettings == 3) {
-			btn.setTextAppearance(getApplicationContext(), R.style.LargeText);
-		} else {
-			btn.setTextAppearance(getApplicationContext(), R.style.SmallText);
-		}
+		btn.setTextAppearance(getApplicationContext(), R.style.SmallText);
 	}
 
 	private void setBtnColor(Button btn) {
@@ -175,20 +173,13 @@ public class ListenerActivity extends ActionBarActivity implements
 				DEFAULT_PREF_VALUE));
 	}
 
-	@Override
-	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
-		ArrayList<Prediction> predictions = gestureLib.recognize(gesture);
-		Log.d("debug", "gesture detected!!!");
-		for (Prediction prediction : predictions) {
-			if (prediction.score > 0 && prediction.name.equals("Back")) {
-				onBackPressed();
-			}
-		}
+	public int getInvertedness() {
+		return Integer.valueOf(prefs.getString("pref_invert_color_key",
+				DEFAULT_PREF_VALUE));
 	}
-	
-	public void setGestureOverlayView (int id) {
-		View inflate = getLayoutInflater().inflate(id, null);
-	    gestureOverlayView.addView(inflate);
+
+	public int getNumIndexBtns() {
+		return numBtns;
 	}
 
 }

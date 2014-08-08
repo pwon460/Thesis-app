@@ -8,159 +8,19 @@
 
     <LinearLayout
         android:id="@+id/index_view"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_marginRight="@dimen/listview_index_margin"
         android:layout_weight="1"
         android:orientation="vertical" >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center" >
-
-            <Button
-                android:id="@+id/lButtonUp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/up_arrow_test"
-                android:onClick="onIndexButtonClick" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center" >
-
-            <Button
-                android:id="@+id/lButton1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:onClick="onIndexButtonClick" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center" >
-
-            <Button
-                android:id="@+id/lButton2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:onClick="onIndexButtonClick"
-                android:text="@string/blank" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center" >
-
-            <Button
-                android:id="@+id/lButton3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:onClick="onIndexButtonClick"
-                android:text="@string/blank" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center" >
-
-            <Button
-                android:id="@+id/lButton4"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:onClick="onIndexButtonClick"
-                android:text="@string/blank" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center" >
-
-            <Button
-                android:id="@+id/lButton5"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:onClick="onIndexButtonClick"
-                android:text="@string/blank" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center" >
-
-            <Button
-                android:id="@+id/lButton6"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:onClick="onIndexButtonClick"
-                android:text="@string/blank" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center" >
-
-            <Button
-                android:id="@+id/lButton7"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:onClick="onIndexButtonClick"
-                android:text="@string/blank" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center" >
-
-            <Button
-                android:id="@+id/lButton8"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:onClick="onIndexButtonClick"
-                android:text="@string/blank" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center" >
-
-            <Button
-                android:id="@+id/lButtonDown"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/up_arrow_test"
-                android:onClick="onIndexButtonClick"
-                android:rotation="180" />
-        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/mainview"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/activity_custom_margin"
-        android:layout_weight="3"
+        android:layout_marginLeft="@dimen/listview_index_margin"
+        android:layout_weight="4"
         android:gravity="center"
         android:orientation="vertical" >
 

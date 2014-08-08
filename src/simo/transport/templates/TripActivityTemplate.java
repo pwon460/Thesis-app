@@ -18,9 +18,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -37,6 +36,7 @@ public class TripActivityTemplate extends ListenerActivity implements
 	private CustomAdapter adapter;
 	private ListView listview;
 	private IndexButtonHandler handler;
+	private static final int OFF = 1;
 
 	// stack for storing previous listview states
 	private ArrayList<ArrayList<String>> prevListStates;
@@ -55,35 +55,35 @@ public class TripActivityTemplate extends ListenerActivity implements
 		}
 		listview = (ListView) findViewById(R.id.list_view);
 		listview.setOnItemClickListener(this);
+		getPrefVals();
+		addIndexButtonsToLayout();
 		handler = new IndexButtonHandler();
+		handler.setNumBtns(getNumIndexBtns());
 
 		prevListStates = new ArrayList<ArrayList<String>>();
 		stack = new ArrayList<String>();
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		// getMenuInflater().inflate(R.menu.trip_template, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		// int id = item.getItemId();
-		// if (id == R.id.action_settings) {
-		// return true;
-		// }
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 		applySettings();
+	}
+
+	private void getPrefVals() {
+		getColorsFromPrefs();
+		getTextSettingsFromPrefs();
+		getNumIndexBtnsFromPrefs();
+		Log.d("debug", "num btns on side = " + getNumIndexBtns());
+	}
+
+	private void addIndexButtonsToLayout() {
+		LinearLayout layout = (LinearLayout) findViewById(R.id.index_view);
+		getLayoutInflater().inflate(R.layout.up_arrow, layout);
+		for (int i = 0; i < getNumIndexBtns() - 2; i++) {
+			getLayoutInflater().inflate(R.layout.index_button, layout);
+		}
+		getLayoutInflater().inflate(R.layout.down_arrow, layout);
 	}
 
 	// default behaviour all subclasses of this template should do:
@@ -94,18 +94,16 @@ public class TripActivityTemplate extends ListenerActivity implements
 			long id) {
 		stack.add("listview");
 		handler.resetFilter();
-
 	}
 
 	// filter list of stations/routes/suburbs/etc in the listview
 	// also highlight button to indicate it's been clicked
 	public void onIndexButtonClick(View view) {
-		if (view.getId() == R.id.rButtonUp || view.getId() == R.id.lButtonUp) {
+		if (view.getId() == R.id.up_button) {
 			Log.d("debug", "up button pressed");
 			handler.handleUpClick();
 			setIndexButtons();
-		} else if (view.getId() == R.id.rButtonDown
-				|| view.getId() == R.id.lButtonDown) {
+		} else if (view.getId() == R.id.down_button) {
 			Log.d("debug", "down button pressed");
 			handler.handleDownClick();
 			setIndexButtons();
@@ -116,7 +114,13 @@ public class TripActivityTemplate extends ListenerActivity implements
 			if (!btnText.equals("")) {
 				Log.d("debug", "adding index button to stack: " + btnText);
 				stack.add("indexBtn");
-				handler.handleIndexBtnClicked(btnText); // add to current filter
+				if (btnText.length() < 2) {
+					handler.handleIndexBtnClicked(btnText); // add to current
+															// filter
+				} else if (btnText.length() == 2) {
+					handler.handleIndexBtnClicked(btnText.substring(btnText
+							.length() - 1)); // add to current filter
+				}
 				filterList(handler.getFilter());
 				setAdapterToList();
 			}
@@ -148,24 +152,32 @@ public class TripActivityTemplate extends ListenerActivity implements
 		adapter = new CustomAdapter(this, R.layout.list_row, displayedList);
 		applySettings(); // get and apply preference settings to the adapter and
 							// index buttons on right hand side
+		listview.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+		Log.d("debug", "measured height = " + listview.getMeasuredHeight());
 		// use own custom layout for the listview
 		listview.setAdapter(adapter);
 	}
 
 	@Override
 	public void applySettings() {
-		getColorsFromPrefs();
-		getTextSettingsFromPrefs();
 		setIndexButtons();
 		setArrowColor();
-		adapter.setTextColor(getTextColor());
-		Log.d("debug", "setting text color for adapter to " + getTextColor());
+		Log.d("debug", "textcolor = " + getTextColor());
+		Log.d("debug", "background color = " + getBackgroundColor());
+		if (getInvertedness() == OFF) {
+			Log.d("debug", "inverse mode OFF");
+			adapter.setTextColor(getTextColor());
+			adapter.setInverseMode(false);
+		} else {
+			Log.d("debug", "inverse mode ON");
+			adapter.setTextColor(getBackgroundColor());
+			adapter.setBackgroundColor(getTextColor());
+			adapter.setInverseMode(true);
+		}
+
 		adapter.setTextSettings(getTextSettings());
-		Log.d("debug", "setting text settings for adapter to "
-				+ getTextSettings());
 		LinearLayout layout = (LinearLayout) findViewById(R.id.custom_layout_view);
 		layout.setBackgroundColor(getBackgroundColor());
-		Log.d("debug", "setting background color to " + getBackgroundColor());
 	}
 
 	public void setIndexButtons() {
@@ -186,6 +198,7 @@ public class TripActivityTemplate extends ListenerActivity implements
 				temp.setText(btnsToShow.get(i - 1));
 				setTextSettings(temp);
 				temp.setTextColor(getTextColor());
+				temp.setBackgroundColor(getBackgroundColor());
 				temp.setGravity(Gravity.CENTER);
 				setBtnBackground(temp, ButtonBuilder.getBorderedRectangle(this,
 						getTextColor()));
@@ -196,21 +209,13 @@ public class TripActivityTemplate extends ListenerActivity implements
 	private void setArrowColor() {
 		// color the up button
 		Button upArrow;
-		if (getHandedness() == 1) {
-			upArrow = (Button) findViewById(R.id.rButtonUp);
-		} else {
-			upArrow = (Button) findViewById(R.id.lButtonUp);
-		}
+		upArrow = (Button) findViewById(R.id.up_button);
 		Drawable d = upArrow.getBackground();
 		d.setColorFilter(getTextColor(), Mode.MULTIPLY);
 
 		// color the down button
 		Button downArrow;
-		if (getHandedness() == 1) {
-			downArrow = (Button) findViewById(R.id.rButtonDown);
-		} else {
-			downArrow = (Button) findViewById(R.id.lButtonDown);
-		}
+		downArrow = (Button) findViewById(R.id.down_button);
 		d = downArrow.getBackground();
 		d.setColorFilter(getTextColor(), Mode.MULTIPLY);
 	}

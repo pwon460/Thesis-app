@@ -9,7 +9,8 @@ public class MockInformationExtractor implements TransportDAO {
 		ArrayList<String> mockStations = new ArrayList<String>();
 
 		String[] values = new String[] { "0", "000", "001", "1", "2", "3", "4",
-				"5", "6", "7", "8", "9", "A", "B", "C", "D" };
+				"5", "6", "7", "8", "9", "A", "B", "C", "D", "Aldnoah",
+				"Alberta", "Aberdeen", "Abba", "Bernard", "Belford", "Clocktown" };
 
 		for (int i = 0; i < values.length; i++) {
 			mockStations.add(values[i]);

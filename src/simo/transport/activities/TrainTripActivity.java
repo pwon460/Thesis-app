@@ -17,7 +17,6 @@ import android.widget.TextView;
 public class TrainTripActivity extends TripActivityTemplate {
 
 	private String startingPoint;
-	private int index;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,18 +54,13 @@ public class TrainTripActivity extends TripActivityTemplate {
 		TextView tv = holder.getTextView();
 		if (startingPoint == null) {
 			startingPoint = tv.getText().toString();
-			index = position;
-			Log.d("debug", "position is = " + position);
-			Log.d("debug", "starting point is = " + startingPoint);
-			getDisplayedList().remove(startingPoint);
-			Log.d("debug", "removed " + startingPoint + " from the list");
-			setTitle("Select destination station");
 			// reset the list back to normal for person to choose destination
 			ArrayList<String> listToDisplay = getDataAccessObject()
 					.getStations();
 			// remove starting point from the list
 			listToDisplay.remove(startingPoint);
 			setListToDisplay(listToDisplay);
+			setTitle("Select destination station");
 			// set the list to the listview
 			setAdapterToList();
 		} else {
@@ -80,16 +74,17 @@ public class TrainTripActivity extends TripActivityTemplate {
 
 	@Override
 	public void onBackPressed() {
-		if (getPrevAction().equals("indexBtn")) {
+		String result = getPrevAction();
+		if (result.equals("indexBtn")) {
 			// undo the action of the index button being pressed
 			Log.d("debug", "restoring list to original");
 			setListToDisplay(getPrevListState());
 			setAdapterToList();
-		} else if (getPrevAction().equals("listview")) {
+		} else if (result.equals("listview")) {
 			// button previously pressed was from listview
 			// return dest list back to origin list
 			Log.d("debug", "restoring list to original");
-			getDisplayedList().add(index, startingPoint);
+			setListToDisplay(getDataAccessObject().getStations());
 			startingPoint = null;
 			setTitle("Select origin station");
 			setAdapterToList();

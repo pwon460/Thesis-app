@@ -37,5 +37,7 @@
     <string name="title_activity_show_trip">ShowTripActivity</string>
     <string name="title_activity_ferry_trip">FerryTripActivity</string>
     <string name="title_activity_light_rail_trip">LightRailTripActivity</string>
+    <string name="invertColor">Invert List Colors</string>
+    <string name="numIndexBtns">Index Buttons</string>
 
 </resources>

@@ -18,6 +18,17 @@ public class ButtonBuilder {
 		return drawable;
 	}
 	
+	// special case for color inverse mode of listview
+	public static GradientDrawable getBorderedRectangle(Context ctx,
+			int textColor, int background) {
+		GradientDrawable drawable = new GradientDrawable();
+		drawable.setShape(GradientDrawable.RECTANGLE);
+		drawable.setColor(background);
+		drawable.setStroke(BORDER_WIDTH, textColor);
+
+		return drawable;
+	}
+	
 	public static GradientDrawable getBlankRectangle(Context ctx) {
 		GradientDrawable drawable = new GradientDrawable();
 		drawable.setShape(GradientDrawable.RECTANGLE);
@@ -41,5 +52,5 @@ public class ButtonBuilder {
 
 		return drawable;
 	}
-
+	
 }

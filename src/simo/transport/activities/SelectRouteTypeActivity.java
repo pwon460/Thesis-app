@@ -19,7 +19,6 @@ public class SelectRouteTypeActivity extends ListenerActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setGestureOverlayView(R.layout.activity_select_route_type);
 		setContentView(R.layout.activity_select_route_type);
 	}
 
