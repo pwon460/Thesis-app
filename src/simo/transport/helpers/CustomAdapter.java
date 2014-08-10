@@ -7,7 +7,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +19,7 @@ import android.widget.TextView;
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class CustomAdapter extends ArrayAdapter<String> {
 
+	private int numItemsShown;
 	private Context context;
 	private ArrayList<String> values;
 	private int resource;
@@ -27,27 +27,32 @@ public class CustomAdapter extends ArrayAdapter<String> {
 	private int textSettings;
 	private int background;
 	private boolean isInverted;
-	private int listViewHeight;
+	private int itemHeight;
 
-	public CustomAdapter(Context context, int resource, ArrayList<String> values) {
+	public CustomAdapter(Context context, int resource,
+			ArrayList<String> values, int numItemsShown) {
 		super(context, resource, values);
 		this.resource = resource;
 		this.context = context;
 		this.values = values;
 		this.isInverted = false;
+		this.numItemsShown = numItemsShown;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View rowView = convertView;
+		TextView rowView = (TextView) convertView;
 		// reuse views as per Holder pattern
 		if (rowView == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			rowView = inflater.inflate(resource, parent, false);
+			rowView = (TextView) inflater.inflate(resource, parent, false);
 			// override the size of the item in the listview
+			itemHeight = parent.getMeasuredHeight() / numItemsShown;
 			rowView.setLayoutParams(new AbsListView.LayoutParams(
-					LayoutParams.MATCH_PARENT, 280));
+					LayoutParams.MATCH_PARENT, itemHeight));
+
+			// Log.d("debug", "list view item height = " + itemHeight);
 			// configure view holder
 			ViewHolder viewHolder = new ViewHolder();
 			viewHolder.setTextView((TextView) rowView
@@ -109,8 +114,12 @@ public class CustomAdapter extends ArrayAdapter<String> {
 		this.background = color;
 	}
 
-	public void setListViewHeight(int height) {
-		listViewHeight = height;
+	public int getItemHeight() {
+		return itemHeight;
+	}
+
+	public int getNumItemsShown() {
+		return numItemsShown;
 	}
 
 }

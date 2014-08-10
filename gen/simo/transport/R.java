@@ -1155,12 +1155,12 @@ containing a value of this type.
         public static final int icon=0x7f06002a;
         public static final int ifRoom=0x7f06000a;
         public static final int image=0x7f060027;
-        public static final int index_view=0x7f060041;
+        public static final int index_view=0x7f060043;
         public static final int light_rail_btn=0x7f06004a;
         public static final int listMode=0x7f060001;
         public static final int list_item=0x7f060029;
-        public static final int list_view=0x7f060043;
-        public static final int mainview=0x7f060042;
+        public static final int list_view=0x7f060042;
+        public static final int mainview=0x7f060041;
         public static final int middle=0x7f060012;
         public static final int never=0x7f060009;
         public static final int none=0x7f060010;
@@ -1256,14 +1256,15 @@ containing a value of this type.
         public static final int activity_show_trip=0x7f03001d;
         public static final int activity_train_trip=0x7f03001e;
         public static final int activity_view_trip=0x7f03001f;
-        public static final int custom_lefthand_layout=0x7f030020;
-        public static final int custom_righthand_layout=0x7f030021;
-        public static final int down_arrow=0x7f030022;
-        public static final int index_button=0x7f030023;
-        public static final int list_row=0x7f030024;
-        public static final int support_simple_spinner_dropdown_item=0x7f030025;
-        public static final int transport_choice=0x7f030026;
-        public static final int up_arrow=0x7f030027;
+        public static final int custom_button=0x7f030020;
+        public static final int custom_lefthand_layout=0x7f030021;
+        public static final int custom_righthand_layout=0x7f030022;
+        public static final int down_arrow=0x7f030023;
+        public static final int index_button=0x7f030024;
+        public static final int list_row=0x7f030025;
+        public static final int support_simple_spinner_dropdown_item=0x7f030026;
+        public static final int transport_choice=0x7f030027;
+        public static final int up_arrow=0x7f030028;
     }
     public static final class menu {
         public static final int ferry_trip=0x7f0e0000;

@@ -2,7 +2,7 @@ package simo.transport.activities;
 
 import simo.transport.R;
 import simo.transport.helpers.ButtonBuilder;
-import simo.transport.templates.ListenerActivity;
+import simo.transport.templates.BasicListenerActivity;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.Button;
 
 @TargetApi(Build.VERSION_CODES.KITKAT)
-public class SelectTripActivity extends ListenerActivity {
+public class SelectTripActivity extends BasicListenerActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

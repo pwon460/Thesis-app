@@ -22,7 +22,7 @@ public class TrainTripActivity extends TripActivityTemplate {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTitle("Select origin station");
-		setListToDisplay(getDataAccessObject().getStations());
+		getListHandler().setFullList(getDataAccessObject().getStations());
 		Log.d("debug", "first call to set adapter list adapter");
 		setAdapterToList();
 	}
@@ -36,9 +36,6 @@ public class TrainTripActivity extends TripActivityTemplate {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		// int id = item.getItemId();
 		// if (id == R.id.action_settings) {
 		// return true;
@@ -49,17 +46,16 @@ public class TrainTripActivity extends TripActivityTemplate {
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		super.onItemClick(parent, view, position, id); 
+		super.onItemClick(parent, view, position, id);
 		ViewHolder holder = (ViewHolder) view.getTag();
 		TextView tv = holder.getTextView();
 		if (startingPoint == null) {
 			startingPoint = tv.getText().toString();
 			// reset the list back to normal for person to choose destination
-			ArrayList<String> listToDisplay = getDataAccessObject()
-					.getStations();
+			ArrayList<String> tempList = getDataAccessObject().getStations();
 			// remove starting point from the list
-			listToDisplay.remove(startingPoint);
-			setListToDisplay(listToDisplay);
+			tempList.remove(startingPoint);
+			getListHandler().setFullList(tempList);
 			setTitle("Select destination station");
 			// set the list to the listview
 			setAdapterToList();
@@ -78,13 +74,13 @@ public class TrainTripActivity extends TripActivityTemplate {
 		if (result.equals("indexBtn")) {
 			// undo the action of the index button being pressed
 			Log.d("debug", "restoring list to original");
-			setListToDisplay(getPrevListState());
+			getListHandler().restorePrevState();
 			setAdapterToList();
 		} else if (result.equals("listview")) {
 			// button previously pressed was from listview
 			// return dest list back to origin list
 			Log.d("debug", "restoring list to original");
-			setListToDisplay(getDataAccessObject().getStations());
+			getListHandler().setFullList(getDataAccessObject().getStations());
 			startingPoint = null;
 			setTitle("Select origin station");
 			setAdapterToList();

@@ -1,14 +1,15 @@
 package simo.transport.templates;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import simo.transport.R;
 import simo.transport.backend.MockInformationExtractor;
 import simo.transport.backend.TransportDAO;
 import simo.transport.helpers.ButtonBuilder;
 import simo.transport.helpers.CustomAdapter;
+import simo.transport.helpers.DisplayedListHandler;
 import simo.transport.helpers.IndexButtonHandler;
+import simo.transport.helpers.SwipeGestureListener;
 import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -19,7 +20,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -28,40 +28,55 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class TripActivityTemplate extends ListenerActivity implements
+public class TripActivityTemplate extends BasicListenerActivity implements
 		OnItemClickListener, OnSharedPreferenceChangeListener {
 
+	private static final int NUM_ITEMS_SHOWN = 4;
+	private static final int OFF = 1;
 	private TransportDAO transportDAO = new MockInformationExtractor();
-	private ArrayList<String> displayedList;
 	private CustomAdapter adapter;
 	private ListView listview;
-	private IndexButtonHandler handler;
-	private static final int OFF = 1;
-
-	// stack for storing previous listview states
-	private ArrayList<ArrayList<String>> prevListStates;
+	private IndexButtonHandler indexHandler;
+	private DisplayedListHandler listHandler;
+	private SwipeGestureListener gestureListener;
 
 	// records whether an index button or a listview button was pushed
-	private ArrayList<String> stack;
+	private ArrayList<String> actionStack;
 
+	// this create method will be utilized by all subclasses IN ADDITION
+	// to the subclass' own create method
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// set the basic layout
+		// grab preferences from settings eg.
+		loadPrefVals();
+		// set the basic skeleton layout
 		if (getHandedness() == 1) {
-			setContentView(R.layout.custom_righthand_layout);
-		} else {
 			setContentView(R.layout.custom_lefthand_layout);
+		} else {
+			setContentView(R.layout.custom_righthand_layout);
 		}
-		listview = (ListView) findViewById(R.id.list_view);
-		listview.setOnItemClickListener(this);
-		getPrefVals();
+		// add index buttons to this skeleton
 		addIndexButtonsToLayout();
-		handler = new IndexButtonHandler();
-		handler.setNumBtns(getNumIndexBtns());
 
-		prevListStates = new ArrayList<ArrayList<String>>();
-		stack = new ArrayList<String>();
+		listview = (ListView) findViewById(R.id.list_view);
+		// add click listener so clicked items lead to a response
+		listview.setOnItemClickListener(this);
+		// add swipe listener to listen for swipe up/down
+		// and call the setAdapterToList on swipe detected
+		gestureListener = new SwipeGestureListener(this);
+		listview.setOnTouchListener(gestureListener);
+
+		// initialize handler to take care of listview buttons
+		listHandler = new DisplayedListHandler();
+		listHandler.setNumItemsShown(NUM_ITEMS_SHOWN);
+
+		// initialize handler to take care of index buttons
+		indexHandler = new IndexButtonHandler();
+		indexHandler.setNumBtns(getNumIndexBtns());
+
+		actionStack = new ArrayList<String>();
+
 	}
 
 	@Override
@@ -70,11 +85,15 @@ public class TripActivityTemplate extends ListenerActivity implements
 		applySettings();
 	}
 
-	private void getPrefVals() {
-		getColorsFromPrefs();
-		getTextSettingsFromPrefs();
-		getNumIndexBtnsFromPrefs();
-		Log.d("debug", "num btns on side = " + getNumIndexBtns());
+	/*
+	 * figure out which setting is currently selected and save to fields with
+	 * getter methods. these settings are slightly tricky as the choices require
+	 * pre-handling and thus need to be handled separately instead of a simple
+	 * get statement
+	 */
+	private void loadPrefVals() {
+		loadColorsFromPrefs();
+		loadNumIndexBtnsFromPrefs();
 	}
 
 	private void addIndexButtonsToLayout() {
@@ -92,8 +111,8 @@ public class TripActivityTemplate extends ListenerActivity implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		stack.add("listview");
-		handler.resetFilter();
+		actionStack.add("listview");
+		indexHandler.resetFilter();
 	}
 
 	// filter list of stations/routes/suburbs/etc in the listview
@@ -101,11 +120,11 @@ public class TripActivityTemplate extends ListenerActivity implements
 	public void onIndexButtonClick(View view) {
 		if (view.getId() == R.id.up_button) {
 			Log.d("debug", "up button pressed");
-			handler.handleUpClick();
+			indexHandler.handleUpClick();
 			setIndexButtons();
 		} else if (view.getId() == R.id.down_button) {
 			Log.d("debug", "down button pressed");
-			handler.handleDownClick();
+			indexHandler.handleDownClick();
 			setIndexButtons();
 		} else {
 			Button btn = (Button) view;
@@ -113,47 +132,40 @@ public class TripActivityTemplate extends ListenerActivity implements
 			// ignore the index button click if it's a blank string
 			if (!btnText.equals("")) {
 				Log.d("debug", "adding index button to stack: " + btnText);
-				stack.add("indexBtn");
+				actionStack.add("indexBtn");
 				if (btnText.length() < 2) {
-					handler.handleIndexBtnClicked(btnText); // add to current
-															// filter
+					indexHandler.handleIndexBtnClicked(btnText); // add to
+																	// current
+					// filter
 				} else if (btnText.length() == 2) {
-					handler.handleIndexBtnClicked(btnText.substring(btnText
-							.length() - 1)); // add to current filter
+					indexHandler.handleIndexBtnClicked(btnText
+							.substring(btnText.length() - 1)); // add to current
+																// filter
 				}
-				filterList(handler.getFilter());
+				filterList();
 				setAdapterToList();
 			}
 		}
 
 	}
 
-	private void filterList(String filter) {
-		prevListStates.add(displayedList); // save list current state
-		Log.d("debug", "saving current list state: " + displayedList);
-		Log.d("debug", "filtering list by: " + filter);
-		ArrayList<String> tempList = new ArrayList<String>();
-		for (int i = 0; i < displayedList.size(); i++) {
-			String item = displayedList.get(i).toUpperCase(Locale.ENGLISH);
-			if (item.startsWith(filter)) {
-				Log.d("debug", "adding " + item);
-				tempList.add(item);
-			}
-		}
-
-		displayedList = tempList;
-		Log.d("debug", "remaining list: " + displayedList);
+	private void filterList() {
+		listHandler.saveCurrListState(); // save list current state
+		Log.d("debug",
+				"saving current list state: " + listHandler.getFullList());
+		Log.d("debug", "filtering list by: " + indexHandler.getFilter());
+		listHandler.filterList(indexHandler.getFilter());
+		Log.d("debug", "remaining list: " + listHandler.getFullList());
 		setAdapterToList();
 	}
 
 	public void setAdapterToList() {
-		handler.setListToIndex(displayedList);
-		Log.d("debug", "text color = " + getTextColor());
-		adapter = new CustomAdapter(this, R.layout.list_row, displayedList);
-		applySettings(); // get and apply preference settings to the adapter and
+		indexHandler.setListToIndex(listHandler.getFullList());
+		adapter = new CustomAdapter(this, R.layout.list_row,
+				listHandler.getDisplayedList(), NUM_ITEMS_SHOWN);
+		applySettings(); // get and apply preference settings to the new adapter
+							// and
 							// index buttons on right hand side
-		listview.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-		Log.d("debug", "measured height = " + listview.getMeasuredHeight());
 		// use own custom layout for the listview
 		listview.setAdapter(adapter);
 	}
@@ -162,14 +174,10 @@ public class TripActivityTemplate extends ListenerActivity implements
 	public void applySettings() {
 		setIndexButtons();
 		setArrowColor();
-		Log.d("debug", "textcolor = " + getTextColor());
-		Log.d("debug", "background color = " + getBackgroundColor());
 		if (getInvertedness() == OFF) {
-			Log.d("debug", "inverse mode OFF");
 			adapter.setTextColor(getTextColor());
 			adapter.setInverseMode(false);
 		} else {
-			Log.d("debug", "inverse mode ON");
 			adapter.setTextColor(getBackgroundColor());
 			adapter.setBackgroundColor(getTextColor());
 			adapter.setInverseMode(true);
@@ -181,7 +189,7 @@ public class TripActivityTemplate extends ListenerActivity implements
 	}
 
 	public void setIndexButtons() {
-		ArrayList<String> btnsToShow = handler.getIndexBtnSubset();
+		ArrayList<String> btnsToShow = indexHandler.getIndexBtnSubset();
 		Log.d("debug", "buttons to show: " + btnsToShow.toString());
 
 		View indexView = findViewById(R.id.index_view);
@@ -191,7 +199,8 @@ public class TripActivityTemplate extends ListenerActivity implements
 		for (int i = 1; i < numButtons - 1; i++) {
 			LinearLayout innerLayout = (LinearLayout) group.getChildAt(i);
 			Button temp = (Button) innerLayout.getChildAt(0);
-			if (i - 1 >= btnsToShow.size() || displayedList.size() == 1) {
+			if (i - 1 >= btnsToShow.size()
+					|| listHandler.getFullList().size() == 1) {
 				temp.setText("");
 				setBtnBackground(temp, ButtonBuilder.getBlankRectangle(this));
 			} else {
@@ -233,38 +242,26 @@ public class TripActivityTemplate extends ListenerActivity implements
 		return transportDAO;
 	}
 
-	public void setListToDisplay(ArrayList<String> listToDisplay) {
-		displayedList = listToDisplay;
-	}
-
-	public ArrayList<String> getDisplayedList() {
-		return displayedList;
-	}
-
 	public ListView getListView() {
 		return listview;
 	}
 
-	public ArrayList<String> getPrevListState() {
-		ArrayList<String> prevState = new ArrayList<String>();
-		if (prevListStates.size() > 0) {
-			prevState = prevListStates.remove(prevListStates.size() - 1);
-		}
-		return prevState;
-	}
-
 	public String getPrevAction() {
 		String prevAction = "";
-		if (stack.size() > 0) {
-			prevAction = stack.remove(stack.size() - 1);
+		if (actionStack.size() > 0) {
+			prevAction = actionStack.remove(actionStack.size() - 1);
 		}
 
 		Log.d("debug", "prev button clicked = " + prevAction);
 		if (prevAction.equals("indexBtn")) {
-			handler.handleBackBtnClicked();
+			indexHandler.handleBackBtnClicked();
 		}
 
 		return prevAction;
+	}
+
+	public DisplayedListHandler getListHandler() {
+		return listHandler;
 	}
 
 }

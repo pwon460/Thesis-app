@@ -7,10 +7,19 @@
     android:orientation="horizontal" >
 
     <LinearLayout
-        android:id="@+id/mainview"
+        android:id="@+id/index_view"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginRight="@dimen/listview_index_margin"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mainview"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/listview_index_margin"
         android:layout_weight="4"
         android:gravity="center"
         android:orientation="vertical" >
@@ -20,25 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="#FFF"
-            android:fadeScrollbars="false"
-            android:fastScrollAlwaysVisible="true"
-            android:fastScrollEnabled="true"
-            android:gravity="center"
-            android:scrollbarAlwaysDrawVerticalTrack="true"
-            android:scrollbarSize="@dimen/scrollbarSize"
-            android:scrollbarStyle="outsideOverlay" >
-        </ListView>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/index_view"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/listview_index_margin"
-        android:layout_weight="1"
-        android:orientation="vertical" >
-
-        
+            android:gravity="center" />
     </LinearLayout>
 
 </LinearLayout>

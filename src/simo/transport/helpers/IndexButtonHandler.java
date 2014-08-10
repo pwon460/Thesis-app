@@ -8,6 +8,7 @@ import android.util.Log;
 
 public class IndexButtonHandler {
 
+	private static final int NUM_ARROW_BTNS = 2;
 	private int numBtns = 8;
 	private ArrayList<String> allIndexBtns;
 	private String filter = "";
@@ -19,7 +20,7 @@ public class IndexButtonHandler {
 		allIndexBtns = new ArrayList<String>();
 		if (filter.length() < 2) {
 			startIndex = 0;
-			endIndex = startIndex + numBtns - 1;
+			endIndex = startIndex + numBtns - NUM_ARROW_BTNS - 1;
 			for (int i = 0; i < toIndex.size(); i++) {
 				int index = filter.length();
 				// Log.d("debug", "index looked at = " + index);
@@ -28,7 +29,7 @@ public class IndexButtonHandler {
 				}
 				// String temp = toIndex.get(i).charAt(index) + "";
 				String temp = toIndex.get(i).substring(0, index + 1);
-				Log.d("debug", "temp = " + temp);
+//				Log.d("debug", "temp = " + temp);
 				if (!allIndexBtns.contains(temp)) {
 					allIndexBtns.add(temp);
 				}
@@ -44,6 +45,7 @@ public class IndexButtonHandler {
 		ArrayList<String> subList = new ArrayList<String>();
 		Log.d("debug", "creating sublist");
 		Log.d("debug", "startingIndex = " + startIndex);
+		Log.d("debug", "endingIndex = " + endIndex);
 		Log.d("debug", "list size = " + allIndexBtns.size());
 		if (endIndex >= allIndexBtns.size()) {
 			Log.d("debug", "smaller sublist");
@@ -54,7 +56,7 @@ public class IndexButtonHandler {
 		} else {
 			Log.d("debug", "full sized sublist");
 			for (int i = startIndex; i <= endIndex; i++) {
-				Log.d("debug", "adding to sublist: " + allIndexBtns.get(i));
+//				Log.d("debug", "adding to sublist: " + allIndexBtns.get(i));
 				subList.add(allIndexBtns.get(i));
 			}
 		}
@@ -63,9 +65,9 @@ public class IndexButtonHandler {
 	}
 
 	public void handleUpClick() {
-		if (startIndex >= numBtns) {
+		if (startIndex >= numBtns - NUM_ARROW_BTNS) {
 			endIndex = startIndex - 1;
-			startIndex -= numBtns;
+			startIndex -= numBtns - NUM_ARROW_BTNS;
 		}
 
 	}
@@ -73,7 +75,7 @@ public class IndexButtonHandler {
 	public void handleDownClick() {
 		if (endIndex + 1 < allIndexBtns.size()) {
 			startIndex = endIndex + 1;
-			endIndex += numBtns;
+			endIndex += numBtns - NUM_ARROW_BTNS;
 		}
 	}
 
@@ -86,9 +88,9 @@ public class IndexButtonHandler {
 
 	public void handleBackBtnClicked() {
 		if (filter.length() > 0) {
-			Log.d("debug", "filter before = " + filter);
+//			Log.d("debug", "filter before = " + filter);
 			filter = filter.substring(0, filter.length() - 1);
-			Log.d("debug", "filter after = " + filter);
+//			Log.d("debug", "filter after = " + filter);
 		}
 	}
 
@@ -101,6 +103,7 @@ public class IndexButtonHandler {
 	}
 
 	public void setNumBtns(int num) {
+		Log.d("debug", "setting num btns = " + num);
 		numBtns = num;
 	}
 }
