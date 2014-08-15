@@ -44,11 +44,11 @@ public class SwipeGestureListener extends SimpleOnGestureListener implements
 				return false;
 			}
 			if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE) { // swipe up
-				activity.getListHandler().handleUpSwipe();
+				activity.getListHandler().onUpClicked();
 				activity.setAdapterToList();
 			} else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE) { // swipe
 																		// down
-				activity.getListHandler().handleDownSwipe();
+				activity.getListHandler().onDownClicked();
 				activity.setAdapterToList();
 			}
 		}

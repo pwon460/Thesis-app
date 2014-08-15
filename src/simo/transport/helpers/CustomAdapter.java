@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import simo.transport.R;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -64,23 +64,28 @@ public class CustomAdapter extends ArrayAdapter<String> {
 		ViewHolder holder = (ViewHolder) rowView.getTag();
 		String s = values.get(position);
 		TextView tv = holder.getTextView();
-		tv.setText(s);
 		tv.setGravity(Gravity.CENTER);
-		setTextSettings(tv);
 		tv.setTextColor(textColor);
-		if (isInverted) {
-			setTextViewBackgroundColor(tv, ButtonBuilder.getBorderedRectangle(
-					context, textColor, background));
+		setTextSettings(tv);
+		if (s.equals("up")) {
+			tv.setText("^");
+		} else if (s.equals("down")) {
+			tv.setText("v");
 		} else {
-			setTextViewBackgroundColor(tv,
-					ButtonBuilder.getBorderedRectangle(context, textColor));
+			tv.setText(s);
+			if (isInverted) {
+				setTextViewBackground(tv, ButtonBuilder.getBorderedRectangle(
+						context, textColor, background));
+			} else {
+				setTextViewBackground(tv,
+						ButtonBuilder.getBorderedRectangle(context, textColor));
+			}
 		}
 
 		return rowView;
 	}
 
-	private void setTextViewBackgroundColor(TextView tv,
-			GradientDrawable drawable) {
+	private void setTextViewBackground(TextView tv, Drawable drawable) {
 		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 		if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
 			tv.setBackground(drawable);

@@ -46,25 +46,31 @@ public class TrainTripActivity extends TripActivityTemplate {
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		super.onItemClick(parent, view, position, id);
-		ViewHolder holder = (ViewHolder) view.getTag();
-		TextView tv = holder.getTextView();
-		if (startingPoint == null) {
-			startingPoint = tv.getText().toString();
-			// reset the list back to normal for person to choose destination
-			ArrayList<String> tempList = getDataAccessObject().getStations();
-			// remove starting point from the list
-			tempList.remove(startingPoint);
-			getListHandler().setFullList(tempList);
-			setTitle("Select destination station");
-			// set the list to the listview
-			setAdapterToList();
-		} else {
-			String destination = tv.getText().toString();
-			getDataAccessObject().setTrainTrip(startingPoint, destination);
-			Intent intent = new Intent(this, ShowTripActivity.class);
-			// TODO: figure out what to pass onwards
-			startActivity(intent);
+		boolean handled = handleItemClick(view);
+
+		if (!handled) {
+			ViewHolder holder = (ViewHolder) view.getTag();
+			TextView tv = holder.getTextView();
+			if (startingPoint == null) {
+				startingPoint = tv.getText().toString();
+				// reset the list back to normal for person to choose
+				// destination
+				ArrayList<String> tempList = getDataAccessObject()
+						.getStations();
+				// remove starting point from the list
+				Log.d("debug", "removing " + startingPoint + " from the list");
+				tempList.remove(startingPoint);
+				getListHandler().setFullList(tempList);
+				setTitle("Select destination station");
+				// set the list to the listview
+				setAdapterToList();
+			} else {
+				String destination = tv.getText().toString();
+				getDataAccessObject().setTrainTrip(startingPoint, destination);
+				Intent intent = new Intent(this, ShowTripActivity.class);
+				// TODO: figure out what to pass onwards
+				startActivity(intent);
+			}
 		}
 	}
 

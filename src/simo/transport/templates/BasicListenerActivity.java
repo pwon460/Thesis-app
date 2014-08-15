@@ -21,7 +21,7 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		OnSharedPreferenceChangeListener {
 
 	private static final String DEFAULT_PREF_VALUE = "1";
-	private static final String DEFAULT_NUM_BTN_PREF_VALUE = "5";
+	// private static final String DEFAULT_NUM_BTN_PREF_VALUE = "1";
 	private static final int NUM_ARROW_BTNS = 2;
 	private SharedPreferences prefs; // the preferences in the xml file
 	private int textColor; // text color currently selected by user
@@ -55,15 +55,18 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		Log.d("debug", "background is " + background);
 
 		// apply preference settings to buttons on screen and the layout
-		LinearLayout home = (LinearLayout) findViewById(id);
+		LinearLayout layout = (LinearLayout) findViewById(id);
 		Button btn;
 
-		for (int i = 0; i < home.getChildCount(); i++) {
-			btn = (Button) home.getChildAt(i);
-			setBtnColor(btn);
-			setTextSettings(btn);
+//		Log.d("debug", "layout = " + layout);
+		for (int i = 0; i < layout.getChildCount(); i++) {
+			btn = (Button) layout.getChildAt(i);
+			if (!btn.getText().equals("")) {
+				setBtnColor(btn);
+				setTextSettings(btn);
+			}
 		}
-		home.setBackgroundColor(background);
+		layout.setBackgroundColor(background);
 
 	}
 
@@ -101,17 +104,18 @@ public class BasicListenerActivity extends ActionBarActivity implements
 
 	public void loadNumIndexBtnsFromPrefs() {
 		int tempVal = Integer.valueOf(prefs.getString("pref_index_btns_key",
-				DEFAULT_NUM_BTN_PREF_VALUE));
+				DEFAULT_PREF_VALUE));
+		Log.d("debug", "pref val = " + tempVal);
 		if (tempVal == 1) {
-			numBtns = 4 + NUM_ARROW_BTNS;
-		} else if (tempVal == 2) {
-			numBtns = 5 + NUM_ARROW_BTNS;
-		} else if (tempVal == 3) {
-			numBtns = 6 + NUM_ARROW_BTNS;
-		} else if (tempVal == 4) {
-			numBtns = 7 + NUM_ARROW_BTNS;
-		} else {
 			numBtns = 8 + NUM_ARROW_BTNS;
+		} else if (tempVal == 2) {
+			numBtns = 9 + NUM_ARROW_BTNS;
+		} else if (tempVal == 3) {
+			numBtns = 10 + NUM_ARROW_BTNS;
+		} else if (tempVal == 4) {
+			numBtns = 11 + NUM_ARROW_BTNS;
+		} else {
+			numBtns = 12 + NUM_ARROW_BTNS;
 		}
 	}
 

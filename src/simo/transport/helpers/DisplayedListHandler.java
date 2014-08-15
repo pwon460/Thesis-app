@@ -1,6 +1,7 @@
 package simo.transport.helpers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 
 import android.util.Log;
@@ -9,45 +10,99 @@ public class DisplayedListHandler {
 
 	// stack for storing previous listview states
 	private ArrayList<ArrayList<String>> prevListStates = new ArrayList<ArrayList<String>>();
-	private int listIndex = 0;
-	private ArrayList<String> fullList;
+	private int fromIndex;
+	private ArrayList<String> fullList; // this one has up and down buttons
+										// included in the list
 	private int numItemsShown;
 	private ArrayList<String> displayedList;
+	private boolean prevIsDown;
+	private boolean prevIsUp;
 
 	public void setFullList(ArrayList<String> list) {
-		listIndex = 0;
+		fromIndex = 0;
 		displayedList = new ArrayList<String>();
 		fullList = list;
+		makePartitions();
+		Log.d("debug", "full list = " + fullList);
 	}
 
-	public ArrayList<String> getFullList() {
-		return fullList;
+	private void makePartitions() {
+
+		for (int i = 0; i < fullList.size(); i++) {
+			if (i != 0 && i % (numItemsShown - 1) == 0
+					&& i < fullList.size() - 1) {
+				fullList.add(i, "down");
+			}
+		}
+
+		for (int i = 0; i < fullList.size(); i++) {
+			if (fullList.get(i).equals("down")) {
+				fullList.add(i + 1, "up");
+			}
+		}
+
 	}
 
-	public void handleDownSwipe() {
+	public ArrayList<String> getOriginalList() {
+		ArrayList<String> originalList = new ArrayList<String>();
+
+		for (int i = 0; i < fullList.size(); i++) {
+			String item = fullList.get(i);
+			if (!item.equals("down") && !item.equals("up")) {
+				originalList.add(item);
+			}
+		}
+
+		return originalList;
+	}
+
+	public void onDownClicked() {
 		displayedList.clear();
-		for (int i = listIndex; i < listIndex + numItemsShown; i++) {
-			if (i == fullList.size()) {
+
+		if (prevIsUp) {
+			fromIndex += numItemsShown;
+			prevIsUp = false;
+		}
+
+		// add the actual items to be displayed on the list
+		int temp = fromIndex;
+		while (temp < fullList.size()) {
+			String item = fullList.get(temp);
+			displayedList.add(item);
+			temp++;
+			if (item.equals("down")) {
 				break;
 			}
-			displayedList.add(fullList.get(i));
 		}
-		if (listIndex + numItemsShown < fullList.size()) {
-			listIndex += numItemsShown;
+
+		if (fromIndex + numItemsShown < fullList.size()) {
+			fromIndex += numItemsShown;
 		}
+
+		prevIsDown = true;
 	}
 
-	public void handleUpSwipe() {
+	public void onUpClicked() {
 		displayedList.clear();
-		if (listIndex >= numItemsShown) {
-			listIndex -= numItemsShown;
+
+		if (prevIsDown) {
+			if (fromIndex - numItemsShown > 0) {
+				fromIndex -= numItemsShown;
+			}
+			prevIsDown = false;
 		}
-		for (int i = listIndex; i < listIndex + numItemsShown; i++) {
-			if (i == fullList.size()) {
+
+		while (fromIndex > 0) {
+			fromIndex--;
+			String item = fullList.get(fromIndex);
+			displayedList.add(item);
+			if (item.equals("up")) {
 				break;
 			}
-			displayedList.add(fullList.get(i));
 		}
+
+		Collections.reverse(displayedList);
+		prevIsUp = true;
 	}
 
 	public void setNumItemsShown(int num) {
@@ -59,18 +114,19 @@ public class DisplayedListHandler {
 	}
 
 	public void filterList(String filter) {
-		listIndex = 0;
+		fromIndex = 0;
 		displayedList.clear();
 		ArrayList<String> tempList = new ArrayList<String>();
 		for (int i = 0; i < fullList.size(); i++) {
-			String item = fullList.get(i).toUpperCase(Locale.ENGLISH);
-			if (item.startsWith(filter)) {
+			String item = fullList.get(i);
+			if (item.toUpperCase(Locale.ENGLISH).startsWith(filter)) {
 				Log.d("debug", "adding " + item);
 				tempList.add(item);
 			}
 		}
 
 		fullList = tempList;
+		makePartitions();
 	}
 
 	private ArrayList<String> getPrevListState() {
@@ -82,14 +138,14 @@ public class DisplayedListHandler {
 	}
 
 	public void restorePrevState() {
-		listIndex = 0;
+		fromIndex = 0;
 		displayedList.clear();
 		fullList = getPrevListState();
 	}
 
 	public ArrayList<String> getDisplayedList() {
 		if (displayedList.size() == 0) {
-			handleDownSwipe(); // grab first 'num items shown'
+			onDownClicked(); // grab first 'num items shown'
 		}
 		return displayedList;
 	}

@@ -9,7 +9,6 @@ import simo.transport.helpers.ButtonBuilder;
 import simo.transport.helpers.CustomAdapter;
 import simo.transport.helpers.DisplayedListHandler;
 import simo.transport.helpers.IndexButtonHandler;
-import simo.transport.helpers.SwipeGestureListener;
 import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -26,19 +25,19 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class TripActivityTemplate extends BasicListenerActivity implements
 		OnItemClickListener, OnSharedPreferenceChangeListener {
 
-	private static final int NUM_ITEMS_SHOWN = 4;
+	private static final int NUM_ITEMS_SHOWN = 6;
 	private static final int OFF = 1;
 	private TransportDAO transportDAO = new MockInformationExtractor();
 	private CustomAdapter adapter;
 	private ListView listview;
 	private IndexButtonHandler indexHandler;
 	private DisplayedListHandler listHandler;
-	private SwipeGestureListener gestureListener;
 
 	// records whether an index button or a listview button was pushed
 	private ArrayList<String> actionStack;
@@ -52,9 +51,9 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 		loadPrefVals();
 		// set the basic skeleton layout
 		if (getHandedness() == 1) {
-			setContentView(R.layout.custom_lefthand_layout);
-		} else {
 			setContentView(R.layout.custom_righthand_layout);
+		} else {
+			setContentView(R.layout.custom_lefthand_layout);
 		}
 		// add index buttons to this skeleton
 		addIndexButtonsToLayout();
@@ -62,10 +61,6 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 		listview = (ListView) findViewById(R.id.list_view);
 		// add click listener so clicked items lead to a response
 		listview.setOnItemClickListener(this);
-		// add swipe listener to listen for swipe up/down
-		// and call the setAdapterToList on swipe detected
-		gestureListener = new SwipeGestureListener(this);
-		listview.setOnTouchListener(gestureListener);
 
 		// initialize handler to take care of listview buttons
 		listHandler = new DisplayedListHandler();
@@ -105,14 +100,35 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 		getLayoutInflater().inflate(R.layout.down_arrow, layout);
 	}
 
-	// default behaviour all subclasses of this template should do:
-	// add to stack and reset filter
-	// by default, listview will highlight items clicked so no need to do
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		actionStack.add("listview");
-		indexHandler.resetFilter();
+		// overridden by children that will call the onItemClick method below
+	}
+
+	/*
+	 * default behaviour all subclasses of this template should do: add to stack
+	 * and reset filter by default, listview will highlight items clicked so no
+	 * need to do
+	 */
+	public boolean handleItemClick(View view) {
+		Boolean isHandled = false;
+		TextView tv = (TextView) view;
+		Log.d("debug", "text = " + tv.getText());
+		if (tv.getText().equals("^")) {
+			listHandler.onUpClicked();
+			setAdapterToList();
+			isHandled = true;
+		} else if (tv.getText().equals("v")) {
+			listHandler.onDownClicked();
+			setAdapterToList();
+			isHandled = true;
+		} else {
+			actionStack.add("listview");
+			indexHandler.resetFilter();
+		}
+
+		return isHandled;
 	}
 
 	// filter list of stations/routes/suburbs/etc in the listview
@@ -152,15 +168,15 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 	private void filterList() {
 		listHandler.saveCurrListState(); // save list current state
 		Log.d("debug",
-				"saving current list state: " + listHandler.getFullList());
+				"saving current list state: " + listHandler.getOriginalList());
 		Log.d("debug", "filtering list by: " + indexHandler.getFilter());
 		listHandler.filterList(indexHandler.getFilter());
-		Log.d("debug", "remaining list: " + listHandler.getFullList());
+		Log.d("debug", "remaining list: " + listHandler.getOriginalList());
 		setAdapterToList();
 	}
 
 	public void setAdapterToList() {
-		indexHandler.setListToIndex(listHandler.getFullList());
+		indexHandler.setListToIndex(listHandler.getOriginalList());
 		adapter = new CustomAdapter(this, R.layout.list_row,
 				listHandler.getDisplayedList(), NUM_ITEMS_SHOWN);
 		applySettings(); // get and apply preference settings to the new adapter
@@ -200,7 +216,7 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 			LinearLayout innerLayout = (LinearLayout) group.getChildAt(i);
 			Button temp = (Button) innerLayout.getChildAt(0);
 			if (i - 1 >= btnsToShow.size()
-					|| listHandler.getFullList().size() == 1) {
+					|| listHandler.getOriginalList().size() == 1) {
 				temp.setText("");
 				setBtnBackground(temp, ButtonBuilder.getBlankRectangle(this));
 			} else {

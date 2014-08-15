@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginRight="@dimen/listview_index_margin"
-        android:layout_weight="4"
+        android:layout_weight="6"
         android:gravity="center"
         android:orientation="vertical" >
 
@@ -28,7 +28,8 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/listview_index_margin"
         android:layout_weight="1"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:gravity="right" >
 
         
     </LinearLayout>

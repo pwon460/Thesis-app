@@ -16,7 +16,7 @@ public class IndexButtonHandler {
 	private int endIndex;
 
 	public void setListToIndex(ArrayList<String> toIndex) {
-		Log.d("debug", "list to turn into indices: " + toIndex.toString());
+//		Log.d("debug", "list to turn into indices: " + toIndex.toString());
 		allIndexBtns = new ArrayList<String>();
 		if (filter.length() < 2) {
 			startIndex = 0;
@@ -43,18 +43,18 @@ public class IndexButtonHandler {
 	// a maximum of 12 at a time
 	public ArrayList<String> getIndexBtnSubset() {
 		ArrayList<String> subList = new ArrayList<String>();
-		Log.d("debug", "creating sublist");
-		Log.d("debug", "startingIndex = " + startIndex);
-		Log.d("debug", "endingIndex = " + endIndex);
-		Log.d("debug", "list size = " + allIndexBtns.size());
+//		Log.d("debug", "creating sublist");
+//		Log.d("debug", "startingIndex = " + startIndex);
+//		Log.d("debug", "endingIndex = " + endIndex);
+//		Log.d("debug", "list size = " + allIndexBtns.size());
 		if (endIndex >= allIndexBtns.size()) {
-			Log.d("debug", "smaller sublist");
+//			Log.d("debug", "smaller sublist");
 			for (int i = startIndex; i < allIndexBtns.size(); i++) {
 				// Log.d("debug", "adding to sublist: " + allIndexBtns.get(i));
 				subList.add(allIndexBtns.get(i));
 			}
 		} else {
-			Log.d("debug", "full sized sublist");
+//			Log.d("debug", "full sized sublist");
 			for (int i = startIndex; i <= endIndex; i++) {
 //				Log.d("debug", "adding to sublist: " + allIndexBtns.get(i));
 				subList.add(allIndexBtns.get(i));
@@ -103,7 +103,7 @@ public class IndexButtonHandler {
 	}
 
 	public void setNumBtns(int num) {
-		Log.d("debug", "setting num btns = " + num);
+//		Log.d("debug", "setting num btns = " + num);
 		numBtns = num;
 	}
 }
