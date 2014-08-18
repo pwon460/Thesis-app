@@ -33,11 +33,14 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 
 	private static final int NUM_ITEMS_SHOWN = 6;
 	private static final int OFF = 1;
+	private static final int INDEX_BTN_WIDTH_MOD = 20;
 	private TransportDAO transportDAO = new MockInformationExtractor();
 	private CustomAdapter adapter;
 	private ListView listview;
 	private IndexButtonHandler indexHandler;
 	private DisplayedListHandler listHandler;
+	private int originalWidth = 0;
+	private int originalHeight = 0;
 
 	// records whether an index button or a listview button was pushed
 	private ArrayList<String> actionStack;
@@ -143,40 +146,44 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 			indexHandler.handleDownClick();
 			setIndexButtons();
 		} else {
-			Button btn = (Button) view;
-			String btnText = btn.getText().toString();
+			Button btnClicked = (Button) view;
+			String btnClickedText = btnClicked.getText().toString();
+
 			// ignore the index button click if it's a blank string
-			if (!btnText.equals("")) {
-				Log.d("debug", "adding index button to stack: " + btnText);
-				actionStack.add("indexBtn");
-				if (btnText.length() < 2) {
-					indexHandler.handleIndexBtnClicked(btnText); // add to
-																	// current
-					// filter
-				} else if (btnText.length() == 2) {
-					indexHandler.handleIndexBtnClicked(btnText
-							.substring(btnText.length() - 1)); // add to current
-																// filter
+			if (!btnClickedText.equals("")) {
+				Log.d("debug", "adding index button to stack: "
+						+ btnClickedText);
+
+				String filter = indexHandler.getFilter();
+				// if the button clicked is the same as the filter, go up one
+				// level
+				if (btnClickedText.equals(filter)) {
+					onBackPressed();
+				} else {
+					if (filter.length() == 1 && btnClickedText.length() == 1) {
+						onBackPressed();
+					}
+					actionStack.add("indexBtn");
+					indexHandler.handleIndexBtnClicked(btnClickedText);
+					filterList();
+					setAdapterToList();
 				}
-				filterList();
-				setAdapterToList();
 			}
 		}
-
 	}
 
 	private void filterList() {
 		listHandler.saveCurrListState(); // save list current state
 		Log.d("debug",
-				"saving current list state: " + listHandler.getOriginalList());
+				"saving current list state: " + listHandler.getFullList());
 		Log.d("debug", "filtering list by: " + indexHandler.getFilter());
 		listHandler.filterList(indexHandler.getFilter());
-		Log.d("debug", "remaining list: " + listHandler.getOriginalList());
+		Log.d("debug", "remaining list: " + listHandler.getFullList());
 		setAdapterToList();
 	}
 
 	public void setAdapterToList() {
-		indexHandler.setListToIndex(listHandler.getOriginalList());
+		indexHandler.setListToIndex(listHandler.getFullList());
 		adapter = new CustomAdapter(this, R.layout.list_row,
 				listHandler.getDisplayedList(), NUM_ITEMS_SHOWN);
 		applySettings(); // get and apply preference settings to the new adapter
@@ -207,24 +214,50 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 	public void setIndexButtons() {
 		ArrayList<String> btnsToShow = indexHandler.getIndexBtnSubset();
 		Log.d("debug", "buttons to show: " + btnsToShow.toString());
+		// Log.d("debug", "setting index buttons to display");
 
 		View indexView = findViewById(R.id.index_view);
 		ViewGroup group = (ViewGroup) indexView;
 		int numButtons = group.getChildCount();
 		// less one button both sides because arrow buttons don't need to be set
 		for (int i = 1; i < numButtons - 1; i++) {
-			LinearLayout innerLayout = (LinearLayout) group.getChildAt(i);
-			Button temp = (Button) innerLayout.getChildAt(0);
-			if (i - 1 >= btnsToShow.size()
-					|| listHandler.getOriginalList().size() == 1) {
+			Button temp = (Button) group.getChildAt(i);
+
+			if (i - 1 >= btnsToShow.size() || indexHandler.getFilter().length() == 2) {
 				temp.setText("");
 				setBtnBackground(temp, ButtonBuilder.getBlankRectangle(this));
 			} else {
-				temp.setText(btnsToShow.get(i - 1));
-				setTextSettings(temp);
+				String text = btnsToShow.get(i - 1);
+				temp.setText(text);
+				temp.setGravity(Gravity.CENTER);
+				temp.setTextAppearance(this, R.style.IndexBtnText);
 				temp.setTextColor(getTextColor());
 				temp.setBackgroundColor(getBackgroundColor());
-				temp.setGravity(Gravity.CENTER);
+
+				// make box wider to indicate different 'tier' of index
+				if (text.length() > 1) {
+					/*
+					 * save these values to return the button size back to
+					 * normal on back button pressed
+					 */
+					if (originalWidth == 0 || originalHeight == 0) {
+						originalWidth = temp.getMeasuredWidth();
+						originalHeight = temp.getMeasuredHeight();
+					}
+
+					temp.setLayoutParams(new LinearLayout.LayoutParams(
+							originalWidth + INDEX_BTN_WIDTH_MOD, originalHeight));
+
+				} else if (text.length() == 1 && originalWidth > 0
+						&& originalHeight > 0) {
+					/*
+					 * reset the button back to original size on back pressed
+					 */
+					temp.setLayoutParams(new LinearLayout.LayoutParams(
+							originalWidth, originalHeight));
+
+				}
+
 				setBtnBackground(temp, ButtonBuilder.getBorderedRectangle(this,
 						getTextColor()));
 			}

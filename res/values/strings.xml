@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">SimoTransportApp</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">Simo Transport App</string>
     <string name="btn_settings">Settings</string>
     <string name="btn_transport">Transportation</string>
     <string name="text_style">bold</string>
     <string name="small">Small text</string>
     <string name="medium">Medium text</string>
     <string name="large">Large text</string>
-    <string name="title_activity_settings_">Settings_Activity</string>
+    <string name="title_activity_settings">Settings</string>
     <string name="pref_accessibility">Accessibility</string>
     <string name="pref_others">Extras</string>
     <string name="colors_settings">Choose a color</string>
@@ -23,20 +21,15 @@
     <string name="bus">Bus</string>
     <string name="ferry">Ferry</string>
     <string name="light_rail">Light Rail</string>
-    <string name="title_activity_pick_trip">PickTripActivity</string>
+    <string name="title_activity_select_trip">Select Trip</string>
     <string name="default_colorscheme">White on Black</string>
     <string name="default_textsize">Small</string>
-    <string name="title_activity_trip_template">TripTemplate</string>
-    <string name="title_activity_train_trip">TrainTripActivity</string>
     <string name="handedness">Handedness</string>
     <string name="accessibilitySettings">Accessibility Settings</string>
-    <string name="title_activity_select_route_type">SelectRouteTypeActivity</string>
+    <string name="title_activity_select_route_type">Select Route Type</string>
     <string name="btn_route">Route</string>
     <string name="btn_suburb">Suburb</string>
-    <string name="title_activity_view_trip">ViewTripActivity</string>
-    <string name="title_activity_show_trip">ShowTripActivity</string>
-    <string name="title_activity_ferry_trip">FerryTripActivity</string>
-    <string name="title_activity_light_rail_trip">LightRailTripActivity</string>
+    <string name="title_activity_show_trip">Your Trip</string>
     <string name="invertColor">Invert List Colors</string>
     <string name="numIndexBtns">Index Buttons</string>
 

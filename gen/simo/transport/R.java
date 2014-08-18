@@ -984,7 +984,7 @@ containing a value of this type.
          */
         public static final int activity_horizontal_margin=0x7f090015;
         public static final int activity_vertical_margin=0x7f090016;
-        public static final int btn_size=0x7f09001c;
+        public static final int btn_size=0x7f09001d;
         /**  The platform's desired fixed height for a dialog along the major axis
          (the screen is in portrait). This may be either a fraction or a dimension.
  The platform's desired fixed height for a dialog along the major axis
@@ -1018,10 +1018,11 @@ containing a value of this type.
          */
         public static final int dialog_fixed_width_minor=0x7f090012;
         public static final int listview_index_margin=0x7f090018;
-        public static final int scrollbarSize=0x7f09001d;
-        public static final int text_size_large=0x7f09001b;
-        public static final int text_size_medium=0x7f09001a;
-        public static final int text_size_small=0x7f090019;
+        public static final int scrollbarSize=0x7f09001e;
+        public static final int text_size_large=0x7f09001c;
+        public static final int text_size_medium=0x7f09001b;
+        public static final int text_size_small=0x7f09001a;
+        public static final int text_size_very_small=0x7f090019;
     }
     public static final class drawable {
         public static final int abc_ab_bottom_solid_dark_holo=0x7f020000;
@@ -1128,7 +1129,6 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f060016;
         public static final int action_menu_presenter=0x7f060017;
         public static final int action_mode_close_button=0x7f060024;
-        public static final int action_settings=0x7f06004e;
         public static final int activity_chooser_view_content=0x7f060025;
         public static final int always=0x7f06000b;
         public static final int beginning=0x7f060011;
@@ -1249,36 +1249,20 @@ containing a value of this type.
         public static final int abc_search_dropdown_item_icons_2line=0x7f030015;
         public static final int abc_search_view=0x7f030016;
         public static final int abc_simple_decor=0x7f030017;
-        public static final int activity_ferry_trip=0x7f030018;
-        public static final int activity_light_rail_trip=0x7f030019;
-        public static final int activity_main=0x7f03001a;
-        public static final int activity_select_route_type=0x7f03001b;
-        public static final int activity_settings=0x7f03001c;
-        public static final int activity_show_trip=0x7f03001d;
-        public static final int activity_train_trip=0x7f03001e;
-        public static final int activity_view_trip=0x7f03001f;
-        public static final int custom_button=0x7f030020;
-        public static final int custom_lefthand_layout=0x7f030021;
-        public static final int custom_righthand_layout=0x7f030022;
-        public static final int down_arrow=0x7f030023;
-        public static final int index_button=0x7f030024;
-        public static final int list_row=0x7f030025;
-        public static final int support_simple_spinner_dropdown_item=0x7f030026;
-        public static final int transport_choice=0x7f030027;
-        public static final int up_arrow=0x7f030028;
-    }
-    public static final class menu {
-        public static final int ferry_trip=0x7f0e0000;
-        public static final int light_rail_trip=0x7f0e0001;
-        public static final int main=0x7f0e0002;
-        public static final int pick_trip=0x7f0e0003;
-        public static final int select_route_type=0x7f0e0004;
-        public static final int settings_=0x7f0e0005;
-        public static final int show_trip=0x7f0e0006;
-        public static final int train_origin=0x7f0e0007;
-        public static final int train_trip=0x7f0e0008;
-        public static final int trip_template=0x7f0e0009;
-        public static final int view_trip=0x7f0e000a;
+        public static final int activity_main=0x7f030018;
+        public static final int activity_select_route_type=0x7f030019;
+        public static final int activity_settings=0x7f03001a;
+        public static final int activity_show_trip=0x7f03001b;
+        public static final int activity_view_trip=0x7f03001c;
+        public static final int custom_button=0x7f03001d;
+        public static final int custom_lefthand_layout=0x7f03001e;
+        public static final int custom_righthand_layout=0x7f03001f;
+        public static final int down_arrow=0x7f030020;
+        public static final int index_button=0x7f030021;
+        public static final int list_row=0x7f030022;
+        public static final int support_simple_spinner_dropdown_item=0x7f030023;
+        public static final int transport_choice=0x7f030024;
+        public static final int up_arrow=0x7f030025;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1321,44 +1305,37 @@ containing a value of this type.
         /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0b000b;
-        public static final int accessibilitySettings=0x7f0b0029;
-        public static final int action_settings=0x7f0b000f;
+        public static final int accessibilitySettings=0x7f0b0025;
         public static final int app_name=0x7f0b000d;
-        public static final int blank=0x7f0b001e;
-        public static final int btn_route=0x7f0b002b;
-        public static final int btn_settings=0x7f0b0010;
-        public static final int btn_suburb=0x7f0b002c;
-        public static final int btn_transport=0x7f0b0011;
-        public static final int bus=0x7f0b0020;
-        public static final int colors=0x7f0b001a;
-        public static final int colors_settings=0x7f0b0019;
-        public static final int default_colorscheme=0x7f0b0024;
-        public static final int default_textsize=0x7f0b0025;
-        public static final int ferry=0x7f0b0021;
-        public static final int handedness=0x7f0b0028;
-        public static final int hello_world=0x7f0b000e;
-        public static final int invertColor=0x7f0b0031;
-        public static final int large=0x7f0b0015;
-        public static final int light_rail=0x7f0b0022;
-        public static final int medium=0x7f0b0014;
-        public static final int numIndexBtns=0x7f0b0032;
-        public static final int pref_accessibility=0x7f0b0017;
-        public static final int pref_gps=0x7f0b001d;
-        public static final int pref_others=0x7f0b0018;
-        public static final int small=0x7f0b0013;
-        public static final int text_settings=0x7f0b001b;
-        public static final int text_style=0x7f0b0012;
-        public static final int textsize=0x7f0b001c;
-        public static final int title_activity_ferry_trip=0x7f0b002f;
-        public static final int title_activity_light_rail_trip=0x7f0b0030;
-        public static final int title_activity_pick_trip=0x7f0b0023;
-        public static final int title_activity_select_route_type=0x7f0b002a;
-        public static final int title_activity_settings_=0x7f0b0016;
-        public static final int title_activity_show_trip=0x7f0b002e;
-        public static final int title_activity_train_trip=0x7f0b0027;
-        public static final int title_activity_trip_template=0x7f0b0026;
-        public static final int title_activity_view_trip=0x7f0b002d;
-        public static final int train=0x7f0b001f;
+        public static final int blank=0x7f0b001c;
+        public static final int btn_route=0x7f0b0027;
+        public static final int btn_settings=0x7f0b000e;
+        public static final int btn_suburb=0x7f0b0028;
+        public static final int btn_transport=0x7f0b000f;
+        public static final int bus=0x7f0b001e;
+        public static final int colors=0x7f0b0018;
+        public static final int colors_settings=0x7f0b0017;
+        public static final int default_colorscheme=0x7f0b0022;
+        public static final int default_textsize=0x7f0b0023;
+        public static final int ferry=0x7f0b001f;
+        public static final int handedness=0x7f0b0024;
+        public static final int invertColor=0x7f0b002a;
+        public static final int large=0x7f0b0013;
+        public static final int light_rail=0x7f0b0020;
+        public static final int medium=0x7f0b0012;
+        public static final int numIndexBtns=0x7f0b002b;
+        public static final int pref_accessibility=0x7f0b0015;
+        public static final int pref_gps=0x7f0b001b;
+        public static final int pref_others=0x7f0b0016;
+        public static final int small=0x7f0b0011;
+        public static final int text_settings=0x7f0b0019;
+        public static final int text_style=0x7f0b0010;
+        public static final int textsize=0x7f0b001a;
+        public static final int title_activity_select_route_type=0x7f0b0026;
+        public static final int title_activity_select_trip=0x7f0b0021;
+        public static final int title_activity_settings=0x7f0b0014;
+        public static final int title_activity_show_trip=0x7f0b0029;
+        public static final int train=0x7f0b001d;
     }
     public static final class style {
         /** 
@@ -1395,6 +1372,7 @@ containing a value of this type.
          */
         public static final int AppTheme=0x7f0c008c;
         public static final int BlackOnWhite=0x7f0c008e;
+        public static final int IndexBtnText=0x7f0c0095;
         public static final int LargeText=0x7f0c0093;
         public static final int MediumText=0x7f0c0092;
         public static final int MyPreferenceTheme=0x7f0c0094;

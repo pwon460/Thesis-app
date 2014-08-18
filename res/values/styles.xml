@@ -60,5 +60,10 @@
         <item name="android:textColorSecondary">@color/white</item>
         <item name="android:background">@drawable/selector</item>
     </style>
+    
+    <style name="IndexBtnText">
+        <item name="android:textSize">@dimen/text_size_very_small</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
 </resources>

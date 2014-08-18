@@ -6,6 +6,7 @@ import simo.transport.R;
 import simo.transport.helpers.ViewHolder;
 import simo.transport.templates.TripActivityTemplate;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -14,32 +15,41 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
-public class TrainTripActivity extends TripActivityTemplate {
+public class TripActivity extends TripActivityTemplate {
 
 	private String startingPoint;
+	private String transport;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTitle("Select origin station");
+
+		Intent intent = getIntent();
+		transport = intent.getStringExtra("transport");
+
+		Resources r = getResources();
+		String title = "Select origin ";
+		if (transport.equals(r.getString(R.string.train))) {
+			title += "station";
+		} else if (transport.equals(r.getString(R.string.ferry))) {
+			title += "wharf";
+		} else if (transport.equals(r.getString(R.string.light_rail))) {
+			title += "stop";
+		}
+		setTitle(title);
+
 		getListHandler().setFullList(getDataAccessObject().getStations());
-		Log.d("debug", "first call to set adapter list adapter");
 		setAdapterToList();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.train_origin, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// int id = item.getItemId();
-		// if (id == R.id.action_settings) {
-		// return true;
-		// }
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -61,7 +71,18 @@ public class TrainTripActivity extends TripActivityTemplate {
 				Log.d("debug", "removing " + startingPoint + " from the list");
 				tempList.remove(startingPoint);
 				getListHandler().setFullList(tempList);
-				setTitle("Select destination station");
+
+				Resources r = getResources();
+				String title = "Select destination ";
+				if (transport.equals(r.getString(R.string.train))) {
+					title += "station";
+				} else if (transport.equals(r.getString(R.string.ferry))) {
+					title += "wharf";
+				} else if (transport.equals(r.getString(R.string.light_rail))) {
+					title += "stop";
+				}
+				setTitle(title);
+
 				// set the list to the listview
 				setAdapterToList();
 			} else {
@@ -79,16 +100,25 @@ public class TrainTripActivity extends TripActivityTemplate {
 		String result = getPrevAction();
 		if (result.equals("indexBtn")) {
 			// undo the action of the index button being pressed
-			Log.d("debug", "restoring list to original");
 			getListHandler().restorePrevState();
 			setAdapterToList();
 		} else if (result.equals("listview")) {
 			// button previously pressed was from listview
 			// return dest list back to origin list
-			Log.d("debug", "restoring list to original");
 			getListHandler().setFullList(getDataAccessObject().getStations());
 			startingPoint = null;
-			setTitle("Select origin station");
+
+			Resources r = getResources();
+			String title = "Select origin ";
+			if (transport.equals(r.getString(R.string.train))) {
+				title += "station";
+			} else if (transport.equals(r.getString(R.string.ferry))) {
+				title += "wharf";
+			} else if (transport.equals(r.getString(R.string.light_rail))) {
+				title += "stop";
+			}
+			setTitle(title);
+
 			setAdapterToList();
 		} else {
 			super.onBackPressed();

@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -51,19 +52,22 @@ public class BasicListenerActivity extends ActionBarActivity implements
 	protected void applySettings() {
 		// grab current color setting
 		loadColorsFromPrefs();
-		Log.d("debug", "text color is " + textColor);
-		Log.d("debug", "background is " + background);
+		// Log.d("debug", "text color is " + textColor);
+		// Log.d("debug", "background is " + background);
 
 		// apply preference settings to buttons on screen and the layout
 		LinearLayout layout = (LinearLayout) findViewById(id);
 		Button btn;
 
-//		Log.d("debug", "layout = " + layout);
+		// Log.d("debug", "layout = " + layout);
 		for (int i = 0; i < layout.getChildCount(); i++) {
 			btn = (Button) layout.getChildAt(i);
 			if (!btn.getText().equals("")) {
-				setBtnColor(btn);
-				setTextSettings(btn);
+				setViewClickedBackground(btn);
+				btn.setTextColor(textColor);
+				btn.setGravity(Gravity.CENTER);
+				btn.setTextAppearance(getApplicationContext(),
+						R.style.SmallText);
 			}
 		}
 		layout.setBackgroundColor(background);
@@ -119,25 +123,16 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		}
 	}
 
-	public void setTextSettings(Button btn) {
-		btn.setGravity(Gravity.CENTER);
-		btn.setTextAppearance(getApplicationContext(), R.style.SmallText);
-	}
-
-	private void setBtnColor(Button btn) {
-
-		// apply them to the button
+	public void setViewClickedBackground(View view) {
 		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 		if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-			btn.setBackground(ButtonBuilder.getBorderedRectangle(
-					getApplicationContext(), textColor));
+			view.setBackground(ButtonBuilder.getHighlightedBorderedRectangle(
+					this, textColor, background));
 		} else {
-			btn.setBackgroundDrawable(ButtonBuilder.getBorderedRectangle(
-					getApplicationContext(), textColor));
+			view.setBackgroundDrawable(ButtonBuilder
+					.getHighlightedBorderedRectangle(this, textColor,
+							background));
 		}
-
-		btn.setTextColor(textColor);
-
 	}
 
 	@Override

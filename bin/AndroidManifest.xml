@@ -24,35 +24,22 @@
         </activity>
         <activity
             android:name="simo.transport.activities.SettingsActivity"
-            android:label="@string/title_activity_settings_" >
+            android:label="@string/title_activity_settings" >
         </activity>
         <activity
             android:name="simo.transport.activities.SelectTripActivity"
-            android:label="@string/title_activity_pick_trip" >
+            android:label="@string/title_activity_select_trip" >
         </activity>
         <activity
-            android:name="simo.transport.activities.SelectRouteTypeActivity"
+            android:name="simo.transport.activities.BusRouteTypeActivity"
             android:label="@string/title_activity_select_route_type" >
         </activity>
         <activity
-            android:name="simo.transport.activities.ViewTripActivity"
-            android:label="@string/title_activity_view_trip" >
-        </activity>
-        <activity
-            android:name="simo.transport.activities.TrainTripActivity"
-            android:label="@string/title_activity_train_trip" >
+            android:name="simo.transport.activities.TripActivity" >
         </activity>
         <activity
             android:name="simo.transport.activities.ShowTripActivity"
             android:label="@string/title_activity_show_trip" >
-        </activity>
-        <activity
-            android:name="simo.transport.activities.FerryTripActivity"
-            android:label="@string/title_activity_ferry_trip" >
-        </activity>
-        <activity
-            android:name="simo.transport.activities.LightRailTripActivity"
-            android:label="@string/title_activity_light_rail_trip" >
         </activity>
     </application>
 

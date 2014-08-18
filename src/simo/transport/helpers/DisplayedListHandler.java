@@ -43,7 +43,10 @@ public class DisplayedListHandler {
 
 	}
 
-	public ArrayList<String> getOriginalList() {
+	/*
+	 * returns the fullList in its original unaltered state
+	 */
+	public ArrayList<String> getFullList() {
 		ArrayList<String> originalList = new ArrayList<String>();
 
 		for (int i = 0; i < fullList.size(); i++) {
