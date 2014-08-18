@@ -31,14 +31,15 @@ public class TripActivity extends TripActivityTemplate {
 		String title = "Select origin ";
 		if (transport.equals(r.getString(R.string.train))) {
 			title += "station";
+			getListHandler().setFullList(getDataAccessObject().getStations());
 		} else if (transport.equals(r.getString(R.string.ferry))) {
 			title += "wharf";
-		} else if (transport.equals(r.getString(R.string.light_rail))) {
+			getListHandler().setFullList(getDataAccessObject().getWharfs());
+		} else { // light rail
 			title += "stop";
+			getListHandler().setFullList(getDataAccessObject().getStops());
 		}
 		setTitle(title);
-
-		getListHandler().setFullList(getDataAccessObject().getStations());
 		setAdapterToList();
 	}
 
@@ -63,25 +64,29 @@ public class TripActivity extends TripActivityTemplate {
 			TextView tv = holder.getTextView();
 			if (startingPoint == null) {
 				startingPoint = tv.getText().toString();
-				// reset the list back to normal for person to choose
-				// destination
-				ArrayList<String> tempList = getDataAccessObject()
-						.getStations();
-				// remove starting point from the list
-				Log.d("debug", "removing " + startingPoint + " from the list");
-				tempList.remove(startingPoint);
-				getListHandler().setFullList(tempList);
-
+				/*
+				 * case statement to handle title and reset the list back to
+				 * normal for person to choose destination
+				 */
 				Resources r = getResources();
+				ArrayList<String> tempList;
 				String title = "Select destination ";
 				if (transport.equals(r.getString(R.string.train))) {
 					title += "station";
+					tempList = getDataAccessObject().getStations();
 				} else if (transport.equals(r.getString(R.string.ferry))) {
 					title += "wharf";
-				} else if (transport.equals(r.getString(R.string.light_rail))) {
+					tempList = getDataAccessObject().getWharfs();
+				} else {
 					title += "stop";
+					tempList = getDataAccessObject().getStops();
 				}
 				setTitle(title);
+
+				// remove starting point from the soon-to-be list of destinations
+				Log.d("debug", "removing " + startingPoint + " from the list");
+				tempList.remove(startingPoint);
+				getListHandler().setFullList(tempList);
 
 				// set the list to the listview
 				setAdapterToList();
@@ -105,20 +110,20 @@ public class TripActivity extends TripActivityTemplate {
 		} else if (result.equals("listview")) {
 			// button previously pressed was from listview
 			// return dest list back to origin list
-			getListHandler().setFullList(getDataAccessObject().getStations());
-			startingPoint = null;
-
 			Resources r = getResources();
 			String title = "Select origin ";
 			if (transport.equals(r.getString(R.string.train))) {
 				title += "station";
+				getListHandler().setFullList(getDataAccessObject().getStations());
 			} else if (transport.equals(r.getString(R.string.ferry))) {
 				title += "wharf";
-			} else if (transport.equals(r.getString(R.string.light_rail))) {
+				getListHandler().setFullList(getDataAccessObject().getWharfs());
+			} else {
 				title += "stop";
+				getListHandler().setFullList(getDataAccessObject().getStops());
 			}
 			setTitle(title);
-
+			startingPoint = null;
 			setAdapterToList();
 		} else {
 			super.onBackPressed();

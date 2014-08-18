@@ -19,7 +19,6 @@ public class SelectTripActivity extends BasicListenerActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.transport_choice);
 		setID(R.id.pick_transport);
-		applySettings();
 	}
 
 	@Override
@@ -39,7 +38,7 @@ public class SelectTripActivity extends BasicListenerActivity {
 		Intent intent;
 
 		if (text.equals(getResources().getString(R.string.bus))) {
-			intent = new Intent(this, BusRouteTypeActivity.class);
+			intent = new Intent(this, BusOptionsActivity.class);
 		} else {
 			intent = new Intent(this, TripActivity.class);
 			intent.putExtra("transport", text);

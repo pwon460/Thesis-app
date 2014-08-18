@@ -1,9 +1,7 @@
 package simo.transport.activities;
 
 import simo.transport.R;
-import simo.transport.helpers.ButtonBuilder;
 import simo.transport.templates.BasicListenerActivity;
-import simo.transport.templates.TripActivityTemplate;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
@@ -14,12 +12,13 @@ import android.view.View;
 import android.widget.Button;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class BusRouteTypeActivity extends BasicListenerActivity {
+public class BusOptionsActivity extends BasicListenerActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_select_route_type);
+		setContentView(R.layout.activity_bus_options);
+		setID(R.id.bus_options);
 	}
 
 	@Override
@@ -32,13 +31,13 @@ public class BusRouteTypeActivity extends BasicListenerActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void goSelectRoute(View view) {
+	public void goBusTripActivity(View view) {
 		setViewClickedBackground(view);
 		Button temp = (Button) view;
 		String text = temp.getText().toString();
-		Intent intent = new Intent(this, TripActivityTemplate.class);
-		intent.putExtra("btn_text", text);
+		Intent intent;
+		intent = new Intent(this, BusTripActivity.class);
+		intent.putExtra("routeType", text);
 		startActivity(intent);
 	}
-
 }

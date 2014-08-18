@@ -22,6 +22,8 @@ public class DisplayedListHandler {
 		fromIndex = 0;
 		displayedList = new ArrayList<String>();
 		fullList = list;
+		prevIsDown = false;
+		prevIsUp = false;
 		makePartitions();
 		Log.d("debug", "full list = " + fullList);
 	}

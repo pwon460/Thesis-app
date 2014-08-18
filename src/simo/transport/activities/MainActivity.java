@@ -22,7 +22,6 @@ public class MainActivity extends BasicListenerActivity {
 		// tell superclass id of page being used for applySettings to work on
 		// that page
 		setID(R.id.home);
-		applySettings();
 	}
 
 	@Override

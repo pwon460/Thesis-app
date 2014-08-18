@@ -1,10 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/home"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    tools:context="simo.transport.activities.MainActivity" >
+    android:id="@+id/bus_options"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/button1"
@@ -14,8 +13,8 @@
         android:layout_marginLeft="@dimen/activity_custom_margin"
         android:layout_marginRight="@dimen/activity_custom_margin"
         android:layout_marginTop="@dimen/activity_custom_margin"
-        android:onClick="goPickTrip"
-        android:text="@string/btn_transport" />
+        android:onClick="goBusTripActivity"
+        android:text="@string/btn_route" />
 
     <Button
         android:id="@+id/button2"
@@ -23,8 +22,8 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_margin="@dimen/activity_custom_margin"
-        android:onClick="goSettings"
-        android:text="@string/btn_settings" />
+        android:onClick="goBusTripActivity"
+        android:text="@string/btn_suburb" />
 
     <Button
         android:id="@+id/button3"

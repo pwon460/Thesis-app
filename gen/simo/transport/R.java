@@ -1133,10 +1133,11 @@ containing a value of this type.
         public static final int always=0x7f06000b;
         public static final int beginning=0x7f060011;
         public static final int bus_btn=0x7f06004a;
+        public static final int bus_options=0x7f06003c;
         public static final int button1=0x7f06003d;
-        public static final int button2=0x7f06003c;
-        public static final int button3=0x7f06003e;
-        public static final int button4=0x7f06003f;
+        public static final int button2=0x7f06003e;
+        public static final int button3=0x7f06003f;
+        public static final int button4=0x7f060040;
         public static final int checkbox=0x7f06002d;
         public static final int collapseActionView=0x7f06000d;
         public static final int customTextView=0x7f060047;
@@ -1180,7 +1181,6 @@ containing a value of this type.
         public static final int search_plate=0x7f060036;
         public static final int search_src_text=0x7f060037;
         public static final int search_voice_btn=0x7f06003b;
-        public static final int select_route_type=0x7f060040;
         public static final int settings=0x7f060041;
         public static final int shortcut=0x7f06002e;
         public static final int showCustom=0x7f060007;
@@ -1249,20 +1249,19 @@ containing a value of this type.
         public static final int abc_search_dropdown_item_icons_2line=0x7f030015;
         public static final int abc_search_view=0x7f030016;
         public static final int abc_simple_decor=0x7f030017;
-        public static final int activity_main=0x7f030018;
-        public static final int activity_select_route_type=0x7f030019;
+        public static final int activity_bus_options=0x7f030018;
+        public static final int activity_main=0x7f030019;
         public static final int activity_settings=0x7f03001a;
         public static final int activity_show_trip=0x7f03001b;
-        public static final int activity_view_trip=0x7f03001c;
-        public static final int custom_button=0x7f03001d;
-        public static final int custom_lefthand_layout=0x7f03001e;
-        public static final int custom_righthand_layout=0x7f03001f;
-        public static final int down_arrow=0x7f030020;
-        public static final int index_button=0x7f030021;
-        public static final int list_row=0x7f030022;
-        public static final int support_simple_spinner_dropdown_item=0x7f030023;
-        public static final int transport_choice=0x7f030024;
-        public static final int up_arrow=0x7f030025;
+        public static final int custom_button=0x7f03001c;
+        public static final int custom_lefthand_layout=0x7f03001d;
+        public static final int custom_righthand_layout=0x7f03001e;
+        public static final int down_arrow=0x7f03001f;
+        public static final int index_button=0x7f030020;
+        public static final int list_row=0x7f030021;
+        public static final int support_simple_spinner_dropdown_item=0x7f030022;
+        public static final int transport_choice=0x7f030023;
+        public static final int up_arrow=0x7f030024;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 

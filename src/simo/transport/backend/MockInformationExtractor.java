@@ -27,8 +27,7 @@ public class MockInformationExtractor implements TransportDAO {
 
 	@Override
 	public ArrayList<String> getWharfs() {
-		// TODO Auto-generated method stub
-		return null;
+		return getStations();
 	}
 
 	@Override
@@ -39,8 +38,7 @@ public class MockInformationExtractor implements TransportDAO {
 
 	@Override
 	public ArrayList<String> getStops() {
-		// TODO Auto-generated method stub
-		return null;
+		return getStations();
 	}
 
 	@Override
@@ -56,7 +54,7 @@ public class MockInformationExtractor implements TransportDAO {
 	}
 
 	@Override
-	public ArrayList<String> getRouteOriginStops(String route,
+	public ArrayList<String> getStopsOnRoute(String route,
 			Boolean isRightHand) {
 		// TODO Auto-generated method stub
 		return null;

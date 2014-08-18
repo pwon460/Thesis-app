@@ -39,6 +39,7 @@ public class BasicListenerActivity extends ActionBarActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Log.d("debug", "on resume!");
 		applySettings(); // revert colour back to normal state
 		prefs.registerOnSharedPreferenceChangeListener(this);
 	}
@@ -63,7 +64,7 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		for (int i = 0; i < layout.getChildCount(); i++) {
 			btn = (Button) layout.getChildAt(i);
 			if (!btn.getText().equals("")) {
-				setViewClickedBackground(btn);
+				setViewNormalBackground(btn);
 				btn.setTextColor(textColor);
 				btn.setGravity(Gravity.CENTER);
 				btn.setTextAppearance(getApplicationContext(),
@@ -132,6 +133,17 @@ public class BasicListenerActivity extends ActionBarActivity implements
 			view.setBackgroundDrawable(ButtonBuilder
 					.getHighlightedBorderedRectangle(this, textColor,
 							background));
+		}
+	}
+
+	private void setViewNormalBackground(View view) {
+		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+			view.setBackground(ButtonBuilder.getBorderedRectangle(this,
+					textColor, background));
+		} else {
+			view.setBackgroundDrawable(ButtonBuilder.getBorderedRectangle(this,
+					textColor, background));
 		}
 	}
 

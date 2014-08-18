@@ -77,12 +77,6 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 
 	}
 
-	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
-		applySettings();
-	}
-
 	/*
 	 * figure out which setting is currently selected and save to fields with
 	 * getter methods. these settings are slightly tricky as the choices require

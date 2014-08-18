@@ -18,7 +18,7 @@ public interface TransportDAO {
 	
 	// bus - refer to tripview
 	public ArrayList<String> getRoutes(Boolean isRightHand);
-	public ArrayList<String> getRouteOriginStops(String route, Boolean isRightHand);
+	public ArrayList<String> getStopsOnRoute(String route, Boolean isRightHand);
 	public void setStops(String route, Boolean isRightHand, String origin, String destination);
 	
 	// TODO: fix these later
