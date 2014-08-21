@@ -22,7 +22,6 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		OnSharedPreferenceChangeListener {
 
 	private static final String DEFAULT_PREF_VALUE = "1";
-	// private static final String DEFAULT_NUM_BTN_PREF_VALUE = "1";
 	private static final int NUM_ARROW_BTNS = 2;
 	private SharedPreferences prefs; // the preferences in the xml file
 	private int textColor; // text color currently selected by user
@@ -39,7 +38,7 @@ public class BasicListenerActivity extends ActionBarActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.d("debug", "on resume!");
+//		Log.d("debug", "on resume!");
 		applySettings(); // revert colour back to normal state
 		prefs.registerOnSharedPreferenceChangeListener(this);
 	}
@@ -83,7 +82,7 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		// grab the current preference color settings
 		int colorScheme = Integer.valueOf(prefs.getString("pref_color_key",
 				DEFAULT_PREF_VALUE));
-		Log.d("debug", "color scheme is " + colorScheme);
+//		Log.d("debug", "color scheme is " + colorScheme);
 
 		// grab the appropriate style from the style.xml using
 		// Context.obtainStyledAttributes()
@@ -170,9 +169,16 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		this.id = layoutID;
 	}
 
-	public int getHandedness() {
-		return Integer.valueOf(prefs.getString("pref_main_hand_key",
+	public boolean isRightHandMode() {
+		int mode = Integer.valueOf(prefs.getString("pref_main_hand_key",
 				DEFAULT_PREF_VALUE));
+		boolean isRightHandMode = true;
+		
+		if (mode != Integer.valueOf(DEFAULT_PREF_VALUE)) {
+			isRightHandMode = false;
+		}
+		
+		return isRightHandMode;
 	}
 
 	public int getInvertedness() {

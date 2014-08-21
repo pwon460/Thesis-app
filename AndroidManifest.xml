@@ -41,6 +41,9 @@
             android:name="simo.transport.activities.ShowTripActivity"
             android:label="@string/title_activity_show_trip" >
         </activity>
+        <activity
+            android:name="simo.transport.activities.BusTripActivity" >
+        </activity>
     </application>
 
 </manifest>

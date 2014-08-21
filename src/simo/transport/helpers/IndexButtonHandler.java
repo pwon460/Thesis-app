@@ -127,4 +127,8 @@ public class IndexButtonHandler {
 		numBtns = num;
 	}
 	
+	public void clearList() {
+		allIndexBtns.clear();
+	}
+	
 }

@@ -10,7 +10,6 @@ import simo.transport.helpers.CustomAdapter;
 import simo.transport.helpers.DisplayedListHandler;
 import simo.transport.helpers.IndexButtonHandler;
 import android.annotation.TargetApi;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
@@ -53,7 +52,7 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 		// grab preferences from settings eg.
 		loadPrefVals();
 		// set the basic skeleton layout
-		if (getHandedness() == 1) {
+		if (isRightHandMode()) {
 			setContentView(R.layout.custom_righthand_layout);
 		} else {
 			setContentView(R.layout.custom_lefthand_layout);
@@ -108,10 +107,10 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 	 * and reset filter by default, listview will highlight items clicked so no
 	 * need to do
 	 */
-	public boolean handleItemClick(View view) {
+	public boolean handleArrowButtonClick(View view) {
 		Boolean isHandled = false;
 		TextView tv = (TextView) view;
-		Log.d("debug", "text = " + tv.getText());
+//		Log.d("debug", "text = " + tv.getText());
 		if (tv.getText().equals("^")) {
 			listHandler.onUpClicked();
 			setAdapterToList();
@@ -121,7 +120,6 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 			setAdapterToList();
 			isHandled = true;
 		} else {
-			actionStack.add("listview");
 			indexHandler.resetFilter();
 		}
 
@@ -207,7 +205,7 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 
 	public void setIndexButtons() {
 		ArrayList<String> btnsToShow = indexHandler.getIndexBtnSubset();
-		Log.d("debug", "buttons to show: " + btnsToShow.toString());
+//		Log.d("debug", "buttons to show: " + btnsToShow.toString());
 		// Log.d("debug", "setting index buttons to display");
 
 		View indexView = findViewById(R.id.index_view);
@@ -291,6 +289,7 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 
 	public String getPrevAction() {
 		String prevAction = "";
+		Log.d("debug", "back stack =" + actionStack);
 		if (actionStack.size() > 0) {
 			prevAction = actionStack.remove(actionStack.size() - 1);
 		}
@@ -305,6 +304,14 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 
 	public DisplayedListHandler getListHandler() {
 		return listHandler;
+	}
+	
+	public IndexButtonHandler getIndexHandler() {
+		return indexHandler;
+	}
+	
+	public ArrayList<String> getActionStack() {
+		return actionStack;
 	}
 
 }

@@ -9,8 +9,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -18,6 +16,7 @@ import android.widget.TextView;
 public class TripActivity extends TripActivityTemplate {
 
 	private String startingPoint;
+	private String destination;
 	private String transport;
 
 	@Override
@@ -44,25 +43,15 @@ public class TripActivity extends TripActivityTemplate {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		boolean handled = handleItemClick(view);
+		boolean handled = handleArrowButtonClick(view);
 
 		if (!handled) {
 			ViewHolder holder = (ViewHolder) view.getTag();
 			TextView tv = holder.getTextView();
 			if (startingPoint == null) {
+				getActionStack().add("listview");
 				startingPoint = tv.getText().toString();
 				/*
 				 * case statement to handle title and reset the list back to
@@ -83,7 +72,8 @@ public class TripActivity extends TripActivityTemplate {
 				}
 				setTitle(title);
 
-				// remove starting point from the soon-to-be list of destinations
+				// remove starting point from the soon-to-be list of
+				// destinations
 				Log.d("debug", "removing " + startingPoint + " from the list");
 				tempList.remove(startingPoint);
 				getListHandler().setFullList(tempList);
@@ -91,7 +81,7 @@ public class TripActivity extends TripActivityTemplate {
 				// set the list to the listview
 				setAdapterToList();
 			} else {
-				String destination = tv.getText().toString();
+				destination = tv.getText().toString();
 				getDataAccessObject().setTrainTrip(startingPoint, destination);
 				Intent intent = new Intent(this, ShowTripActivity.class);
 				// TODO: figure out what to pass onwards
@@ -105,8 +95,12 @@ public class TripActivity extends TripActivityTemplate {
 		String result = getPrevAction();
 		if (result.equals("indexBtn")) {
 			// undo the action of the index button being pressed
-			getListHandler().restorePrevState();
-			setAdapterToList();
+			boolean hasRestored = getListHandler().restorePrevState();
+			if (hasRestored == false) {
+				super.onBackPressed();
+			} else {
+				setAdapterToList();
+			}
 		} else if (result.equals("listview")) {
 			// button previously pressed was from listview
 			// return dest list back to origin list
@@ -114,7 +108,8 @@ public class TripActivity extends TripActivityTemplate {
 			String title = "Select origin ";
 			if (transport.equals(r.getString(R.string.train))) {
 				title += "station";
-				getListHandler().setFullList(getDataAccessObject().getStations());
+				getListHandler().setFullList(
+						getDataAccessObject().getStations());
 			} else if (transport.equals(r.getString(R.string.ferry))) {
 				title += "wharf";
 				getListHandler().setFullList(getDataAccessObject().getWharfs());

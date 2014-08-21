@@ -142,10 +142,16 @@ public class DisplayedListHandler {
 		return prevState;
 	}
 
-	public void restorePrevState() {
+	public boolean restorePrevState() {
+		boolean hasRestored = true;
 		fromIndex = 0;
 		displayedList.clear();
+		ArrayList<String> temp = fullList;
 		fullList = getPrevListState();
+		if (temp == fullList) {
+			hasRestored = false;
+		}
+		return hasRestored;
 	}
 
 	public ArrayList<String> getDisplayedList() {
