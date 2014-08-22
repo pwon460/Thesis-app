@@ -122,6 +122,26 @@ public class BasicListenerActivity extends ActionBarActivity implements
 			numBtns = 12 + NUM_ARROW_BTNS;
 		}
 	}
+	
+	public int getNumItemsShown() {
+		int tempVal = Integer.valueOf(prefs.getString("pref_num_list_items",
+				DEFAULT_PREF_VALUE));
+		int numItemsShown = 0;
+		
+		if (tempVal == 1) {
+			numItemsShown = 6;
+		} else if (tempVal == 2) {
+			numItemsShown = 7;
+		} else if (tempVal == 3) {
+			numItemsShown = 8;
+		} else if (tempVal == 4) {
+			numItemsShown = 9;
+		} else {
+			numItemsShown = 10;
+		}
+		
+		return numItemsShown;
+	}
 
 	public void setViewClickedBackground(View view) {
 		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
@@ -189,5 +209,5 @@ public class BasicListenerActivity extends ActionBarActivity implements
 	public int getNumIndexBtns() {
 		return numBtns;
 	}
-
+	
 }

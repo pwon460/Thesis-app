@@ -19,6 +19,7 @@ import android.widget.TextView;
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class CustomAdapter extends ArrayAdapter<String> {
 
+	private static final int PADDING = 5;
 	private int numItemsShown;
 	private Context context;
 	private ArrayList<String> values;
@@ -48,7 +49,7 @@ public class CustomAdapter extends ArrayAdapter<String> {
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			rowView = (TextView) inflater.inflate(resource, parent, false);
 			// override the size of the item in the listview
-			itemHeight = parent.getMeasuredHeight() / numItemsShown;
+			itemHeight = (parent.getMeasuredHeight() - PADDING) / numItemsShown;
 			rowView.setLayoutParams(new AbsListView.LayoutParams(
 					LayoutParams.MATCH_PARENT, itemHeight));
 

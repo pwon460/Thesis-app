@@ -30,7 +30,7 @@ import android.widget.TextView;
 public class TripActivityTemplate extends BasicListenerActivity implements
 		OnItemClickListener, OnSharedPreferenceChangeListener {
 
-	private static final int NUM_ITEMS_SHOWN = 6;
+	private int numItemsShown;
 	private static final int OFF = 1;
 	private static final int INDEX_BTN_WIDTH_MOD = 20;
 	private TransportDAO transportDAO = new MockInformationExtractor();
@@ -51,6 +51,7 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 		super.onCreate(savedInstanceState);
 		// grab preferences from settings eg.
 		loadPrefVals();
+		
 		// set the basic skeleton layout
 		if (isRightHandMode()) {
 			setContentView(R.layout.custom_righthand_layout);
@@ -66,7 +67,7 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 
 		// initialize handler to take care of listview buttons
 		listHandler = new DisplayedListHandler();
-		listHandler.setNumItemsShown(NUM_ITEMS_SHOWN);
+		listHandler.setNumItemsShown(numItemsShown);
 
 		// initialize handler to take care of index buttons
 		indexHandler = new IndexButtonHandler();
@@ -85,6 +86,7 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 	private void loadPrefVals() {
 		loadColorsFromPrefs();
 		loadNumIndexBtnsFromPrefs();
+		numItemsShown = getNumItemsShown();
 	}
 
 	private void addIndexButtonsToLayout() {
@@ -153,6 +155,7 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 					onBackPressed();
 				} else {
 					if (filter.length() == 1 && btnClickedText.length() == 1) {
+						indexHandler.clearList();
 						onBackPressed();
 					}
 					actionStack.add("indexBtn");
@@ -177,7 +180,7 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 	public void setAdapterToList() {
 		indexHandler.setListToIndex(listHandler.getFullList());
 		adapter = new CustomAdapter(this, R.layout.list_row,
-				listHandler.getDisplayedList(), NUM_ITEMS_SHOWN);
+				listHandler.getDisplayedList(), numItemsShown);
 		applySettings(); // get and apply preference settings to the new adapter
 							// and
 							// index buttons on right hand side

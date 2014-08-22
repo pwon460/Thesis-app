@@ -39,6 +39,13 @@
             android:key="pref_index_btns_key"
             android:summary="%s"
             android:title="@string/numIndexBtns" />
+        <ListPreference
+            android:defaultValue="@integer/first"
+            android:entries="@array/maxListItemsArray"
+            android:entryValues="@array/maxListItemsValues"
+            android:key="pref_num_list_items"
+            android:summary="%s"
+            android:title="@string/numListItems" />
 
         <Preference android:title="@string/accessibilitySettings" >
             <intent android:action="android.settings.ACCESSIBILITY_SETTINGS" />

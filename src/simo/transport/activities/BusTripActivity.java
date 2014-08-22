@@ -61,16 +61,6 @@ public class BusTripActivity extends TripActivityTemplate {
 					getActionStack().add("listview");
 					getIndexHandler().clearList();
 					startSuburb = tv.getText().toString();
-					setTitle("Select destination suburb");
-					ArrayList<String> tempList = getDataAccessObject()
-							.getSuburbs();
-					tempList.remove(startSuburb);
-					getListHandler().setFullList(tempList);
-					setAdapterToList();
-				} else if (destSuburb == null) {
-					getActionStack().add("listview");
-					getIndexHandler().clearList();
-					destSuburb = tv.getText().toString();
 					setTitle("Select stop for " + startSuburb);
 					getListHandler().setFullList(
 							getDataAccessObject().getSuburbStops(startSuburb));
@@ -79,17 +69,27 @@ public class BusTripActivity extends TripActivityTemplate {
 					getActionStack().add("listview");
 					getIndexHandler().clearList();
 					originStop = tv.getText().toString();
-					setTitle("Select stop for " + destSuburb);
+					setTitle("Select destination suburb");
 					getListHandler().setFullList(
-							getDataAccessObject().getSuburbStops(destSuburb));
+							getDataAccessObject().getSuburbs());
+					setAdapterToList();
+				} else if (destSuburb == null) {
+					getActionStack().add("listview");
+					getIndexHandler().clearList();
+					destSuburb = tv.getText().toString();
+					setTitle("Select stop for " + destSuburb);
+					ArrayList<String> tempList = getDataAccessObject()
+							.getSuburbStops(destSuburb);
+					if (startSuburb.equals(destSuburb)) {
+						tempList.remove(originStop);
+					}
+					getListHandler().setFullList(tempList);
 					setAdapterToList();
 				} else {
 					destStop = tv.getText().toString();
 					getDataAccessObject().setSuburbInfo(startSuburb,
 							destSuburb, originStop, destStop);
-					Intent intent = new Intent(this, ShowTripActivity.class);
-					// TODO: figure out what to pass onwards
-					startActivity(intent);
+					goTimetableActivity();
 				}
 			} else {
 				if (route == null) {
@@ -115,12 +115,17 @@ public class BusTripActivity extends TripActivityTemplate {
 					destStop = tv.getText().toString();
 					getDataAccessObject().setStops(route, isRightHandMode(),
 							originStop, destStop);
-					Intent intent = new Intent(this, ShowTripActivity.class);
-					// TODO: figure out what to pass onwards
-					startActivity(intent);
+					goTimetableActivity();
 				}
 			}
 		}
+	}
+
+	private void goTimetableActivity() {
+		Intent intent = new Intent(this, ShowTimetableActivity.class);
+		intent.putExtra("DAO", getDataAccessObject());
+		intent.putExtra("transport", getResources().getString(R.id.bus_btn));
+		startActivity(intent);		
 	}
 
 	@Override
@@ -135,18 +140,16 @@ public class BusTripActivity extends TripActivityTemplate {
 			}
 		} else if (result.equals("listview")) {
 			if (isBySuburb) {
-				if (originStop != null) {
+				if (destSuburb != null) {
+					setTitle("Select destination suburb");
+					destSuburb = null;
+					getListHandler().setFullList(
+							getDataAccessObject().getSuburbs());
+				} else if (originStop != null) {
 					setTitle("Select stop for " + startSuburb);
 					originStop = null;
 					getListHandler().setFullList(
 							getDataAccessObject().getSuburbStops(startSuburb));
-				} else if (destSuburb != null) {
-					setTitle("Select destination suburb");
-					destSuburb = null;
-					ArrayList<String> tempList = getDataAccessObject()
-							.getSuburbs();
-					tempList.remove(startSuburb);
-					getListHandler().setFullList(tempList);
 				} else if (startSuburb != null) {
 					setTitle("Select origin suburb");
 					startSuburb = null;

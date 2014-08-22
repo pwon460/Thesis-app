@@ -83,8 +83,9 @@ public class TripActivity extends TripActivityTemplate {
 			} else {
 				destination = tv.getText().toString();
 				getDataAccessObject().setTrainTrip(startingPoint, destination);
-				Intent intent = new Intent(this, ShowTripActivity.class);
-				// TODO: figure out what to pass onwards
+				Intent intent = new Intent(this, ShowTimetableActivity.class);
+				intent.putExtra("DAO", getDataAccessObject());
+				intent.putExtra("transport", transport);
 				startActivity(intent);
 			}
 		}

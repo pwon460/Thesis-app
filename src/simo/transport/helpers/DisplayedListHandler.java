@@ -124,7 +124,8 @@ public class DisplayedListHandler {
 		ArrayList<String> tempList = new ArrayList<String>();
 		for (int i = 0; i < fullList.size(); i++) {
 			String item = fullList.get(i);
-			if (item.toUpperCase(Locale.ENGLISH).startsWith(filter)) {
+			if (item.toUpperCase(Locale.ENGLISH).startsWith(filter)
+					&& !item.equals("up") && !item.equals("down")) {
 				Log.d("debug", "adding " + item);
 				tempList.add(item);
 			}

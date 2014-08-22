@@ -31,6 +31,7 @@
     <string name="btn_suburb">Suburb</string>
     <string name="title_activity_show_trip">Your Trip</string>
     <string name="invertColor">Invert List Colors</string>
-    <string name="numIndexBtns">Index Buttons</string>
+    <string name="numIndexBtns">Index Buttons Displayed</string>
+    <string name="numListItems">List Items Displayed</string>
 
 </resources>

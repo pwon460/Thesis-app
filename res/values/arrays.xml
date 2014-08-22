@@ -53,5 +53,19 @@
         <item>4</item>
         <item>5</item>
     </string-array>
+    <string-array name="maxListItemsArray">
+        <item>Six</item>
+        <item>Seven</item>
+        <item>Eight</item>
+        <item>Nine</item>
+        <item>Ten</item>
+    </string-array>
+    <string-array name="maxListItemsValues">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
 
 </resources>

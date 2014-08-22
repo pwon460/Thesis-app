@@ -38,7 +38,7 @@
             android:name="simo.transport.activities.TripActivity" >
         </activity>
         <activity
-            android:name="simo.transport.activities.ShowTripActivity"
+            android:name="simo.transport.activities.ShowTimetableActivity"
             android:label="@string/title_activity_show_trip" >
         </activity>
         <activity
