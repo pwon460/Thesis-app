@@ -129,9 +129,9 @@ public class MockInformationExtractor extends TransportDAO {
 		ArrayList<TimetableItem> timetable = new ArrayList<TimetableItem>();
 
 		String[] departures = new String[] { "1:30", "2:00", "2:30", "3:00",
-				"4:00" };
+				"4:00", "8:00", "9:20", "10:00", "11:27" };
 		String[] arrivals = new String[] { "1:35", "2:05", "2:35", "3:05",
-				"4:05" };
+				"4:05", "8:45", "10:00", "10:23", "11:36" };
 		String[] descriptions = new String[] { "platform 1", "platform 2",
 				"platform 3", "platform 4", "platform 5" };
 
@@ -148,7 +148,7 @@ public class MockInformationExtractor extends TransportDAO {
 			try {
 				item.setDepartureTime(sdf.parse(today + departures[i]));
 				item.setArrivalTime(sdf.parse(today + arrivals[i]));
-				item.setDescription(descriptions[i]);
+				item.setDescription(descriptions[i % 5]);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}

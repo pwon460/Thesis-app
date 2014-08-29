@@ -38,7 +38,7 @@ public class BasicListenerActivity extends ActionBarActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-//		Log.d("debug", "on resume!");
+		// Log.d("debug", "on resume!");
 		applySettings(); // revert colour back to normal state
 		prefs.registerOnSharedPreferenceChangeListener(this);
 	}
@@ -59,10 +59,11 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		LinearLayout layout = (LinearLayout) findViewById(id);
 		Button btn;
 
-		// Log.d("debug", "layout = " + layout);
+//		Log.d("debug", "layout = " + layout);
 		for (int i = 0; i < layout.getChildCount(); i++) {
 			btn = (Button) layout.getChildAt(i);
-			if (!btn.getText().equals("")) {
+			
+			if (btn.getText().length() > 0) {
 				setViewNormalBackground(btn);
 				btn.setTextColor(textColor);
 				btn.setGravity(Gravity.CENTER);
@@ -82,7 +83,7 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		// grab the current preference color settings
 		int colorScheme = Integer.valueOf(prefs.getString("pref_color_key",
 				DEFAULT_PREF_VALUE));
-//		Log.d("debug", "color scheme is " + colorScheme);
+		// Log.d("debug", "color scheme is " + colorScheme);
 
 		// grab the appropriate style from the style.xml using
 		// Context.obtainStyledAttributes()
@@ -122,12 +123,12 @@ public class BasicListenerActivity extends ActionBarActivity implements
 			numBtns = 12 + NUM_ARROW_BTNS;
 		}
 	}
-	
+
 	public int getNumItemsShown() {
 		int tempVal = Integer.valueOf(prefs.getString("pref_num_list_items",
 				DEFAULT_PREF_VALUE));
 		int numItemsShown = 0;
-		
+
 		if (tempVal == 1) {
 			numItemsShown = 6;
 		} else if (tempVal == 2) {
@@ -139,7 +140,7 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		} else {
 			numItemsShown = 10;
 		}
-		
+
 		return numItemsShown;
 	}
 
@@ -193,11 +194,11 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		int mode = Integer.valueOf(prefs.getString("pref_main_hand_key",
 				DEFAULT_PREF_VALUE));
 		boolean isRightHandMode = true;
-		
+
 		if (mode != Integer.valueOf(DEFAULT_PREF_VALUE)) {
 			isRightHandMode = false;
 		}
-		
+
 		return isRightHandMode;
 	}
 
@@ -209,5 +210,5 @@ public class BasicListenerActivity extends ActionBarActivity implements
 	public int getNumIndexBtns() {
 		return numBtns;
 	}
-	
+
 }
