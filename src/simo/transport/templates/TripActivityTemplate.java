@@ -79,15 +79,6 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 
 	}
 
-	@Override
-	protected void onResume() {
-		View indexView = findViewById(R.id.index_view);
-		ViewGroup group = (ViewGroup) indexView;
-		int numButtons = group.getChildCount();
-		Log.d("debug", "width = " + group.getChildAt(0).getMeasuredWidth());
-		super.onResume();
-	}
-
 	/*
 	 * figure out which setting is currently selected and save to fields with
 	 * getter methods. these settings are slightly tricky as the choices require
@@ -234,13 +225,17 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 			if (i - 1 >= btnsToShow.size()
 					|| indexHandler.getFilter().length() == 2) {
 				temp.setText("");
-				temp.setContentDescription("Unused ");
+				temp.setContentDescription("");
+				temp.setClickable(false);
+				temp.setFocusable(false);
 				setBtnBackground(temp, ButtonBuilder.getBlankRectangle(this));
 			} else {
 				String text = btnsToShow.get(i - 1);
 				temp.setText(text);
 				temp.setContentDescription("Show all " + listname
 						+ " starting with: " + text + ", this is an index ");
+				temp.setClickable(true);
+				temp.setFocusable(true);
 				temp.setGravity(Gravity.CENTER);
 				temp.setTextAppearance(this, R.style.IndexBtnText);
 				temp.setTextColor(getTextColor());
