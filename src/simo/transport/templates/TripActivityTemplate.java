@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -52,7 +53,7 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 		super.onCreate(savedInstanceState);
 		// grab preferences from settings eg.
 		loadPrefVals();
-		
+
 		// set the basic skeleton layout
 		if (isRightHandMode()) {
 			setContentView(R.layout.custom_righthand_layout);
@@ -76,6 +77,15 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 
 		actionStack = new ArrayList<String>();
 
+	}
+
+	@Override
+	protected void onResume() {
+		View indexView = findViewById(R.id.index_view);
+		ViewGroup group = (ViewGroup) indexView;
+		int numButtons = group.getChildCount();
+		Log.d("debug", "width = " + group.getChildAt(0).getMeasuredWidth());
+		super.onResume();
 	}
 
 	/*
@@ -113,7 +123,7 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 	public boolean handleArrowButtonClick(View view) {
 		Boolean isHandled = false;
 		TextView tv = (TextView) view;
-//		Log.d("debug", "text = " + tv.getText());
+		// Log.d("debug", "text = " + tv.getText());
 		String text = tv.getText().toString();
 		if (text.equals("^")) {
 			listHandler.onUpClicked();
@@ -134,11 +144,11 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 	// also highlight button to indicate it's been clicked
 	public void onIndexButtonClick(View view) {
 		if (view.getId() == R.id.up_button) {
-//			Log.d("debug", "up button pressed");
+			// Log.d("debug", "up button pressed");
 			indexHandler.handleUpClick();
 			setIndexButtons();
 		} else if (view.getId() == R.id.down_button) {
-//			Log.d("debug", "down button pressed");
+			// Log.d("debug", "down button pressed");
 			indexHandler.handleDownClick();
 			setIndexButtons();
 		} else {
@@ -210,9 +220,10 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 
 	public void setIndexButtons() {
 		ArrayList<String> btnsToShow = indexHandler.getIndexBtnSubset();
-//		Log.d("debug", "buttons to show: " + btnsToShow.toString());
+		// Log.d("debug", "buttons to show: " + btnsToShow.toString());
 		// Log.d("debug", "setting index buttons to display");
 
+		Boolean hasShrunk = false;
 		View indexView = findViewById(R.id.index_view);
 		ViewGroup group = (ViewGroup) indexView;
 		int numButtons = group.getChildCount();
@@ -220,47 +231,69 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 		for (int i = 1; i < numButtons - 1; i++) {
 			Button temp = (Button) group.getChildAt(i);
 
-			if (i - 1 >= btnsToShow.size() || indexHandler.getFilter().length() == 2) {
+			if (i - 1 >= btnsToShow.size()
+					|| indexHandler.getFilter().length() == 2) {
 				temp.setText("");
 				temp.setContentDescription("Unused ");
 				setBtnBackground(temp, ButtonBuilder.getBlankRectangle(this));
 			} else {
 				String text = btnsToShow.get(i - 1);
 				temp.setText(text);
-				temp.setContentDescription("Filter " + listname +  " by: " + text + ", this is an index ");
+				temp.setContentDescription("Show all " + listname
+						+ " starting with: " + text + ", this is an index ");
 				temp.setGravity(Gravity.CENTER);
 				temp.setTextAppearance(this, R.style.IndexBtnText);
 				temp.setTextColor(getTextColor());
 				temp.setBackgroundColor(getBackgroundColor());
 
-				// make box wider to indicate different 'tier' of index
-				if (text.length() > 1) {
-					/*
-					 * save these values to return the button size back to
-					 * normal on back button pressed
-					 */
+				if (indexHandler.getFilter().length() > 0) {
 					if (originalWidth == 0 || originalHeight == 0) {
 						originalWidth = temp.getMeasuredWidth();
 						originalHeight = temp.getMeasuredHeight();
+						Log.d("debug", "original width = " + originalWidth);
 					}
 
-					temp.setLayoutParams(new LinearLayout.LayoutParams(
-							originalWidth + INDEX_BTN_WIDTH_MOD, originalHeight));
+					if (text.length() == 1) {
+						setBtnLayout(temp, originalWidth - INDEX_BTN_WIDTH_MOD,
+								originalHeight);
+						hasShrunk = true;
+					}
+				} else {
+					if (originalWidth > 0 && originalHeight > 0) {
+						/*
+						 * reset the button back to original size on back
+						 * pressed
+						 */
+						setBtnLayout(temp, originalWidth, originalHeight);
+						hasShrunk = false;
 
-				} else if (text.length() == 1 && originalWidth > 0
-						&& originalHeight > 0) {
-					/*
-					 * reset the button back to original size on back pressed
-					 */
-					temp.setLayoutParams(new LinearLayout.LayoutParams(
-							originalWidth, originalHeight));
-
+					}
 				}
 
 				setBtnBackground(temp, ButtonBuilder.getBorderedRectangle(this,
 						getTextColor()));
 			}
 		}
+
+		if (originalHeight > 0 && originalWidth > 0) {
+			Log.d("debug", "numButtons = " + numButtons);
+			// shrink index arrows as well
+			Button upBtn = (Button) group.getChildAt(0);
+			Button downBtn = (Button) group.getChildAt(numButtons - 1);
+			if (hasShrunk) {
+				setBtnLayout(upBtn, originalWidth - INDEX_BTN_WIDTH_MOD,
+						originalHeight);
+				setBtnLayout(downBtn, originalWidth - INDEX_BTN_WIDTH_MOD,
+						originalHeight);
+			} else {
+				setBtnLayout(upBtn, originalWidth, originalHeight);
+				setBtnLayout(downBtn, originalWidth, originalHeight);
+			}
+		}
+	}
+
+	private void setBtnLayout(Button btn, int width, int height) {
+		btn.setLayoutParams(new LinearLayout.LayoutParams(width, height));
 	}
 
 	private void setArrowColor() {
@@ -312,15 +345,15 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 	public DisplayedListHandler getListHandler() {
 		return listHandler;
 	}
-	
+
 	public IndexButtonHandler getIndexHandler() {
 		return indexHandler;
 	}
-	
+
 	public ArrayList<String> getActionStack() {
 		return actionStack;
 	}
-	
+
 	public void setListName(String newName) {
 		listname = newName;
 	}
