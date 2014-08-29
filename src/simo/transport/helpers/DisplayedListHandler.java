@@ -82,14 +82,17 @@ public class DisplayedListHandler {
 
 		if (fromIndex + numItemsShown < fullList.size()) {
 			fromIndex += numItemsShown;
+			prevIsDown = true;	
+		} else {
+			prevIsDown = false;
 		}
-
-		prevIsDown = true;
+		
 	}
 
 	public void onUpClicked() {
 		displayedList.clear();
 
+		Log.d("debug", "before = " + fromIndex);
 		if (prevIsDown) {
 			if (fromIndex - numItemsShown > 0) {
 				fromIndex -= numItemsShown;

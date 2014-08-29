@@ -70,10 +70,13 @@ public class CustomAdapter extends ArrayAdapter<String> {
 		setTextSettings(tv);
 		if (s.equals("up")) {
 			tv.setText("^");
+			tv.setContentDescription("Scroll up list");
 		} else if (s.equals("down")) {
 			tv.setText("v");
+			tv.setContentDescription("Scroll down list");
 		} else {
 			tv.setText(s);
+			tv.setContentDescription(s);
 			if (isInverted) {
 				setTextViewBackground(tv, ButtonBuilder.getBorderedRectangle(
 						context, textColor, background));

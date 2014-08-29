@@ -10,10 +10,10 @@
         android:id="@+id/button1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_marginLeft="@dimen/activity_custom_margin"
         android:layout_marginRight="@dimen/activity_custom_margin"
         android:layout_marginTop="@dimen/activity_custom_margin"
+        android:layout_weight="1"
         android:onClick="goPickTrip"
         android:text="@string/btn_transport" />
 
@@ -21,23 +21,16 @@
         android:id="@+id/button2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_margin="@dimen/activity_custom_margin"
+        android:layout_weight="1"
         android:onClick="goSettings"
         android:text="@string/btn_settings" />
 
-    <Button
-        android:id="@+id/button3"
+    <LinearLayout
+        android:id="@+id/padding"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/transparent" />
-
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/transparent" />
+        android:layout_weight="2"
+        android:orientation="vertical" />
 
 </LinearLayout>

@@ -59,16 +59,19 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		LinearLayout layout = (LinearLayout) findViewById(id);
 		Button btn;
 
-//		Log.d("debug", "layout = " + layout);
+		// Log.d("debug", "layout = " + layout);
 		for (int i = 0; i < layout.getChildCount(); i++) {
-			btn = (Button) layout.getChildAt(i);
-			
-			if (btn.getText().length() > 0) {
-				setViewNormalBackground(btn);
-				btn.setTextColor(textColor);
-				btn.setGravity(Gravity.CENTER);
-				btn.setTextAppearance(getApplicationContext(),
-						R.style.SmallText);
+			View v = layout.getChildAt(i);
+			if (v.getId() != R.id.padding) {
+				btn = (Button) v;
+
+				if (btn.getText().length() > 0) {
+					setViewNormalBackground(btn);
+					btn.setTextColor(textColor);
+					btn.setGravity(Gravity.CENTER);
+					btn.setTextAppearance(getApplicationContext(),
+							R.style.SmallText);
+				}
 			}
 		}
 		layout.setBackgroundColor(background);

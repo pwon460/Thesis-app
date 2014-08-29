@@ -10,6 +10,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
@@ -30,12 +31,15 @@ public class TripActivity extends TripActivityTemplate {
 		String title = "Select origin ";
 		if (transport.equals(r.getString(R.string.train))) {
 			title += "station";
+			setListName("origin stations");
 			getListHandler().setFullList(getDataAccessObject().getStations());
 		} else if (transport.equals(r.getString(R.string.ferry))) {
 			title += "wharf";
+			setListName("origin wharves");
 			getListHandler().setFullList(getDataAccessObject().getWharfs());
 		} else { // light rail
 			title += "stop";
+			setListName("origin stops");
 			getListHandler().setFullList(getDataAccessObject().getStops());
 		}
 		setTitle(title);
@@ -62,15 +66,20 @@ public class TripActivity extends TripActivityTemplate {
 				String title = "Select destination ";
 				if (transport.equals(r.getString(R.string.train))) {
 					title += "station";
+					setListName("destination stations");
 					tempList = getDataAccessObject().getStations();
 				} else if (transport.equals(r.getString(R.string.ferry))) {
 					title += "wharf";
+					setListName("destination wharves");
 					tempList = getDataAccessObject().getWharfs();
 				} else {
 					title += "stop";
+					setListName("destination stops");
 					tempList = getDataAccessObject().getStops();
 				}
 				setTitle(title);
+				getWindow().getDecorView().sendAccessibilityEvent(
+						AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
 
 				// remove starting point from the soon-to-be list of
 				// destinations
@@ -109,16 +118,21 @@ public class TripActivity extends TripActivityTemplate {
 			String title = "Select origin ";
 			if (transport.equals(r.getString(R.string.train))) {
 				title += "station";
+				setListName("origin stations");
 				getListHandler().setFullList(
 						getDataAccessObject().getStations());
 			} else if (transport.equals(r.getString(R.string.ferry))) {
 				title += "wharf";
+				setListName("origin wharves");
 				getListHandler().setFullList(getDataAccessObject().getWharfs());
 			} else {
 				title += "stop";
+				setListName("origin stops");
 				getListHandler().setFullList(getDataAccessObject().getStops());
 			}
 			setTitle(title);
+			getWindow().getDecorView().sendAccessibilityEvent(
+					AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
 			startingPoint = null;
 			setAdapterToList();
 		} else {

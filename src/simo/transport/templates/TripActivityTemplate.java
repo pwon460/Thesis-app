@@ -40,6 +40,7 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 	private DisplayedListHandler listHandler;
 	private int originalWidth = 0;
 	private int originalHeight = 0;
+	private String listname = "";
 
 	// records whether an index button or a listview button was pushed
 	private ArrayList<String> actionStack;
@@ -113,11 +114,12 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 		Boolean isHandled = false;
 		TextView tv = (TextView) view;
 //		Log.d("debug", "text = " + tv.getText());
-		if (tv.getText().equals("^")) {
+		String text = tv.getText().toString();
+		if (text.equals("^")) {
 			listHandler.onUpClicked();
 			setAdapterToList();
 			isHandled = true;
-		} else if (tv.getText().equals("v")) {
+		} else if (text.equals("v")) {
 			listHandler.onDownClicked();
 			setAdapterToList();
 			isHandled = true;
@@ -132,11 +134,11 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 	// also highlight button to indicate it's been clicked
 	public void onIndexButtonClick(View view) {
 		if (view.getId() == R.id.up_button) {
-			Log.d("debug", "up button pressed");
+//			Log.d("debug", "up button pressed");
 			indexHandler.handleUpClick();
 			setIndexButtons();
 		} else if (view.getId() == R.id.down_button) {
-			Log.d("debug", "down button pressed");
+//			Log.d("debug", "down button pressed");
 			indexHandler.handleDownClick();
 			setIndexButtons();
 		} else {
@@ -220,10 +222,12 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 
 			if (i - 1 >= btnsToShow.size() || indexHandler.getFilter().length() == 2) {
 				temp.setText("");
+				temp.setContentDescription("Unused ");
 				setBtnBackground(temp, ButtonBuilder.getBlankRectangle(this));
 			} else {
 				String text = btnsToShow.get(i - 1);
 				temp.setText(text);
+				temp.setContentDescription("Filter " + listname +  " by: " + text + ", this is an index ");
 				temp.setGravity(Gravity.CENTER);
 				temp.setTextAppearance(this, R.style.IndexBtnText);
 				temp.setTextColor(getTextColor());
@@ -315,6 +319,10 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 	
 	public ArrayList<String> getActionStack() {
 		return actionStack;
+	}
+	
+	public void setListName(String newName) {
+		listname = newName;
 	}
 
 }

@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/down_arrow"
         android:onClick="onIndexButtonClick"
-        android:rotation="180" />
+        android:rotation="180"
+        android:contentDescription="@string/index_scroll_up" />
 
 </LinearLayout>
