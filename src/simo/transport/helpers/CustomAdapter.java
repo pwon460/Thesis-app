@@ -19,13 +19,12 @@ import android.widget.TextView;
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class CustomAdapter extends ArrayAdapter<String> {
 
-	private static final int PADDING = 5;
+	private static final int PADDING = 10;
 	private int numItemsShown;
 	private Context context;
 	private ArrayList<String> values;
 	private int resource;
 	private int textColor;
-	private int textSettings;
 	private int background;
 	private boolean isInverted;
 	private int itemHeight;
@@ -65,17 +64,20 @@ public class CustomAdapter extends ArrayAdapter<String> {
 		ViewHolder holder = (ViewHolder) rowView.getTag();
 		String s = values.get(position);
 		TextView tv = holder.getTextView();
-		tv.setGravity(Gravity.CENTER);
 		tv.setTextColor(textColor);
-		setTextSettings(tv);
+		tv.setTextAppearance(context, R.style.VerySmallText);
 		if (s.equals("up")) {
 			tv.setText("^");
+			tv.setGravity(Gravity.CENTER);
 			tv.setContentDescription("Scroll up list");
 		} else if (s.equals("down")) {
 			tv.setText("v");
+			tv.setGravity(Gravity.CENTER);
 			tv.setContentDescription("Scroll down list");
 		} else {
 			tv.setText(s);
+			tv.setPadding(parent.getMeasuredWidth()/15, 0, parent.getMeasuredWidth()/15, 0);
+			tv.setGravity(Gravity.CENTER_VERTICAL);
 			tv.setContentDescription(s);
 			if (isInverted) {
 				setTextViewBackground(tv, ButtonBuilder.getBorderedRectangle(
@@ -98,21 +100,8 @@ public class CustomAdapter extends ArrayAdapter<String> {
 		}
 	}
 
-	private void setTextSettings(TextView tv) {
-		tv.setGravity(Gravity.CENTER);
-		if (textSettings == 3) {
-			tv.setTextAppearance(context, R.style.LargeText);
-		} else {
-			tv.setTextAppearance(context, R.style.MediumText);
-		}
-	}
-
 	public void setTextColor(int color) {
 		this.textColor = color;
-	}
-
-	public void setTextSettings(int textSettings) {
-		this.textSettings = textSettings;
 	}
 
 	public void setInverseMode(boolean isInverted) {

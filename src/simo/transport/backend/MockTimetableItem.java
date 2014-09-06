@@ -2,23 +2,21 @@ package simo.transport.backend;
 
 import java.util.Date;
 
-public class MockTimetableItem implements TimetableItem {
+public class MockTimetableItem extends TimetableItem {
 
+	private static final long serialVersionUID = 1L;
 	private Date departure;
 	private Date arrival;
 	private String description;
 
-	@Override
 	public Date getDepartureTime() {
 		return departure;
 	}
 
-	@Override
 	public Date getArrivalTime() {
 		return arrival;
 	}
 
-	@Override
 	public String getDescription() {
 		return description;
 	}

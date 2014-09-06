@@ -2,55 +2,174 @@ package simo.transport.helpers;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.util.Log;
 
 public class IndexButtonHandler {
 
 	private static final int NUM_ARROW_BTNS = 2;
-	private int numBtns = 8;
+	private int numIndexBtns = 8;
 	private ArrayList<String> allIndexBtns;
 	private String filter = "";
 	private int startIndex;
 	private int endIndex;
-	private int originalListSize = 0;
 
-	public void setListToIndex(ArrayList<String> toIndex) {
-		Log.d("debug", "list to turn into indices: " + toIndex.toString());
-		
-		// first list passed in will be the original list
-		if (originalListSize == 0) {
-			originalListSize = toIndex.size();
-		}
-		
+	public void setListToIndex(ArrayList<String> toIndex, int numItemsShown) {
+//		Log.d("debug", "list to turn into indices: " + toIndex.toString());
+
 		if (allIndexBtns == null) {
 			allIndexBtns = new ArrayList<String>();
-		} else if (filter.length() == 0 && toIndex.size() == originalListSize) {
-			// case: back button usage
-			Log.d("debug", "asdf");
+		} else {
 			allIndexBtns.clear();
 		}
 
-		if (filter.length() < 2) {
-			startIndex = 0;
-			endIndex = startIndex + numBtns - NUM_ARROW_BTNS - 1;
+		startIndex = 0;
+		endIndex = startIndex + numIndexBtns - NUM_ARROW_BTNS - 1;
+
+		if (filter.length() < 2 && toIndex.size() > numItemsShown) {
+			if (toIndex.get(0).matches("\\D+")) {
+//				Log.d("debug", "handling non route");
+				handleNonRoute(toIndex, numItemsShown);
+			} else {
+//				Log.d("debug", "handling route");
+				handleRoute(toIndex, numItemsShown);
+			}
+		}
+
+		Collections.sort(allIndexBtns);
+	}
+
+	private void handleNonRoute(ArrayList<String> toIndex, int numItemsShown) {
+		if (filter.length() == 0) {
 			for (int i = 0; i < toIndex.size(); i++) {
-				String item = toIndex.get(i);
-				// Log.d("debug", "filter = " + filter);
-				if (item.length() <= filter.length()) {
-					continue;
+				String temp = Character.toString(toIndex.get(i).charAt(0));
+				if (!allIndexBtns.contains(temp)) {
+					allIndexBtns.add(temp);
+				}
+			}
+		} else { // filter length == 1
+			int numItemsOnTwoPgs = numItemsShown * 2 - 2; // -2 to account for
+															// up and down arrow
+			String anchor = toIndex.get(0);
+			StringBuilder sb;
+			for (int i = numItemsOnTwoPgs; i < toIndex.size() - 1; i += numItemsOnTwoPgs) {
+//				Log.d("debug", "initial i = " + i);
+				sb = new StringBuilder();
+				String currItem = toIndex.get(i);
+				String prevItem = toIndex.get(i - 1);
+				String nextItem = toIndex.get(i + 1);
+
+				int j = i - 1;
+				boolean handled = true;
+				while (currItem.charAt(1) == prevItem.charAt(1)
+						&& currItem.charAt(1) == nextItem.charAt(1) && j >= 0) {
+					currItem = prevItem;
+					prevItem = toIndex.get(j--);
+					if (j == i - numItemsOnTwoPgs) {
+						handled = false;
+						break;
+					}
+				}
+				
+//				Log.d("debug", "go back method: index j = " + j);
+
+				if (!handled) {
+					currItem = toIndex.get(i);
+					j = i + 1;
+					while (currItem.charAt(1) == nextItem.charAt(1)
+							&& j < toIndex.size()) {
+						currItem = nextItem;
+						nextItem = toIndex.get(j++);
+					}
+					
+//					Log.d("debug", "go fwd method: index j = " + j);
+				}
+				
+				if (currItem.charAt(1) == nextItem.charAt(1)) {
+					sb.append(anchor.charAt(0)).append(anchor.charAt(1))
+							.append("-").append(anchor.charAt(0))
+							.append(prevItem.charAt(1));
+//					Log.d("debug", "index added = " + sb.toString());
+					allIndexBtns.add(sb.toString());
+					anchor = currItem;
+				} else {
+					sb.append(anchor.charAt(0)).append(anchor.charAt(1))
+							.append("-").append(anchor.charAt(0))
+							.append(currItem.charAt(1));
+//					Log.d("debug", "index added = " + sb.toString());
+					allIndexBtns.add(sb.toString());
+					anchor = nextItem;
 				}
 
-				String temp = item.substring(0, filter.length() + 1);
-				// Log.d("debug", "temp = " + temp);
+				i = j;
+//				Log.d("debug", "setting i to j, i = " + i);
+			}
+			
+			sb = new StringBuilder();
+			sb.append(anchor.charAt(0)).append(anchor.charAt(1)).append("-")
+					.append(anchor.charAt(0)).append(toIndex.get(toIndex.size() - 1).charAt(1));
+//			Log.d("debug", "index added = " + sb.toString());
+			allIndexBtns.add(sb.toString());
+
+		}
+	}
+
+	private void handleRoute(ArrayList<String> toIndex, int numItemsShown) {
+		if (filter.length() == 0) {
+			for (int i = 0; i < toIndex.size(); i++) {
+				String[] items = toIndex.get(i).split("\\s", 2);
+				Pattern pattern = Pattern.compile("^\\d+");
+				Matcher matcher = pattern.matcher(items[0]);
+				String temp = "";
+
+				if (matcher.find()) {
+					int routeNum = Integer.parseInt(matcher.group());
+					if (routeNum < 100) {
+						temp = "000";
+					} else {
+						temp = matcher.group().charAt(0) + "00";
+					}
+				} else {
+					temp = items[0].charAt(0) + "00";
+				}
+
 				if (!allIndexBtns.contains(temp)) {
-					if (filter.length() == 0 || temp.contains(filter)) {
+					allIndexBtns.add(temp);
+				}
+
+			}
+		} else { // filter length == 1
+			// if stuff to show is more than 2 pages, then index it
+			// the random '2' comes from 1 down button on first page and 1 up
+			// button on next page
+			if (toIndex.size() >= numItemsShown * 2 - 2) {
+				for (int i = 0; i < toIndex.size(); i++) {
+					String[] items = toIndex.get(i).split(" ", 2);
+					Pattern pattern = Pattern.compile("^\\d+");
+					Matcher matcher = pattern.matcher(items[0]);
+					String temp = "";
+
+					if (matcher.find()) {
+						int routeNum = Integer.parseInt(matcher.group());
+						if (routeNum < 100) {
+							temp = Integer.toString(routeNum / 10);
+						} else if (routeNum >= 100 & routeNum < 1000) {
+							temp = Integer.toString(routeNum / 10) + "0";
+						} else if (routeNum >= 1000) {
+							temp = Integer.toString(routeNum / 100) + "0";
+						}
+					} else {
+						temp = items[0].substring(0, 2) + "0";
+					}
+
+					if (!allIndexBtns.contains(temp)) {
 						allIndexBtns.add(temp);
 					}
 				}
 			}
-			Collections.sort(allIndexBtns);
+
 		}
 	}
 
@@ -83,9 +202,9 @@ public class IndexButtonHandler {
 	}
 
 	public void handleUpClick() {
-		if (startIndex >= numBtns - NUM_ARROW_BTNS) {
+		if (startIndex >= numIndexBtns - NUM_ARROW_BTNS) {
 			endIndex = startIndex - 1;
-			startIndex -= numBtns - NUM_ARROW_BTNS;
+			startIndex -= numIndexBtns - NUM_ARROW_BTNS;
 		}
 
 	}
@@ -93,22 +212,34 @@ public class IndexButtonHandler {
 	public void handleDownClick() {
 		if (endIndex + 1 < allIndexBtns.size()) {
 			startIndex = endIndex + 1;
-			endIndex += numBtns - NUM_ARROW_BTNS;
+			endIndex += numIndexBtns - NUM_ARROW_BTNS;
 		}
 	}
 
 	public void handleIndexBtnClicked(String s) {
 		Log.d("debug", "index button clicked");
 		Log.d("debug", "filter before = " + filter);
-		String lastChar = s.substring(s.length() - 1);
-		filter += lastChar.toUpperCase(Locale.ENGLISH);
+		if (filter.length() == 0) {
+			filter += s.charAt(0);
+		} else {
+			if (s.matches("[A-Z][a-z]-[A-Z][a-z]")) {
+				filter += "<" + s.charAt(1) + "-" + s.charAt(4) + ">";
+			} else {
+				filter += s.charAt(filter.length());
+			}
+		}
 		Log.d("debug", "filter after = " + filter);
 	}
 
 	public void handleBackBtnClicked() {
 		if (filter.length() > 0) {
 			// Log.d("debug", "filter before = " + filter);
-			filter = filter.substring(0, filter.length() - 1);
+			if (filter.substring(filter.length() - 1).equals(">")) {
+				String[] parts = filter.split("<");
+				filter = parts[0];
+			} else {
+				filter = filter.substring(0, filter.length() - 1);
+			}
 			// Log.d("debug", "filter after = " + filter);
 		}
 	}
@@ -124,11 +255,7 @@ public class IndexButtonHandler {
 
 	public void setNumBtns(int num) {
 		// Log.d("debug", "setting num btns = " + num);
-		numBtns = num;
+		numIndexBtns = num;
 	}
-	
-	public void clearList() {
-		allIndexBtns.clear();
-	}
-	
+
 }

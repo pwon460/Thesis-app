@@ -1,28 +1,60 @@
 package simo.transport.backend;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MockInformationExtractor extends TransportDAO {
+import simo.transport.R;
+import android.content.Context;
+import android.util.Log;
 
-	private static final long serialVersionUID = 1L;
+public class MockInformationExtractor implements TransportDAO {
+
 	private ArrayList<String> list = new ArrayList<String>();
+	private Context ctx;
+	
+	public MockInformationExtractor(Context ctx) {
+		this.ctx = ctx;
+	}
 
 	@Override
 	public ArrayList<String> getStations() {
 		list.clear();
-		String[] values = new String[] { "0", "000", "001", "1", "2", "3", "4",
-				"5", "6", "7", "8", "9", "A", "B", "C", "D", "Aldnoah",
-				"Alberta", "Aberdeen", "Abba", "Bernard", "Belford",
-				"Clocktown", "Mockingbird", "Upton" };
+		// String[] values = new String[] { "Aldnoah", "Alberta", "Aberdeen",
+		// "Abba", "Bernard", "Belford", "Clocktown", "Mockingbird",
+		// "Upton", "Acheron", "North Beach", "Gerogery", "Coolatai",
+		// "Wimba", "Leeman", "Lake Cooper", "Atherton", "Roebourne",
+		// "Milloo", "Broadwater", "Newhaven", "Towan", "Iama",
+		// "Silent Grove", "Saint Kilda", "Yarrock", "Pampas", "Stirling",
+		// "Clandulla", "Kalorama", "Bald Hills", "Bulumwaal",
+		// "Wallumburrawang", "Yarras" };
 
-		for (int i = 0; i < values.length; i++) {
-			list.add(values[i]);
-		}
+		list = loadFile(R.raw.suburb);
 
 		return list;
+	}
+
+	private ArrayList<String> loadFile(int resId) {
+		InputStream is = ctx.getResources().openRawResource(resId);
+		InputStreamReader inputReader = new InputStreamReader(is);
+		BufferedReader bufferedReader = new BufferedReader(inputReader);
+		ArrayList<String> stuff = new ArrayList<String>();
+		String line;
+
+		try {
+			while ((line = bufferedReader.readLine()) != null) {
+				stuff.add(line);
+			}
+		} catch (IOException e) {
+			Log.d("error", "unable to read file");
+		}
+
+		return stuff;
 	}
 
 	@Override
@@ -56,14 +88,21 @@ public class MockInformationExtractor extends TransportDAO {
 	@Override
 	public ArrayList<String> getRoutes(Boolean isRightHand) {
 		list.clear();
-		String[] values = new String[] { "000", "001", "002", "003", "100",
-				"200", "300", "400", "500", "600", "700", "800", "900", "M00",
-				"M50", "N00" };
+//		String[] values = new String[] { "1 Austinmer to Wollongong",
+//				"2 Stanwell Park to Wollongong", "3",
+//				"10 Tuggerah/Wyong to Wyee", "11",
+//				"1A Warriewood to Sydney Olympic Park", "1B", "20", "24", "33",
+//				"34\5", "66A Gosford & Copacabana...", "100", "200", "300",
+//				"400", "500", "660", "700", "800", "900", "M10", "M20", "M30",
+//				"M40", "M50", "N00", "S1", "S2", "S2", "S3", "S3", "S4", "S4",
+//				"S5", "S5", "S6", "S6", "S7", "S7", "S8", "S8", "S9", "S9",
+//				"S10 Heckenberg to Miller Shops via Busby",
+//				"S10 Miller Shops to Heckenberg via Busby", "S11", "S12",
+//				"S13", "S14", "S15", "S16", "S17 Spring Farm to Narellan",
+//				"S17 Narellan to Spring Farm", "T60", "WPSB" };
 
-		for (int i = 0; i < values.length; i++) {
-			list.add(values[i]);
-		}
-
+		list = loadFile(R.raw.route);
+		
 		return list;
 	}
 

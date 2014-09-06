@@ -9,7 +9,6 @@ import org.joda.time.Minutes;
 
 import simo.transport.R;
 import simo.transport.backend.TimetableItem;
-import simo.transport.backend.TransportDAO;
 import simo.transport.helpers.CustomAdapter;
 import simo.transport.helpers.DisplayedListHandler;
 import simo.transport.templates.BasicListenerActivity;
@@ -20,13 +19,14 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class ShowTimetableActivity extends BasicListenerActivity implements
 		OnItemClickListener {
 
 	private int numItemsShown;
 	private ListView listview;
-	private TransportDAO transportDAO;
+	private ArrayList<TimetableItem> timetable;
 	private CustomAdapter adapter;
 	private DisplayedListHandler listHandler;
 
@@ -35,7 +35,7 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 		super.onCreate(savedInstanceState);
 		getPrefSettings();
 		Intent intent = getIntent();
-		transportDAO = (TransportDAO) intent.getSerializableExtra("DAO");
+		timetable = (ArrayList<TimetableItem>) intent.getSerializableExtra("timetable");
 		String transport = intent.getStringExtra("transport");
 
 		setContentView(R.layout.activity_timetable);
@@ -67,14 +67,11 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 	@Override
 	public void applySettings() {
 		adapter.setTextColor(getTextColor());
-		adapter.setTextSettings(getTextSettings());
 		LinearLayout layout = (LinearLayout) findViewById(R.id.timetable_layout);
 		layout.setBackgroundColor(getBackgroundColor());
 	}
 
 	private ArrayList<String> unpackTimetable(String transport) {
-		ArrayList<TimetableItem> timetable = transportDAO
-				.getTimetable(transport);
 		ArrayList<String> list = new ArrayList<String>();
 
 		for (TimetableItem item : timetable) {
@@ -157,8 +154,17 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		// TODO Auto-generated method stub
-
+		TextView tv = (TextView) view;
+		String text = tv.getText().toString();
+		if (text.equals("^")) {
+			listHandler.onUpClicked();
+			setAdapterToList();
+		} else if (text.equals("v")) {
+			listHandler.onDownClicked();
+			setAdapterToList();
+		} else {
+			// TODO: not implemented yet
+		}
 	}
 
 }

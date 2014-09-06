@@ -10,7 +10,6 @@ import simo.transport.helpers.CustomAdapter;
 import simo.transport.helpers.DisplayedListHandler;
 import simo.transport.helpers.IndexButtonHandler;
 import android.annotation.TargetApi;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -18,7 +17,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -28,20 +26,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class TripActivityTemplate extends BasicListenerActivity implements
-		OnItemClickListener, OnSharedPreferenceChangeListener {
+public abstract class TripActivityTemplate extends BasicListenerActivity
+		implements OnItemClickListener {
 
 	private int numItemsShown;
 	private static final int OFF = 1;
-	private static final int INDEX_BTN_WIDTH_MOD = 20;
-	private TransportDAO transportDAO = new MockInformationExtractor();
+	private TransportDAO transportDAO = new MockInformationExtractor(this);
 	private CustomAdapter adapter;
 	private ListView listview;
 	private IndexButtonHandler indexHandler;
 	private DisplayedListHandler listHandler;
-	private int originalWidth = 0;
-	private int originalHeight = 0;
-	private String listname = "";
 
 	// records whether an index button or a listview button was pushed
 	private ArrayList<String> actionStack;
@@ -80,10 +74,8 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 	}
 
 	/*
-	 * figure out which setting is currently selected and save to fields with
-	 * getter methods. these settings are slightly tricky as the choices require
-	 * pre-handling and thus need to be handled separately instead of a simple
-	 * get statement
+	 * only this template and its children needs these values so set them up
+	 * during onCreate() of this activity
 	 */
 	private void loadPrefVals() {
 		loadColorsFromPrefs();
@@ -101,9 +93,27 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		// overridden by children that will call the onItemClick method below
+	public abstract void onItemClick(AdapterView<?> parent, View view,
+			int position, long id);
+
+	/*
+	 * called onResume() see BasicListenerActivity.onResume()
+	 */
+	@Override
+	public void applySettings() {
+		setIndexButtons();
+		setArrowColor();
+		if (getInvertedness() == OFF) {
+			adapter.setTextColor(getTextColor());
+			adapter.setInverseMode(false);
+		} else {
+			adapter.setTextColor(getBackgroundColor());
+			adapter.setBackgroundColor(getTextColor());
+			adapter.setInverseMode(true);
+		}
+
+		LinearLayout layout = (LinearLayout) findViewById(R.id.custom_layout_view);
+		layout.setBackgroundColor(getBackgroundColor());
 	}
 
 	/*
@@ -132,7 +142,6 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 	}
 
 	// filter list of stations/routes/suburbs/etc in the listview
-	// also highlight button to indicate it's been clicked
 	public void onIndexButtonClick(View view) {
 		if (view.getId() == R.id.up_button) {
 			// Log.d("debug", "up button pressed");
@@ -151,62 +160,35 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 				Log.d("debug", "adding index button to stack: "
 						+ btnClickedText);
 
-				String filter = indexHandler.getFilter();
-				// if the button clicked is the same as the filter, go up one
-				// level
-				if (btnClickedText.equals(filter)) {
-					onBackPressed();
-				} else {
-					if (filter.length() == 1 && btnClickedText.length() == 1) {
-						indexHandler.clearList();
-						onBackPressed();
-					}
-					actionStack.add("indexBtn");
-					indexHandler.handleIndexBtnClicked(btnClickedText);
-					filterList();
-					setAdapterToList();
-				}
+				actionStack.add("indexBtn");
+				indexHandler.handleIndexBtnClicked(btnClickedText);
+				filterList();
+				setAdapterToList();
 			}
 		}
 	}
 
 	private void filterList() {
 		listHandler.saveCurrListState(); // save list current state
-		Log.d("debug",
-				"saving current list state: " + listHandler.getFullList());
-		Log.d("debug", "filtering list by: " + indexHandler.getFilter());
+		// Log.d("debug",
+		// "saving current list state: " + listHandler.getFullList());
+		// Log.d("debug", "filtering list by: " + indexHandler.getFilter());
 		listHandler.filterList(indexHandler.getFilter());
-		Log.d("debug", "remaining list: " + listHandler.getFullList());
+		// Log.d("debug", "remaining list: " + listHandler.getFullList());
 		setAdapterToList();
 	}
 
 	public void setAdapterToList() {
-		indexHandler.setListToIndex(listHandler.getFullList());
+		indexHandler.setListToIndex(listHandler.getFullList(), numItemsShown);
 		adapter = new CustomAdapter(this, R.layout.list_row,
 				listHandler.getDisplayedList(), numItemsShown);
-		applySettings(); // get and apply preference settings to the new adapter
-							// and
-							// index buttons on right hand side
+		/*
+		 * get and apply preference settings to the new adapter and index
+		 * buttons on right hand side
+		 */
+		applySettings();
 		// use own custom layout for the listview
 		listview.setAdapter(adapter);
-	}
-
-	@Override
-	public void applySettings() {
-		setIndexButtons();
-		setArrowColor();
-		if (getInvertedness() == OFF) {
-			adapter.setTextColor(getTextColor());
-			adapter.setInverseMode(false);
-		} else {
-			adapter.setTextColor(getBackgroundColor());
-			adapter.setBackgroundColor(getTextColor());
-			adapter.setInverseMode(true);
-		}
-
-		adapter.setTextSettings(getTextSettings());
-		LinearLayout layout = (LinearLayout) findViewById(R.id.custom_layout_view);
-		layout.setBackgroundColor(getBackgroundColor());
 	}
 
 	public void setIndexButtons() {
@@ -214,7 +196,6 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 		// Log.d("debug", "buttons to show: " + btnsToShow.toString());
 		// Log.d("debug", "setting index buttons to display");
 
-		Boolean hasShrunk = false;
 		View indexView = findViewById(R.id.index_view);
 		ViewGroup group = (ViewGroup) indexView;
 		int numButtons = group.getChildCount();
@@ -232,63 +213,18 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 			} else {
 				String text = btnsToShow.get(i - 1);
 				temp.setText(text);
-				temp.setContentDescription("Show all " + listname
-						+ " starting with: " + text + ", this is an index ");
+				temp.setContentDescription(text + ", index ");
 				temp.setClickable(true);
 				temp.setFocusable(true);
 				temp.setGravity(Gravity.CENTER);
 				temp.setTextAppearance(this, R.style.IndexBtnText);
 				temp.setTextColor(getTextColor());
 				temp.setBackgroundColor(getBackgroundColor());
-
-				if (indexHandler.getFilter().length() > 0) {
-					if (originalWidth == 0 || originalHeight == 0) {
-						originalWidth = temp.getMeasuredWidth();
-						originalHeight = temp.getMeasuredHeight();
-						Log.d("debug", "original width = " + originalWidth);
-					}
-
-					if (text.length() == 1) {
-						setBtnLayout(temp, originalWidth - INDEX_BTN_WIDTH_MOD,
-								originalHeight);
-						hasShrunk = true;
-					}
-				} else {
-					if (originalWidth > 0 && originalHeight > 0) {
-						/*
-						 * reset the button back to original size on back
-						 * pressed
-						 */
-						setBtnLayout(temp, originalWidth, originalHeight);
-						hasShrunk = false;
-
-					}
-				}
-
 				setBtnBackground(temp, ButtonBuilder.getBorderedRectangle(this,
 						getTextColor()));
 			}
 		}
 
-		if (originalHeight > 0 && originalWidth > 0) {
-			Log.d("debug", "numButtons = " + numButtons);
-			// shrink index arrows as well
-			Button upBtn = (Button) group.getChildAt(0);
-			Button downBtn = (Button) group.getChildAt(numButtons - 1);
-			if (hasShrunk) {
-				setBtnLayout(upBtn, originalWidth - INDEX_BTN_WIDTH_MOD,
-						originalHeight);
-				setBtnLayout(downBtn, originalWidth - INDEX_BTN_WIDTH_MOD,
-						originalHeight);
-			} else {
-				setBtnLayout(upBtn, originalWidth, originalHeight);
-				setBtnLayout(downBtn, originalWidth, originalHeight);
-			}
-		}
-	}
-
-	private void setBtnLayout(Button btn, int width, int height) {
-		btn.setLayoutParams(new LinearLayout.LayoutParams(width, height));
 	}
 
 	private void setArrowColor() {
@@ -337,6 +273,11 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 		return prevAction;
 	}
 
+	public void clearActionStack() {
+		actionStack.clear();
+		listHandler.clearPrevListStates();
+	}
+	
 	public DisplayedListHandler getListHandler() {
 		return listHandler;
 	}
@@ -347,10 +288,6 @@ public class TripActivityTemplate extends BasicListenerActivity implements
 
 	public ArrayList<String> getActionStack() {
 		return actionStack;
-	}
-
-	public void setListName(String newName) {
-		listname = newName;
 	}
 
 }

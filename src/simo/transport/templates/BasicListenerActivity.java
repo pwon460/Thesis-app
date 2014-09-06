@@ -49,7 +49,7 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		prefs.unregisterOnSharedPreferenceChangeListener(this);
 	}
 
-	protected void applySettings() {
+	public void applySettings() {
 		// grab current color setting
 		loadColorsFromPrefs();
 		// Log.d("debug", "text color is " + textColor);

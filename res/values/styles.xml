@@ -39,6 +39,11 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:background">@color/dark_purple</item>
     </style>
+    
+    <style name="VerySmallText">
+        <item name="android:textSize">@dimen/text_size_very_small</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
     <style name="SmallText">
         <item name="android:textSize">@dimen/text_size_small</item>
@@ -62,7 +67,7 @@
     </style>
     
     <style name="IndexBtnText">
-        <item name="android:textSize">@dimen/text_size_very_small</item>
+        <item name="android:textSize">@dimen/index_btn_text_size</item>
         <item name="android:textStyle">bold</item>
     </style>
 

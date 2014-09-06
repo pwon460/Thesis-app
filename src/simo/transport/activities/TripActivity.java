@@ -31,15 +31,12 @@ public class TripActivity extends TripActivityTemplate {
 		String title = "Select origin ";
 		if (transport.equals(r.getString(R.string.train))) {
 			title += "station";
-			setListName("origin stations");
 			getListHandler().setFullList(getDataAccessObject().getStations());
 		} else if (transport.equals(r.getString(R.string.ferry))) {
 			title += "wharf";
-			setListName("origin wharves");
 			getListHandler().setFullList(getDataAccessObject().getWharfs());
 		} else { // light rail
 			title += "stop";
-			setListName("origin stops");
 			getListHandler().setFullList(getDataAccessObject().getStops());
 		}
 		setTitle(title);
@@ -66,15 +63,12 @@ public class TripActivity extends TripActivityTemplate {
 				String title = "Select destination ";
 				if (transport.equals(r.getString(R.string.train))) {
 					title += "station";
-					setListName("destination stations");
 					tempList = getDataAccessObject().getStations();
 				} else if (transport.equals(r.getString(R.string.ferry))) {
 					title += "wharf";
-					setListName("destination wharves");
 					tempList = getDataAccessObject().getWharfs();
 				} else {
 					title += "stop";
-					setListName("destination stops");
 					tempList = getDataAccessObject().getStops();
 				}
 				setTitle(title);
@@ -93,8 +87,8 @@ public class TripActivity extends TripActivityTemplate {
 				destination = tv.getText().toString();
 				getDataAccessObject().setTrainTrip(startingPoint, destination);
 				Intent intent = new Intent(this, ShowTimetableActivity.class);
-				intent.putExtra("DAO", getDataAccessObject());
-				intent.putExtra("transport", transport);
+				intent.putExtra("timetable", getDataAccessObject()
+						.getTimetable(transport));
 				startActivity(intent);
 			}
 		}
@@ -118,16 +112,13 @@ public class TripActivity extends TripActivityTemplate {
 			String title = "Select origin ";
 			if (transport.equals(r.getString(R.string.train))) {
 				title += "station";
-				setListName("origin stations");
 				getListHandler().setFullList(
 						getDataAccessObject().getStations());
 			} else if (transport.equals(r.getString(R.string.ferry))) {
 				title += "wharf";
-				setListName("origin wharves");
 				getListHandler().setFullList(getDataAccessObject().getWharfs());
 			} else {
 				title += "stop";
-				setListName("origin stops");
 				getListHandler().setFullList(getDataAccessObject().getStops());
 			}
 			setTitle(title);
@@ -135,6 +126,7 @@ public class TripActivity extends TripActivityTemplate {
 					AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
 			startingPoint = null;
 			setAdapterToList();
+			clearActionStack();
 		} else {
 			super.onBackPressed();
 		}

@@ -1,63 +1,55 @@
 package simo.transport.backend;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class TransportDAO implements Serializable {
-
-	/*
-	 * serializable so that it can be passed from activity to activity via
-	 * intent's putExtra method
-	 */
-	private static final long serialVersionUID = 1L;
+public interface TransportDAO {
 
 	// train
-	public abstract ArrayList<String> getStations();
+	public ArrayList<String> getStations();
 
-	public abstract void setTrainTrip(String start, String stop);
+	public void setTrainTrip(String start, String stop);
 
 	// ferry
-	public abstract ArrayList<String> getWharfs();
+	public ArrayList<String> getWharfs();
 
-	public abstract void setFerryTrip(String start, String stop);
+	public void setFerryTrip(String start, String stop);
 
 	// light rail
-	public abstract ArrayList<String> getStops();
+	public ArrayList<String> getStops();
 
-	public abstract void setRailTrip(String start, String stop);
+	public void setRailTrip(String start, String stop);
 
 	/*
 	 * bus interface methods for handling bus when 'route' is clicked
 	 */
 	// list of all routes
-	public abstract ArrayList<String> getRoutes(Boolean isRightHand);
+	public ArrayList<String> getRoutes(Boolean isRightHand);
 
 	// given route, return the stops for that particular route
-	public abstract ArrayList<String> getStopsOnRoute(String route,
-			Boolean isRightHand);
+	public ArrayList<String> getStopsOnRoute(String route, Boolean isRightHand);
 
 	// set the stops picked
-	public abstract void setStops(String route, Boolean isRightHand,
-			String origin, String destination);
+	public void setStops(String route, Boolean isRightHand, String origin,
+			String destination);
 
 	/*
 	 * for handling bus when 'suburb' is clicked
 	 */
-	public abstract ArrayList<String> getSuburbs();
+	public ArrayList<String> getSuburbs();
 
 	/*
 	 * given the origin and/or destination suburb, return all the stops for that
 	 * suburb
 	 */
-	public abstract ArrayList<String> getSuburbStops(String suburb);
+	public ArrayList<String> getSuburbStops(String suburb);
 
 	// set the info for the suburb trip
-	public abstract void setSuburbInfo(String originSuburb, String destSuburb,
+	public void setSuburbInfo(String originSuburb, String destSuburb,
 			String originStop, String destStop);
 
 	/*
 	 * for all transport types
 	 */
-	public abstract ArrayList<TimetableItem> getTimetable(String transport);
+	public ArrayList<TimetableItem> getTimetable(String transport);
 
 }

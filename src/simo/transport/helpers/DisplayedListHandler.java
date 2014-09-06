@@ -3,6 +3,8 @@ package simo.transport.helpers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.util.Log;
 
@@ -25,7 +27,7 @@ public class DisplayedListHandler {
 		prevIsDown = false;
 		prevIsUp = false;
 		makePartitions();
-		Log.d("debug", "full list = " + fullList);
+//		Log.d("debug", "full list = " + fullList);
 	}
 
 	private void makePartitions() {
@@ -82,17 +84,17 @@ public class DisplayedListHandler {
 
 		if (fromIndex + numItemsShown < fullList.size()) {
 			fromIndex += numItemsShown;
-			prevIsDown = true;	
+			prevIsDown = true;
 		} else {
 			prevIsDown = false;
 		}
-		
+
 	}
 
 	public void onUpClicked() {
 		displayedList.clear();
 
-		Log.d("debug", "before = " + fromIndex);
+//		Log.d("debug", "before = " + fromIndex);
 		if (prevIsDown) {
 			if (fromIndex - numItemsShown > 0) {
 				fromIndex -= numItemsShown;
@@ -120,17 +122,82 @@ public class DisplayedListHandler {
 	public void saveCurrListState() {
 		prevListStates.add(fullList);
 	}
+	
+	public void clearPrevListStates() {
+		prevListStates.clear();
+	}
 
 	public void filterList(String filter) {
 		fromIndex = 0;
 		displayedList.clear();
 		ArrayList<String> tempList = new ArrayList<String>();
-		for (int i = 0; i < fullList.size(); i++) {
-			String item = fullList.get(i);
-			if (item.toUpperCase(Locale.ENGLISH).startsWith(filter)
-					&& !item.equals("up") && !item.equals("down")) {
-				Log.d("debug", "adding " + item);
+
+		if (filter.contains(">")) {
+			String[] parts = filter.split("<");
+			String startChar = parts[0];
+			// chop off the ">"
+			String charRange = parts[1].substring(0, parts[1].length() - 1);
+			parts = charRange.split("-");
+			String fromChar = parts[0];
+			String toChar = parts[1];
+			int fromIndex = -1;
+			int toIndex = -1;
+			
+			for (int i = 0; i < fullList.size(); i++) {
+				String item = fullList.get(i);
+				if (item.startsWith(startChar + fromChar) && fromIndex == -1) {
+					fromIndex = i;
+				}
+				
+				if (item.startsWith(startChar + toChar)) {
+					toIndex = i;
+				}
+			}
+			
+			for (int j = fromIndex; j <= toIndex; j++) {
+				String item = fullList.get(j);
+				if (item.equals("up") || item.equals("down")) {
+					continue;
+				}
 				tempList.add(item);
+			}
+			
+		} else {
+			for (int i = 0; i < fullList.size(); i++) {
+				String item = fullList.get(i);
+
+				if (item.equals("up") || item.equals("down")) {
+					continue;
+				}
+				
+				String[] parts = item.split("\\s", 2);
+				if (parts[0].matches("^\\d.*")) {
+					Pattern pattern = Pattern.compile("^\\d+");
+					Matcher matcher = pattern.matcher(parts[0]);
+					String temp = "";
+
+					if (matcher.find()) {
+						int routeNum = Integer.parseInt(matcher.group());
+						if (routeNum < 10) {
+							temp = "00" + routeNum;
+						} else if (routeNum < 100){
+							temp = "0" + routeNum;
+						} else {
+							temp = "" + routeNum;
+						}
+					}
+					
+					if (temp.toUpperCase(Locale.ENGLISH).startsWith(filter)) {
+//						Log.d("debug", "adding " + item);
+						tempList.add(item);
+					}
+					
+				} else {
+					if (item.toUpperCase(Locale.ENGLISH).startsWith(filter)) {
+//						Log.d("debug", "adding " + item);
+						tempList.add(item);
+					}
+				}
 			}
 		}
 
