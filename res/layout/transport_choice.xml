@@ -3,6 +3,7 @@
     android:id="@+id/pick_transport"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
     android:orientation="vertical" >
 
     <Button
@@ -38,9 +39,9 @@
         android:id="@+id/light_rail_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/activity_custom_margin"
-        android:layout_marginLeft="@dimen/activity_custom_margin"
         android:layout_marginBottom="@dimen/activity_custom_margin"
+        android:layout_marginLeft="@dimen/activity_custom_margin"
+        android:layout_marginRight="@dimen/activity_custom_margin"
         android:layout_weight="1"
         android:onClick="goSelectTrip"
         android:text="@string/light_rail" />

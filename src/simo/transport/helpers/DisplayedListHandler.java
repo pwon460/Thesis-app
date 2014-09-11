@@ -123,6 +123,11 @@ public class DisplayedListHandler {
 		prevListStates.add(fullList);
 	}
 	
+	/*
+	 * prev list states only saves the current list state on index button click
+	 * for short-term back button usage. once the listview item has been selected,
+	 * these 'prev list states' can be wiped and start anew for the next list
+	 */
 	public void clearPrevListStates() {
 		prevListStates.clear();
 	}
@@ -163,6 +168,7 @@ public class DisplayedListHandler {
 			}
 			
 		} else {
+			Log.d("debug", "list size to filter = " + fullList.size());
 			for (int i = 0; i < fullList.size(); i++) {
 				String item = fullList.get(i);
 
@@ -187,13 +193,13 @@ public class DisplayedListHandler {
 						}
 					}
 					
-					if (temp.toUpperCase(Locale.ENGLISH).startsWith(filter)) {
+					if (temp.startsWith(filter)) {
 //						Log.d("debug", "adding " + item);
 						tempList.add(item);
 					}
 					
 				} else {
-					if (item.toUpperCase(Locale.ENGLISH).startsWith(filter)) {
+					if (item.startsWith(filter)) {
 //						Log.d("debug", "adding " + item);
 						tempList.add(item);
 					}

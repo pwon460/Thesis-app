@@ -10,7 +10,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.accessibility.AccessibilityEvent;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
@@ -48,11 +47,13 @@ public class TripActivity extends TripActivityTemplate {
 			long id) {
 		boolean handled = handleArrowButtonClick(view);
 
-		if (!handled) {
+		if (!handled) { // ie. it listview item has been clicked
 			ViewHolder holder = (ViewHolder) view.getTag();
 			TextView tv = holder.getTextView();
+			// clear index buttons from action stack as choice has been locked in
+			cleanActionStack();
 			if (startingPoint == null) {
-				getActionStack().add("listview");
+				getActionStack().add(LIST_BTN);
 				startingPoint = tv.getText().toString();
 				/*
 				 * case statement to handle title and reset the list back to
@@ -72,8 +73,6 @@ public class TripActivity extends TripActivityTemplate {
 					tempList = getDataAccessObject().getStops();
 				}
 				setTitle(title);
-				getWindow().getDecorView().sendAccessibilityEvent(
-						AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
 
 				// remove starting point from the soon-to-be list of
 				// destinations
@@ -97,7 +96,7 @@ public class TripActivity extends TripActivityTemplate {
 	@Override
 	public void onBackPressed() {
 		String result = getPrevAction();
-		if (result.equals("indexBtn")) {
+		if (result.equals(INDEX_BTN)) {
 			// undo the action of the index button being pressed
 			boolean hasRestored = getListHandler().restorePrevState();
 			if (hasRestored == false) {
@@ -105,7 +104,7 @@ public class TripActivity extends TripActivityTemplate {
 			} else {
 				setAdapterToList();
 			}
-		} else if (result.equals("listview")) {
+		} else if (result.equals(LIST_BTN)) {
 			// button previously pressed was from listview
 			// return dest list back to origin list
 			Resources r = getResources();
@@ -122,11 +121,8 @@ public class TripActivity extends TripActivityTemplate {
 				getListHandler().setFullList(getDataAccessObject().getStops());
 			}
 			setTitle(title);
-			getWindow().getDecorView().sendAccessibilityEvent(
-					AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
 			startingPoint = null;
 			setAdapterToList();
-			clearActionStack();
 		} else {
 			super.onBackPressed();
 		}

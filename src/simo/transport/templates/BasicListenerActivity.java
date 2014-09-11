@@ -3,23 +3,29 @@ package simo.transport.templates;
 import simo.transport.R;
 import simo.transport.helpers.ButtonBuilder;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnHoverListener;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class BasicListenerActivity extends ActionBarActivity implements
-		OnSharedPreferenceChangeListener {
+		OnSharedPreferenceChangeListener, OnHoverListener {
 
 	private static final String DEFAULT_PREF_VALUE = "1";
 	private static final int NUM_ARROW_BTNS = 2;
@@ -48,6 +54,15 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		super.onPause();
 		prefs.unregisterOnSharedPreferenceChangeListener(this);
 	}
+	
+	@Override
+	public boolean onHover(View v, MotionEvent event) {
+		if (!v.isFocused()) {
+			Log.d("debug", "focused new item");
+			v.requestFocus();
+		}
+		return false;
+	}
 
 	public void applySettings() {
 		// grab current color setting
@@ -62,11 +77,23 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		// Log.d("debug", "layout = " + layout);
 		for (int i = 0; i < layout.getChildCount(); i++) {
 			View v = layout.getChildAt(i);
+
 			if (v.getId() != R.id.padding) {
 				btn = (Button) v;
 
+				if (btn.isFocused()) {
+					btn.clearFocus();
+				}
+
+				if (!isAccessibilityEnabled()) {
+					btn.setFocusableInTouchMode(false);
+				} else {
+					btn.setFocusableInTouchMode(true);
+				}
+
 				if (btn.getText().length() > 0) {
 					setViewNormalBackground(btn);
+					btn.setOnHoverListener(this);
 					btn.setTextColor(textColor);
 					btn.setGravity(Gravity.CENTER);
 					btn.setTextAppearance(getApplicationContext(),
@@ -76,6 +103,11 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		}
 		layout.setBackgroundColor(background);
 
+	}
+
+	public boolean isAccessibilityEnabled() {
+		AccessibilityManager manager = (AccessibilityManager) getSystemService(Context.ACCESSIBILITY_SERVICE);
+		return manager.isEnabled();
 	}
 
 	public void loadColorsFromPrefs() {
@@ -147,26 +179,24 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		return numItemsShown;
 	}
 
-	public void setViewClickedBackground(View view) {
-		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-		if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-			view.setBackground(ButtonBuilder.getHighlightedBorderedRectangle(
-					this, textColor, background));
-		} else {
-			view.setBackgroundDrawable(ButtonBuilder
-					.getHighlightedBorderedRectangle(this, textColor,
-							background));
-		}
-	}
-
 	private void setViewNormalBackground(View view) {
+		GradientDrawable highlightedDrawable = ButtonBuilder
+				.getHighlightedBorderedRectangle(this, textColor, background);
+		StateListDrawable states = new StateListDrawable();
+		states.addState(new int[] { android.R.attr.state_pressed },
+				highlightedDrawable);
+		states.addState(new int[] { android.R.attr.state_selected },
+				highlightedDrawable);
+		states.addState(new int[] { android.R.attr.state_focused },
+				highlightedDrawable);
+		states.addState(new int[] { -android.R.attr.state_focused },
+				ButtonBuilder.getBorderedRectangle(this, textColor, background));
+
 		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 		if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-			view.setBackground(ButtonBuilder.getBorderedRectangle(this,
-					textColor, background));
+			view.setBackground(states);
 		} else {
-			view.setBackgroundDrawable(ButtonBuilder.getBorderedRectangle(this,
-					textColor, background));
+			view.setBackgroundDrawable(states);
 		}
 	}
 

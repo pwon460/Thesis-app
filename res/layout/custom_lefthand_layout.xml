@@ -13,6 +13,7 @@
         android:layout_marginRight="@dimen/listview_index_margin"
         android:layout_weight="6"
         android:gravity="center"
+        android:focusableInTouchMode="true"
         android:orientation="vertical" >
 
         <ListView
@@ -28,6 +29,7 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/listview_index_margin"
         android:layout_weight="1"
+        android:focusableInTouchMode="true"
         android:orientation="vertical"
         android:gravity="right" >
 

@@ -32,7 +32,6 @@ public class BusOptionsActivity extends BasicListenerActivity {
 	}
 
 	public void goBusTripActivity(View view) {
-		setViewClickedBackground(view);
 		Button temp = (Button) view;
 		String text = temp.getText().toString();
 		Intent intent;

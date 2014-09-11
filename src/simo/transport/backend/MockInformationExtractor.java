@@ -130,14 +130,16 @@ public class MockInformationExtractor implements TransportDAO {
 	@Override
 	public ArrayList<String> getSuburbs() {
 		list.clear();
-		String[] values = new String[] { "Abbotsbury", "Abbotsford",
-				"Aberglasslyn", "Balgowlah", "Birchgrove", "Chatswood",
-				"Carlingford", "Dolls Point", "Enfield", "Hornsby", "Killara",
-				"Lane Cove", "North Ryde", "Parramatta", "Zetland" };
-
-		for (int i = 0; i < values.length; i++) {
-			list.add(values[i]);
-		}
+//		String[] values = new String[] { "Abbotsbury", "Abbotsford",
+//				"Aberglasslyn", "Balgowlah", "Birchgrove", "Chatswood",
+//				"Carlingford", "Dolls Point", "Enfield", "Hornsby", "Killara",
+//				"Lane Cove", "North Ryde", "Parramatta", "Zetland" };
+//
+//		for (int i = 0; i < values.length; i++) {
+//			list.add(values[i]);
+//		}
+		
+		list = loadFile(R.raw.suburb);
 
 		return list;
 	}

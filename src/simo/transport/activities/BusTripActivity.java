@@ -8,7 +8,6 @@ import simo.transport.templates.TripActivityTemplate;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.accessibility.AccessibilityEvent;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
@@ -53,14 +52,16 @@ public class BusTripActivity extends TripActivityTemplate {
 			long id) {
 		boolean handled = handleArrowButtonClick(view);
 
+		
 		if (!handled) {
 			ViewHolder holder = (ViewHolder) view.getTag();
 			TextView tv = holder.getTextView();
-
+			// clear index buttons from action stack as choice has been locked in
+			cleanActionStack();
 			if (isBySuburb) {
 				if (startSuburb == null || originStop == null
 						|| destSuburb == null) {
-					getActionStack().add("listview");
+					getActionStack().add(LIST_BTN);
 					String title = "";
 					String btnText = tv.getText().toString();
 					ArrayList<String> temp = null;
@@ -83,7 +84,6 @@ public class BusTripActivity extends TripActivityTemplate {
 					}
 					setTitle(title);
 					getListHandler().setFullList(temp);
-					dispatchAccessibilityNotification();
 					setAdapterToList();
 				} else {
 					destStop = tv.getText().toString();
@@ -93,23 +93,21 @@ public class BusTripActivity extends TripActivityTemplate {
 				}
 			} else {
 				if (route == null) {
-					getActionStack().add("listview");
+					getActionStack().add(LIST_BTN);
 					route = tv.getText().toString();
 					setTitle("Select origin stop");
 					getListHandler().setFullList(
 							getDataAccessObject().getStopsOnRoute(route,
 									isRightHandMode()));
-					dispatchAccessibilityNotification();
 					setAdapterToList();
 				} else if (originStop == null) {
-					getActionStack().add("listview");
+					getActionStack().add(LIST_BTN);
 					originStop = tv.getText().toString();
 					setTitle("Select destination stop");
 					ArrayList<String> tempList = getDataAccessObject()
 							.getStopsOnRoute(route, isRightHandMode());
 					tempList.remove(originStop);
 					getListHandler().setFullList(tempList);
-					dispatchAccessibilityNotification();
 					setAdapterToList();
 				} else {
 					destStop = tv.getText().toString();
@@ -119,11 +117,6 @@ public class BusTripActivity extends TripActivityTemplate {
 				}
 			}
 		}
-	}
-
-	private void dispatchAccessibilityNotification() {
-		getWindow().getDecorView().sendAccessibilityEvent(
-				AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
 	}
 
 	private void goTimetableActivity() {
@@ -137,14 +130,14 @@ public class BusTripActivity extends TripActivityTemplate {
 	@Override
 	public void onBackPressed() {
 		String result = getPrevAction();
-		if (result.equals("indexBtn")) {
+		if (result.equals(INDEX_BTN)) {
 			boolean hasRestored = getListHandler().restorePrevState();
 			if (hasRestored == false) {
 				super.onBackPressed();
 			} else {
 				setAdapterToList();
 			}
-		} else if (result.equals("listview")) {
+		} else if (result.equals(LIST_BTN)) {
 			if (isBySuburb) {
 				if (destSuburb != null) {
 					setTitle("Select destination suburb");
@@ -177,7 +170,6 @@ public class BusTripActivity extends TripActivityTemplate {
 
 				}
 			}
-			dispatchAccessibilityNotification();
 			setAdapterToList();
 		} else {
 			super.onBackPressed();

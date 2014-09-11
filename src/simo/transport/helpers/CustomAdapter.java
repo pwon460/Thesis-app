@@ -69,11 +69,11 @@ public class CustomAdapter extends ArrayAdapter<String> {
 		if (s.equals("up")) {
 			tv.setText("^");
 			tv.setGravity(Gravity.CENTER);
-			tv.setContentDescription("Scroll up list");
+			tv.setContentDescription("List scroll up");
 		} else if (s.equals("down")) {
 			tv.setText("v");
 			tv.setGravity(Gravity.CENTER);
-			tv.setContentDescription("Scroll down list");
+			tv.setContentDescription("List scroll down");
 		} else {
 			tv.setText(s);
 			tv.setPadding(parent.getMeasuredWidth()/15, 0, parent.getMeasuredWidth()/15, 0);

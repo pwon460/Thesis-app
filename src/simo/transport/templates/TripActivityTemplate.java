@@ -1,6 +1,8 @@
 package simo.transport.templates;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
 
 import simo.transport.R;
 import simo.transport.backend.MockInformationExtractor;
@@ -12,12 +14,16 @@ import simo.transport.helpers.IndexButtonHandler;
 import android.annotation.TargetApi;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.View.OnHoverListener;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -27,8 +33,10 @@ import android.widget.TextView;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public abstract class TripActivityTemplate extends BasicListenerActivity
-		implements OnItemClickListener {
+		implements OnItemClickListener, OnHoverListener {
 
+	public static final String LIST_BTN = "listview";
+	public static final String INDEX_BTN = "index";
 	private int numItemsShown;
 	private static final int OFF = 1;
 	private TransportDAO transportDAO = new MockInformationExtractor(this);
@@ -89,16 +97,24 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 		for (int i = 0; i < getNumIndexBtns() - 2; i++) {
 			getLayoutInflater().inflate(R.layout.index_button, layout);
 		}
+		
 		getLayoutInflater().inflate(R.layout.down_arrow, layout);
+
+		for (int i = 0; i < getNumIndexBtns(); i++) {
+			View temp = layout.getChildAt(i);
+			temp.setOnHoverListener(this);
+			if (isAccessibilityEnabled()) {
+				temp.setFocusableInTouchMode(true);
+			} else {
+				temp.setFocusableInTouchMode(false);
+			}
+		}
 	}
 
 	@Override
 	public abstract void onItemClick(AdapterView<?> parent, View view,
 			int position, long id);
 
-	/*
-	 * called onResume() see BasicListenerActivity.onResume()
-	 */
 	@Override
 	public void applySettings() {
 		setIndexButtons();
@@ -143,14 +159,17 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 
 	// filter list of stations/routes/suburbs/etc in the listview
 	public void onIndexButtonClick(View view) {
+		getCurrentFocus().clearFocus();
 		if (view.getId() == R.id.up_button) {
 			// Log.d("debug", "up button pressed");
 			indexHandler.handleUpClick();
 			setIndexButtons();
+			dispatchAccessibilityEvent(view);
 		} else if (view.getId() == R.id.down_button) {
 			// Log.d("debug", "down button pressed");
 			indexHandler.handleDownClick();
 			setIndexButtons();
+			dispatchAccessibilityEvent(view);
 		} else {
 			Button btnClicked = (Button) view;
 			String btnClickedText = btnClicked.getText().toString();
@@ -160,7 +179,7 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 				Log.d("debug", "adding index button to stack: "
 						+ btnClickedText);
 
-				actionStack.add("indexBtn");
+				actionStack.add(INDEX_BTN);
 				indexHandler.handleIndexBtnClicked(btnClickedText);
 				filterList();
 				setAdapterToList();
@@ -168,11 +187,15 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 		}
 	}
 
+	private void dispatchAccessibilityEvent(View view) {
+		view.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_SELECTED);
+	}
+
 	private void filterList() {
 		listHandler.saveCurrListState(); // save list current state
 		// Log.d("debug",
 		// "saving current list state: " + listHandler.getFullList());
-		// Log.d("debug", "filtering list by: " + indexHandler.getFilter());
+		Log.d("debug", "filtering list by: " + indexHandler.getFilter());
 		listHandler.filterList(indexHandler.getFilter());
 		// Log.d("debug", "remaining list: " + listHandler.getFullList());
 		setAdapterToList();
@@ -196,6 +219,26 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 		// Log.d("debug", "buttons to show: " + btnsToShow.toString());
 		// Log.d("debug", "setting index buttons to display");
 
+		View view = findViewById(R.id.up_button);
+
+		if (!indexHandler.canGoUp()) {
+			view.setContentDescription("No more up");
+			view.setClickable(false);
+		} else {
+			view.setContentDescription("Scroll up indices");
+			view.setClickable(true);
+		}
+
+		view = findViewById(R.id.down_button);
+
+		if (!indexHandler.canGoDown()) {
+			view.setContentDescription("No more down");
+			view.setClickable(false);
+		} else {
+			view.setContentDescription("Scroll down indices");
+			view.setClickable(true);
+		}
+
 		View indexView = findViewById(R.id.index_view);
 		ViewGroup group = (ViewGroup) indexView;
 		int numButtons = group.getChildCount();
@@ -209,22 +252,28 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 				temp.setContentDescription("");
 				temp.setClickable(false);
 				temp.setFocusable(false);
-				setBtnBackground(temp, ButtonBuilder.getBlankRectangle(this));
+				temp.setFocusableInTouchMode(false);
+				setBtnBackground(temp, true);
 			} else {
 				String text = btnsToShow.get(i - 1);
+				temp.setContentDescription(text.toUpperCase(Locale.ENGLISH)
+						+ ", index ");
+				text = text.replace(" to ", "-");
 				temp.setText(text);
-				temp.setContentDescription(text + ", index ");
 				temp.setClickable(true);
 				temp.setFocusable(true);
+				if (isAccessibilityEnabled()) {
+					temp.setFocusableInTouchMode(true);
+				} else {
+					temp.setFocusableInTouchMode(false);
+				}
 				temp.setGravity(Gravity.CENTER);
 				temp.setTextAppearance(this, R.style.IndexBtnText);
 				temp.setTextColor(getTextColor());
 				temp.setBackgroundColor(getBackgroundColor());
-				setBtnBackground(temp, ButtonBuilder.getBorderedRectangle(this,
-						getTextColor()));
+				setBtnBackground(temp, false);
 			}
 		}
-
 	}
 
 	private void setArrowColor() {
@@ -241,12 +290,33 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 		d.setColorFilter(getTextColor(), Mode.MULTIPLY);
 	}
 
-	public void setBtnBackground(View toReplace, Drawable replaceWith) {
+	public void setBtnBackground(View toReplace, boolean isBlank) {
+		GradientDrawable drawable;
+		StateListDrawable states = new StateListDrawable();
+
+		if (isBlank) {
+			drawable = ButtonBuilder.getBlankRectangle(this);
+			states.addState(new int[] {}, drawable);
+		} else {
+			drawable = ButtonBuilder.getHighlightedBorderedRectangle(this,
+					getTextColor(), getBackgroundColor());
+			states.addState(new int[] { android.R.attr.state_pressed },
+					drawable);
+			states.addState(new int[] { android.R.attr.state_selected },
+					drawable);
+			states.addState(new int[] { android.R.attr.state_focused },
+					drawable);
+			
+			drawable = ButtonBuilder.getBorderedRectangle(this, getTextColor());
+			states.addState(new int[] { -android.R.attr.state_focused },
+					drawable);
+		}
+
 		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 		if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-			toReplace.setBackground(replaceWith);
+			toReplace.setBackground(states);
 		} else {
-			toReplace.setBackgroundDrawable(replaceWith);
+			toReplace.setBackgroundDrawable(states);
 		}
 	}
 
@@ -266,18 +336,18 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 		}
 
 		Log.d("debug", "prev button clicked = " + prevAction);
-		if (prevAction.equals("indexBtn")) {
+		if (prevAction.equals(INDEX_BTN)) {
 			indexHandler.handleBackBtnClicked();
 		}
 
 		return prevAction;
 	}
 
-	public void clearActionStack() {
-		actionStack.clear();
+	public void cleanActionStack() {
+		actionStack.removeAll(Collections.singleton(INDEX_BTN));
 		listHandler.clearPrevListStates();
 	}
-	
+
 	public DisplayedListHandler getListHandler() {
 		return listHandler;
 	}
@@ -290,4 +360,11 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 		return actionStack;
 	}
 
+	@Override
+	protected void onTitleChanged(CharSequence title, int color) {
+		super.onTitleChanged(title, color);
+		getWindow().getDecorView().sendAccessibilityEvent(
+				AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
+	}
+	
 }

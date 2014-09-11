@@ -15,9 +15,13 @@ public class IndexButtonHandler {
 	private String filter = "";
 	private int startIndex;
 	private int endIndex;
+	private boolean canGoUp;
+	private boolean canGoDown;
+	private String firstItem;
+	private String lastItem;
 
 	public void setListToIndex(ArrayList<String> toIndex, int numItemsShown) {
-//		Log.d("debug", "list to turn into indices: " + toIndex.toString());
+		// Log.d("debug", "list to turn into indices: " + toIndex.toString());
 
 		if (allIndexBtns == null) {
 			allIndexBtns = new ArrayList<String>();
@@ -30,15 +34,21 @@ public class IndexButtonHandler {
 
 		if (filter.length() < 2 && toIndex.size() > numItemsShown) {
 			if (toIndex.get(0).matches("\\D+")) {
-//				Log.d("debug", "handling non route");
+				// Log.d("debug", "handling non route");
 				handleNonRoute(toIndex, numItemsShown);
 			} else {
-//				Log.d("debug", "handling route");
+				// Log.d("debug", "handling route");
 				handleRoute(toIndex, numItemsShown);
 			}
 		}
 
 		Collections.sort(allIndexBtns);
+
+		if (allIndexBtns != null && allIndexBtns.size() > 1) {
+			firstItem = allIndexBtns.get(0);
+			lastItem = allIndexBtns.get(allIndexBtns.size() - 1);
+		}
+
 	}
 
 	private void handleNonRoute(ArrayList<String> toIndex, int numItemsShown) {
@@ -55,7 +65,7 @@ public class IndexButtonHandler {
 			String anchor = toIndex.get(0);
 			StringBuilder sb;
 			for (int i = numItemsOnTwoPgs; i < toIndex.size() - 1; i += numItemsOnTwoPgs) {
-//				Log.d("debug", "initial i = " + i);
+				// Log.d("debug", "initial i = " + i);
 				sb = new StringBuilder();
 				String currItem = toIndex.get(i);
 				String prevItem = toIndex.get(i - 1);
@@ -72,8 +82,8 @@ public class IndexButtonHandler {
 						break;
 					}
 				}
-				
-//				Log.d("debug", "go back method: index j = " + j);
+
+				// Log.d("debug", "go back method: index j = " + j);
 
 				if (!handled) {
 					currItem = toIndex.get(i);
@@ -83,34 +93,43 @@ public class IndexButtonHandler {
 						currItem = nextItem;
 						nextItem = toIndex.get(j++);
 					}
-					
-//					Log.d("debug", "go fwd method: index j = " + j);
+
+					// Log.d("debug", "go fwd method: index j = " + j);
 				}
-				
+
+				// index button will be in form of eg. 'Ab-Ac'
+				char rootChar = anchor.charAt(0);
+				char fromChar = anchor.charAt(1);
+				char toChar;
+				sb.append(rootChar).append(fromChar);
+
 				if (currItem.charAt(1) == nextItem.charAt(1)) {
-					sb.append(anchor.charAt(0)).append(anchor.charAt(1))
-							.append("-").append(anchor.charAt(0))
-							.append(prevItem.charAt(1));
-//					Log.d("debug", "index added = " + sb.toString());
-					allIndexBtns.add(sb.toString());
+					toChar = prevItem.charAt(1);
 					anchor = currItem;
 				} else {
-					sb.append(anchor.charAt(0)).append(anchor.charAt(1))
-							.append("-").append(anchor.charAt(0))
-							.append(currItem.charAt(1));
-//					Log.d("debug", "index added = " + sb.toString());
-					allIndexBtns.add(sb.toString());
+					toChar = currItem.charAt(1);
 					anchor = nextItem;
 				}
 
+				// if 'Ab-Ab' then don't need to repeat 'Ab'
+				if (fromChar != toChar) {
+					sb.append(" to ").append(rootChar).append(toChar);
+				}
+				allIndexBtns.add(sb.toString());
+
 				i = j;
-//				Log.d("debug", "setting i to j, i = " + i);
+				// Log.d("debug", "setting i to j, i = " + i);
 			}
-			
+
 			sb = new StringBuilder();
-			sb.append(anchor.charAt(0)).append(anchor.charAt(1)).append("-")
-					.append(anchor.charAt(0)).append(toIndex.get(toIndex.size() - 1).charAt(1));
-//			Log.d("debug", "index added = " + sb.toString());
+			char rootChar = anchor.charAt(0);
+			char fromChar = anchor.charAt(1);
+			char toChar = toIndex.get(toIndex.size() - 1).charAt(1);
+			sb.append(rootChar).append(fromChar);
+			if (fromChar != toChar) {
+				sb.append(" to ").append(rootChar).append(toChar);
+			}
+			// Log.d("debug", "index added = " + sb.toString());
 			allIndexBtns.add(sb.toString());
 
 		}
@@ -198,6 +217,20 @@ public class IndexButtonHandler {
 			}
 		}
 
+		if (subList.contains(firstItem) && subList.contains(lastItem)) {
+			canGoDown = false;
+			canGoUp = false;
+		} else if (subList.contains(firstItem)) {
+			canGoDown = true;
+			canGoUp = false;
+		} else if (subList.contains(lastItem)) {
+			canGoDown = false;
+			canGoUp = true;
+		} else {
+			canGoDown = true;
+			canGoUp = true;
+		}
+
 		return subList;
 	}
 
@@ -217,8 +250,8 @@ public class IndexButtonHandler {
 	}
 
 	public void handleIndexBtnClicked(String s) {
-		Log.d("debug", "index button clicked");
-		Log.d("debug", "filter before = " + filter);
+		// Log.d("debug", "index button clicked");
+		// Log.d("debug", "filter before = " + filter);
 		if (filter.length() == 0) {
 			filter += s.charAt(0);
 		} else {
@@ -228,7 +261,7 @@ public class IndexButtonHandler {
 				filter += s.charAt(filter.length());
 			}
 		}
-		Log.d("debug", "filter after = " + filter);
+		// Log.d("debug", "filter after = " + filter);
 	}
 
 	public void handleBackBtnClicked() {
@@ -256,6 +289,14 @@ public class IndexButtonHandler {
 	public void setNumBtns(int num) {
 		// Log.d("debug", "setting num btns = " + num);
 		numIndexBtns = num;
+	}
+
+	public boolean canGoDown() {
+		return canGoDown;
+	}
+
+	public boolean canGoUp() {
+		return canGoUp;
 	}
 
 }
