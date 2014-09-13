@@ -1,18 +1,11 @@
 package simo.transport.backend;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public abstract class TimetableItem implements Serializable {
+public interface TimetableItemInterface {
 
 	/*
-	 * Serializable to allow arraylist of timetable items to be passed from one
-	 * activity to the next
-	 */
-	private static final long serialVersionUID = 1L;
-
-	/*
-	 * All dates are assumed to be in 'dd/MM/yyyy HH:mm' format where HH is in
+	 * All dates are to be in 'dd/MM/yyyy HH:mm' format where HH is in
 	 * 24 hour time
 	 */
 	public abstract Date getDepartureTime();

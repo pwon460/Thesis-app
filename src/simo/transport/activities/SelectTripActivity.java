@@ -1,37 +1,131 @@
 package simo.transport.activities;
 
-import simo.transport.R;
-import simo.transport.templates.BasicListenerActivity;
-import android.annotation.TargetApi;
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import java.util.ArrayList;
 
-@TargetApi(Build.VERSION_CODES.KITKAT)
-public class SelectTripActivity extends BasicListenerActivity {
+import simo.transport.R;
+import simo.transport.helpers.ViewHolder;
+import simo.transport.templates.TripActivityTemplate;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.TextView;
+
+public class SelectTripActivity extends TripActivityTemplate {
+
+	private String startingPoint;
+	private String destination;
+	private String transport;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.transport_choice);
-		setID(R.id.pick_transport);
+
+		Intent intent = getIntent();
+		transport = intent.getStringExtra("transport");
+
+		Resources r = getResources();
+		String title = "Select origin ";
+		if (transport.equals(r.getString(R.string.train))) {
+			title += "station";
+			getListHandler().setFullList(getDataAccessObject().getStations());
+		} else if (transport.equals(r.getString(R.string.ferry))) {
+			title += "wharf";
+			getListHandler().setFullList(getDataAccessObject().getWharfs());
+		} else { // light rail
+			title += "stop";
+			getListHandler().setFullList(getDataAccessObject().getStops());
+		}
+		setTitle(title);
+		setAdapterToList();
 	}
 
-	public void goSelectTrip(View view) {
-		Button temp = (Button) view;
-		String text = temp.getText().toString();
-		Intent intent;
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		boolean handled = handleArrowButtonClick(view);
 
-		if (text.equals(getResources().getString(R.string.bus))) {
-			intent = new Intent(this, BusOptionsActivity.class);
-		} else {
-			intent = new Intent(this, TripActivity.class);
-			intent.putExtra("transport", text);
+		if (!handled) { // ie. it listview item has been clicked
+			ViewHolder holder = (ViewHolder) view.getTag();
+			TextView tv = holder.getTextView();
+			// clear index buttons from action stack as choice has been locked in
+			cleanActionStack();
+			if (startingPoint == null) {
+				getActionStack().add(LIST_BTN);
+				startingPoint = tv.getText().toString();
+				/*
+				 * case statement to handle title and reset the list back to
+				 * normal for person to choose destination
+				 */
+				Resources r = getResources();
+				ArrayList<String> tempList;
+				String title = "Select destination ";
+				if (transport.equals(r.getString(R.string.train))) {
+					title += "station";
+					tempList = getDataAccessObject().getStations();
+				} else if (transport.equals(r.getString(R.string.ferry))) {
+					title += "wharf";
+					tempList = getDataAccessObject().getWharfs();
+				} else {
+					title += "stop";
+					tempList = getDataAccessObject().getStops();
+				}
+				setTitle(title);
+
+				// remove starting point from the soon-to-be list of
+				// destinations
+				Log.d("debug", "removing " + startingPoint + " from the list");
+				tempList.remove(startingPoint);
+				getListHandler().setFullList(tempList);
+
+				// set the list to the listview
+				setAdapterToList();
+			} else {
+				destination = tv.getText().toString();
+				Intent intent = new Intent(this, ShowTimetableActivity.class);
+				intent.putExtra("transport", transport);
+				intent.putExtra("origin", startingPoint);
+				intent.putExtra("destination", destination);
+				startActivity(intent);
+			}
 		}
+	}
 
-		startActivity(intent);
+	@Override
+	public void onBackPressed() {
+		String result = getPrevAction();
+		if (result.equals(INDEX_BTN)) {
+			// undo the action of the index button being pressed
+			boolean hasRestored = getListHandler().restorePrevState();
+			if (hasRestored == false) {
+				super.onBackPressed();
+			} else {
+				setAdapterToList();
+			}
+		} else if (result.equals(LIST_BTN)) {
+			// button previously pressed was from listview
+			// return dest list back to origin list
+			Resources r = getResources();
+			String title = "Select origin ";
+			if (transport.equals(r.getString(R.string.train))) {
+				title += "station";
+				getListHandler().setFullList(
+						getDataAccessObject().getStations());
+			} else if (transport.equals(r.getString(R.string.ferry))) {
+				title += "wharf";
+				getListHandler().setFullList(getDataAccessObject().getWharfs());
+			} else {
+				title += "stop";
+				getListHandler().setFullList(getDataAccessObject().getStops());
+			}
+			setTitle(title);
+			startingPoint = null;
+			setAdapterToList();
+		} else {
+			super.onBackPressed();
+		}
 	}
 
 }

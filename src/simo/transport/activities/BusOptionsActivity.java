@@ -35,7 +35,7 @@ public class BusOptionsActivity extends BasicListenerActivity {
 		Button temp = (Button) view;
 		String text = temp.getText().toString();
 		Intent intent;
-		intent = new Intent(this, BusTripActivity.class);
+		intent = new Intent(this, SelectBusTripActivity.class);
 		intent.putExtra("routeType", text);
 		startActivity(intent);
 	}

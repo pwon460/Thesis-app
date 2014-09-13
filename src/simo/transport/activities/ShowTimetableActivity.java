@@ -8,12 +8,16 @@ import org.joda.time.Hours;
 import org.joda.time.Minutes;
 
 import simo.transport.R;
-import simo.transport.backend.TimetableItem;
+import simo.transport.backend.MockTransportDAO;
+import simo.transport.backend.TimetableItemInterface;
+import simo.transport.backend.TransportDAOInterface;
 import simo.transport.helpers.CustomAdapter;
 import simo.transport.helpers.DisplayedListHandler;
 import simo.transport.templates.BasicListenerActivity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -26,20 +30,43 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 
 	private int numItemsShown;
 	private ListView listview;
-	private ArrayList<TimetableItem> timetable;
+	private ArrayList<TimetableItemInterface> timetable;
 	private CustomAdapter adapter;
 	private DisplayedListHandler listHandler;
+	private TransportDAOInterface transportDAO = new MockTransportDAO(this);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getPrefSettings();
-		Intent intent = getIntent();
-		timetable = (ArrayList<TimetableItem>) intent.getSerializableExtra("timetable");
-		String transport = intent.getStringExtra("transport");
-
 		setContentView(R.layout.activity_timetable);
-		setTitle("Timetable");
+		
+		Intent intent = getIntent();
+		String transport = intent.getStringExtra("transport");
+		Log.d("debug", "transport type is " + transport);
+
+		Resources res = getResources();
+		if (transport.equals(res.getString(R.string.bus))) {
+			Boolean isBySuburb = intent.getBooleanExtra("isBySuburb", false);
+			if (isBySuburb) {
+				String originSuburb = intent.getStringExtra("originSuburb");
+				String destSuburb = intent.getStringExtra("destSuburb");
+				String originStop = intent.getStringExtra("originStop");
+				String destStop = intent.getStringExtra("destStop");
+				transportDAO.setBySuburbInfo(originSuburb, destSuburb, originStop, destStop);
+			} else {
+				String route = intent.getStringExtra("route");
+				String originStop = intent.getStringExtra("originStop");
+				String destStop = intent.getStringExtra("destStop");
+				transportDAO.setByStopInfo(route, originStop, destStop);
+			}
+		} else {
+			String origin = intent.getStringExtra("origin");
+			String destination = intent.getStringExtra("destination");
+			transportDAO.setTrip(origin, destination);
+		}
+		
+		timetable = transportDAO.getTimetable(transport);
 		unpackTimetable(transport);
 
 		listHandler = new DisplayedListHandler();
@@ -74,7 +101,7 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 	private ArrayList<String> unpackTimetable(String transport) {
 		ArrayList<String> list = new ArrayList<String>();
 
-		for (TimetableItem item : timetable) {
+		for (TimetableItemInterface item : timetable) {
 			String timeDiff = calcDiff(item.getDepartureTime());
 			String temp = timeDiff + item.getDescription() + ", " 
 					+ getTime(item.getDepartureTime()) + " - "
@@ -163,7 +190,8 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 			listHandler.onDownClicked();
 			setAdapterToList();
 		} else {
-			// TODO: not implemented yet
+			Intent intent = new Intent(this, ViewTripActivity.class);
+			startActivity(intent);
 		}
 	}
 

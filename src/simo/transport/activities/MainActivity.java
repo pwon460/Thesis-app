@@ -28,7 +28,7 @@ public class MainActivity extends BasicListenerActivity {
 	}
 
 	public void goPickTrip(View view) {
-		Intent intent = new Intent(this, SelectTripActivity.class);
+		Intent intent = new Intent(this, SelectTransportActivity.class);
 		startActivity(intent);
 	}
 

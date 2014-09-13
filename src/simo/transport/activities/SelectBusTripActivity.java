@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
-public class BusTripActivity extends TripActivityTemplate {
+public class SelectBusTripActivity extends TripActivityTemplate {
 
 	private Boolean isBySuburb;
 	private String startSuburb;
@@ -52,11 +52,11 @@ public class BusTripActivity extends TripActivityTemplate {
 			long id) {
 		boolean handled = handleArrowButtonClick(view);
 
-		
 		if (!handled) {
 			ViewHolder holder = (ViewHolder) view.getTag();
 			TextView tv = holder.getTextView();
-			// clear index buttons from action stack as choice has been locked in
+			// clear index buttons from action stack as choice has been locked
+			// in
 			cleanActionStack();
 			if (isBySuburb) {
 				if (startSuburb == null || originStop == null
@@ -65,6 +65,7 @@ public class BusTripActivity extends TripActivityTemplate {
 					String title = "";
 					String btnText = tv.getText().toString();
 					ArrayList<String> temp = null;
+					
 					if (startSuburb == null) {
 						startSuburb = btnText;
 						title = "Select stop for " + startSuburb;
@@ -87,7 +88,7 @@ public class BusTripActivity extends TripActivityTemplate {
 					setAdapterToList();
 				} else {
 					destStop = tv.getText().toString();
-					getDataAccessObject().setSuburbInfo(startSuburb,
+					getDataAccessObject().setBySuburbInfo(startSuburb,
 							destSuburb, originStop, destStop);
 					goTimetableActivity();
 				}
@@ -97,22 +98,19 @@ public class BusTripActivity extends TripActivityTemplate {
 					route = tv.getText().toString();
 					setTitle("Select origin stop");
 					getListHandler().setFullList(
-							getDataAccessObject().getStopsOnRoute(route,
-									isRightHandMode()));
+							getDataAccessObject().getStopsOnRoute(route));
 					setAdapterToList();
 				} else if (originStop == null) {
 					getActionStack().add(LIST_BTN);
 					originStop = tv.getText().toString();
 					setTitle("Select destination stop");
 					ArrayList<String> tempList = getDataAccessObject()
-							.getStopsOnRoute(route, isRightHandMode());
+							.getStopsOnRoute(route);
 					tempList.remove(originStop);
 					getListHandler().setFullList(tempList);
 					setAdapterToList();
 				} else {
 					destStop = tv.getText().toString();
-					getDataAccessObject().setStops(route, isRightHandMode(),
-							originStop, destStop);
 					goTimetableActivity();
 				}
 			}
@@ -121,9 +119,20 @@ public class BusTripActivity extends TripActivityTemplate {
 
 	private void goTimetableActivity() {
 		Intent intent = new Intent(this, ShowTimetableActivity.class);
-		String transport = getResources().getString(R.id.bus_btn);
-		intent.putExtra("timetable",
-				getDataAccessObject().getTimetable(transport));
+		String transport = getResources().getString(R.string.bus);
+		intent.putExtra("transport", transport);
+		if (isBySuburb) {
+			intent.putExtra("isBySuburb", true);
+			intent.putExtra("originSuburb", startSuburb);
+			intent.putExtra("destSuburb", destSuburb);
+			intent.putExtra("originStop", originStop);
+			intent.putExtra("destStop", destStop);
+		} else {
+			intent.putExtra("isBySuburb", false);
+			intent.putExtra("route", route);
+			intent.putExtra("originStop", originStop);
+			intent.putExtra("destStop", destStop);
+		}
 		startActivity(intent);
 	}
 
@@ -160,8 +169,7 @@ public class BusTripActivity extends TripActivityTemplate {
 					setTitle("Select origin stop");
 					originStop = null;
 					getListHandler().setFullList(
-							getDataAccessObject().getStopsOnRoute(route,
-									isRightHandMode()));
+							getDataAccessObject().getStopsOnRoute(route));
 				} else if (route != null) {
 					setTitle("Select route");
 					route = null;

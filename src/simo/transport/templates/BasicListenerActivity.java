@@ -58,7 +58,7 @@ public class BasicListenerActivity extends ActionBarActivity implements
 	@Override
 	public boolean onHover(View v, MotionEvent event) {
 		if (!v.isFocused()) {
-			Log.d("debug", "focused new item");
+//			Log.d("debug", "focused new item");
 			v.requestFocus();
 		}
 		return false;
