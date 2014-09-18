@@ -1135,7 +1135,7 @@ containing a value of this type.
         public static final int activity_chooser_view_content=0x7f070025;
         public static final int always=0x7f07000b;
         public static final int beginning=0x7f070011;
-        public static final int bus_btn=0x7f07004f;
+        public static final int bus_btn=0x7f070050;
         public static final int bus_options=0x7f07003c;
         public static final int button1=0x7f07003d;
         public static final int button2=0x7f07003e;
@@ -1152,14 +1152,14 @@ containing a value of this type.
         public static final int end=0x7f070013;
         public static final int expand_activities_button=0x7f070026;
         public static final int expanded_menu=0x7f07002c;
-        public static final int ferry_btn=0x7f070050;
+        public static final int ferry_btn=0x7f070051;
         public static final int home=0x7f070014;
         public static final int homeAsUp=0x7f070005;
         public static final int icon=0x7f07002a;
         public static final int ifRoom=0x7f07000a;
         public static final int image=0x7f070027;
         public static final int index_view=0x7f07004b;
-        public static final int light_rail_btn=0x7f070051;
+        public static final int light_rail_btn=0x7f070052;
         public static final int listMode=0x7f070001;
         public static final int list_item=0x7f070029;
         public static final int list_view=0x7f07004a;
@@ -1171,7 +1171,7 @@ containing a value of this type.
         public static final int normal=0x7f070000;
         public static final int num_trips_left_btn=0x7f070047;
         public static final int padding=0x7f07003f;
-        public static final int pick_transport=0x7f070043;
+        public static final int pick_transport=0x7f07004e;
         public static final int prev_stop_btn=0x7f070045;
         public static final int progress_circular=0x7f070018;
         public static final int progress_horizontal=0x7f070019;
@@ -1198,11 +1198,12 @@ containing a value of this type.
         public static final int timetable_list=0x7f070042;
         public static final int title=0x7f07002b;
         public static final int top_action_bar=0x7f070020;
-        public static final int train_btn=0x7f07004e;
+        public static final int train_btn=0x7f07004f;
         public static final int trip_info_btn=0x7f070044;
         public static final int up=0x7f070021;
-        public static final int up_button=0x7f070052;
+        public static final int up_button=0x7f070053;
         public static final int useLogo=0x7f070003;
+        public static final int view_trip=0x7f070043;
         public static final int withText=0x7f07000c;
     }
     public static final class integer {

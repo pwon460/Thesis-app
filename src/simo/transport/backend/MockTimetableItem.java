@@ -2,7 +2,7 @@ package simo.transport.backend;
 
 import java.util.Date;
 
-public class MockTimetableItem implements TimetableItemInterface {
+public class MockTimetableItem implements TimetableItem {
 
 	private Date departure;
 	private Date arrival;

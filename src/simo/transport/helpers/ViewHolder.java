@@ -13,5 +13,5 @@ public class ViewHolder {
 	public TextView getTextView() {
 		return tv;
 	}
-
+	
 }

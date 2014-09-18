@@ -20,6 +20,8 @@ import android.widget.TextView;
 public class CustomAdapter extends ArrayAdapter<String> {
 
 	private static final int PADDING = 10;
+	private static final int NO_PADDING = 0;
+	private static final int PADDING_ADJUSTMENT = 15;
 	private int numItemsShown;
 	private Context context;
 	private ArrayList<String> values;
@@ -44,25 +46,37 @@ public class CustomAdapter extends ArrayAdapter<String> {
 		TextView rowView = (TextView) convertView;
 		// reuse views as per Holder pattern
 		if (rowView == null) {
-			LayoutInflater inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			rowView = (TextView) inflater.inflate(resource, parent, false);
-			// override the size of the item in the listview
-			itemHeight = (parent.getMeasuredHeight() - PADDING) / numItemsShown;
-			rowView.setLayoutParams(new AbsListView.LayoutParams(
-					LayoutParams.MATCH_PARENT, itemHeight));
-
-			// Log.d("debug", "list view item height = " + itemHeight);
-			// configure view holder
-			ViewHolder viewHolder = new ViewHolder();
-			viewHolder.setTextView((TextView) rowView
-					.findViewById(R.id.customTextView));
-			rowView.setTag(viewHolder);
+			rowView = initRowView(parent);
 		}
 
 		// put stuff into the view
 		ViewHolder holder = (ViewHolder) rowView.getTag();
 		String s = values.get(position);
+		populateRowView(parent, holder, s);
+
+		return rowView;
+	}
+
+	private TextView initRowView(ViewGroup parent) {
+		TextView rowView;
+		LayoutInflater inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		rowView = (TextView) inflater.inflate(resource, parent, false);
+		// override the size of the item in the listview
+		itemHeight = (parent.getMeasuredHeight() - PADDING) / numItemsShown;
+		rowView.setLayoutParams(new AbsListView.LayoutParams(
+				LayoutParams.MATCH_PARENT, itemHeight));
+
+		// Log.d("debug", "list view item height = " + itemHeight);
+		// configure view holder
+		ViewHolder viewHolder = new ViewHolder();
+		viewHolder.setTextView((TextView) rowView
+				.findViewById(R.id.customTextView));
+		rowView.setTag(viewHolder);
+		return rowView;
+	}
+
+	private void populateRowView(ViewGroup parent, ViewHolder holder, String s) {
 		TextView tv = holder.getTextView();
 		tv.setTextColor(textColor);
 		tv.setTextAppearance(context, R.style.VerySmallText);
@@ -76,7 +90,9 @@ public class CustomAdapter extends ArrayAdapter<String> {
 			tv.setContentDescription("List scroll down");
 		} else {
 			tv.setText(s);
-			tv.setPadding(parent.getMeasuredWidth()/15, 0, parent.getMeasuredWidth()/15, 0);
+			tv.setPadding(parent.getMeasuredWidth() / PADDING_ADJUSTMENT,
+					NO_PADDING, parent.getMeasuredWidth() / PADDING_ADJUSTMENT,
+					NO_PADDING);
 			tv.setGravity(Gravity.CENTER_VERTICAL);
 			tv.setContentDescription(s);
 			if (isInverted) {
@@ -87,8 +103,6 @@ public class CustomAdapter extends ArrayAdapter<String> {
 						ButtonBuilder.getBorderedRectangle(context, textColor));
 			}
 		}
-
-		return rowView;
 	}
 
 	private void setTextViewBackground(TextView tv, Drawable drawable) {

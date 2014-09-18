@@ -6,7 +6,7 @@ import java.util.Locale;
 
 import simo.transport.R;
 import simo.transport.backend.MockTransportDAO;
-import simo.transport.backend.TransportDAOInterface;
+import simo.transport.backend.TransportDAO;
 import simo.transport.helpers.ButtonBuilder;
 import simo.transport.helpers.CustomAdapter;
 import simo.transport.helpers.DisplayedListHandler;
@@ -39,7 +39,7 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 	public static final String INDEX_BTN = "index";
 	private int numItemsShown;
 	private static final int OFF = 1;
-	private TransportDAOInterface transportDAO = new MockTransportDAO(this);
+	private TransportDAO transportDAO = new MockTransportDAO(this);
 	private CustomAdapter adapter;
 	private ListView listview;
 	private IndexButtonHandler indexHandler;
@@ -320,7 +320,7 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 		}
 	}
 
-	public TransportDAOInterface getDataAccessObject() {
+	public TransportDAO getDataAccessObject() {
 		return transportDAO;
 	}
 

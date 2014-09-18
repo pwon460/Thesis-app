@@ -10,6 +10,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -109,7 +110,7 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		AccessibilityManager manager = (AccessibilityManager) getSystemService(Context.ACCESSIBILITY_SERVICE);
 		return manager.isEnabled();
 	}
-
+	
 	public void loadColorsFromPrefs() {
 		// The attributes you want retrieved
 		int[] attrs = { android.R.attr.textColor, android.R.attr.background };
@@ -242,6 +243,11 @@ public class BasicListenerActivity extends ActionBarActivity implements
 
 	public int getNumIndexBtns() {
 		return numBtns;
+	}
+	
+	public boolean isGPSEnabled () {
+		LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 	}
 
 }

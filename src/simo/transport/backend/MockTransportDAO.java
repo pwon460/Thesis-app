@@ -9,6 +9,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import simo.transport.R;
 import android.content.Context;
 import android.util.Log;
@@ -16,7 +20,7 @@ import android.util.Log;
 /*
  * This is a pretend implementation for testing purposes only
  */
-public class MockTransportDAO implements TransportDAOInterface {
+public class MockTransportDAO implements TransportDAO {
 
 	private ArrayList<String> list = new ArrayList<String>();
 	private Context ctx;
@@ -169,15 +173,15 @@ public class MockTransportDAO implements TransportDAOInterface {
 	}
 
 	@Override
-	public ArrayList<TimetableItemInterface> getTimetable(String transport) {
+	public ArrayList<TimetableItem> getTimetable(String transport) {
 		Log.d("debug", "mode of transport is " + transport);
 
-		ArrayList<TimetableItemInterface> timetable = new ArrayList<TimetableItemInterface>();
+		ArrayList<TimetableItem> timetable = new ArrayList<TimetableItem>();
 
 		String[] departures = new String[] { "13:30", "14:00", "15:30",
 				"16:00", "17:00", "17:30", "18:00", "19:00", "19:30" };
-		String[] arrivals = new String[] { "14:00", "14:30", "16:00", "16:30",
-				"17:30", "18:00", "18:30", "19:30", "20:00" };
+		String[] arrivals = new String[] { "13:45", "14:15", "15:45", "16:15",
+				"17:15", "17:45", "18:15", "19:15", "19:45" };
 		String[] descriptions = new String[] { "platform 1", "platform 2",
 				"platform 3", "platform 4", "platform 5" };
 
@@ -190,7 +194,7 @@ public class MockTransportDAO implements TransportDAOInterface {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
 		for (int i = 0; i < departures.length; i++) {
-			TimetableItemInterface item = new MockTimetableItem();
+			TimetableItem item = new MockTimetableItem();
 			try {
 				item.setDepartureTime(sdf.parse(today + departures[i]));
 				item.setArrivalTime(sdf.parse(today + arrivals[i]));
@@ -202,12 +206,30 @@ public class MockTransportDAO implements TransportDAOInterface {
 			timetable.add(item);
 		}
 
+		// for testing purposes, add one that's 2 minutes from now
+		TimetableItem item = new MockTimetableItem();
+		DateTime dt = DateTime.now();
+		int hours = dt.getHourOfDay();
+		int mins = dt.getMinuteOfHour() + 1;
+		String temp = hours + ":" + mins;
+		mins += 3;
+		String temp2 = hours + ":" + mins;
+		
+		try {
+			item.setDepartureTime(sdf.parse(today + temp));
+			item.setArrivalTime(sdf.parse(today + temp2));
+			item.setDescription("time test");
+			timetable.add(item);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
 		return timetable;
 	}
 
 	@Override
-	public TripInfoInterface getTrip(String transport, String departure) {
-		TripInfoInterface trip = new MockTripInfo(transport, departure, origin,
+	public TripInfo getTrip(String transport, String departure) {
+		TripInfo trip = new MockTripInfo(transport, departure, origin,
 				dest, route, originStop, destStop);
 		return trip;
 	}

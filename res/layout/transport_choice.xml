@@ -21,7 +21,9 @@
         android:id="@+id/bus_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_custom_margin"
+        android:layout_marginLeft="@dimen/activity_custom_margin"
+        android:layout_marginRight="@dimen/activity_custom_margin"
+        android:layout_marginTop="@dimen/activity_custom_margin"
         android:layout_weight="1"
         android:onClick="goSelectTrip"
         android:text="@string/bus" />
@@ -30,7 +32,9 @@
         android:id="@+id/ferry_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_custom_margin"
+        android:layout_marginLeft="@dimen/activity_custom_margin"
+        android:layout_marginRight="@dimen/activity_custom_margin"
+        android:layout_marginTop="@dimen/activity_custom_margin"
         android:layout_weight="1"
         android:onClick="goSelectTrip"
         android:text="@string/ferry" />
@@ -39,9 +43,7 @@
         android:id="@+id/light_rail_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_custom_margin"
-        android:layout_marginLeft="@dimen/activity_custom_margin"
-        android:layout_marginRight="@dimen/activity_custom_margin"
+        android:layout_margin="@dimen/activity_custom_margin"
         android:layout_weight="1"
         android:onClick="goSelectTrip"
         android:text="@string/light_rail" />
