@@ -10,11 +10,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import simo.transport.R;
 import android.content.Context;
+import android.location.Location;
 import android.util.Log;
 
 /*
@@ -29,6 +28,7 @@ public class MockTransportDAO implements TransportDAO {
 	private String route;
 	private String originStop;
 	private String destStop;
+	private Location currLocation = null;
 
 	public MockTransportDAO(Context ctx) {
 		this.ctx = ctx;
@@ -233,5 +233,22 @@ public class MockTransportDAO implements TransportDAO {
 				dest, route, originStop, destStop);
 		return trip;
 	}
+
+	@Override
+	public boolean isValidTrip(Location location) {
+		currLocation  = location;
+		boolean isValid = false;
+
+		
+		return isValid;
+	}
+
+	@Override
+	public boolean isAtNextStop(Location location, String nextStop) {
+		
+		return false;
+	}
+	
+	
 
 }

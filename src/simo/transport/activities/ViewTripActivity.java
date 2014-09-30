@@ -1,11 +1,13 @@
 package simo.transport.activities;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import simo.transport.R;
 import simo.transport.backend.TransportDAO;
 import simo.transport.backend.TripInfo;
 import simo.transport.helpers.DAOBuilder;
+import simo.transport.helpers.GPSHandler;
 import simo.transport.helpers.Speaker;
 import simo.transport.helpers.TimeBroadcastReceiver;
 import simo.transport.templates.BasicListenerActivity;
@@ -27,6 +29,8 @@ public class ViewTripActivity extends BasicListenerActivity {
 	private int tripIndex = 0;
 	private TransportDAO transportDAO;
 	private TripInfo info;
+	private ArrayList<String> stops;
+	private ArrayList<Date> times;
 	private TimeBroadcastReceiver broadcastReceiver;
 	private Speaker speaker;
 
@@ -44,11 +48,13 @@ public class ViewTripActivity extends BasicListenerActivity {
 		builder.rebuildDAO(intent, transport);
 		transportDAO = builder.getDAO();
 		info = transportDAO.getTrip(transport, departureTime);
+		stops = info.getOrderedStops();
+		times = info.getOrderedTimes();
 		setupTripInfo();
 		if (!isGPSEnabled()) {
 			broadcastReceiver = new TimeBroadcastReceiver(this);
 		} else {
-			// TODO: GPS receiver?
+			new GPSHandler(this);
 		}
 	}
 
@@ -85,10 +91,6 @@ public class ViewTripActivity extends BasicListenerActivity {
 		b.setContentDescription(text);
 	}
 
-	public TripInfo getTripInfo() {
-		return info;
-	}
-
 	public int getTripIndex() {
 		return tripIndex;
 	}
@@ -98,7 +100,6 @@ public class ViewTripActivity extends BasicListenerActivity {
 	}
 
 	public void setNextStop(int tripIndex) {
-		ArrayList<String> stops = info.getOrderedStops();
 		View v = findViewById(R.id.next_stop_btn);
 		Button b = (Button) v;
 		String text;
@@ -117,7 +118,6 @@ public class ViewTripActivity extends BasicListenerActivity {
 	}
 
 	public void setPrevStop(int tripIndex) {
-		ArrayList<String> stops = info.getOrderedStops();
 		View v = findViewById(R.id.prev_stop_btn);
 		Button b = (Button) v;
 		String text;
@@ -131,7 +131,6 @@ public class ViewTripActivity extends BasicListenerActivity {
 	}
 
 	public void setNumStopsLeft(int tripIndex) {
-		ArrayList<String> stops = info.getOrderedStops();
 		View v = findViewById(R.id.num_trips_left_btn);
 		Button b = (Button) v;
 		int endIndex = stops.size();
@@ -140,7 +139,7 @@ public class ViewTripActivity extends BasicListenerActivity {
 		if (tripIndex == TRIP_FINISHED) {
 			text = "Trip finished";
 		} else if (tripIndex == TRIP_INVALID) {
-			text = "Stops left: N/A";
+			text = "Invalid trip";
 		} else {
 			text = "Stops left: " + stopsLeft;
 		}
@@ -182,4 +181,17 @@ public class ViewTripActivity extends BasicListenerActivity {
 	public Speaker getSpeaker() {
 		return speaker;
 	}
+	
+	public TransportDAO getDAO() {
+		return transportDAO;
+	}
+
+	public ArrayList<Date> getTimes() {
+		return times;
+	}
+	
+	public ArrayList<String> getStops() {
+		return stops;
+	}
+	
 }
