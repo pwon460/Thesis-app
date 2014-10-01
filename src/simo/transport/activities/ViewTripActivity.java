@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 public class ViewTripActivity extends BasicListenerActivity {
@@ -99,7 +100,7 @@ public class ViewTripActivity extends BasicListenerActivity {
 		tripIndex = num;
 	}
 
-	public void setNextStop(int tripIndex) {
+	private void setNextStop(int tripIndex) {
 		View v = findViewById(R.id.next_stop_btn);
 		Button b = (Button) v;
 		String text;
@@ -117,7 +118,7 @@ public class ViewTripActivity extends BasicListenerActivity {
 		b.setContentDescription(text);
 	}
 
-	public void setPrevStop(int tripIndex) {
+	private void setPrevStop(int tripIndex) {
 		View v = findViewById(R.id.prev_stop_btn);
 		Button b = (Button) v;
 		String text;
@@ -130,11 +131,10 @@ public class ViewTripActivity extends BasicListenerActivity {
 		b.setContentDescription(text);
 	}
 
-	public void setNumStopsLeft(int tripIndex) {
+	private void setNumStopsLeft(int tripIndex) {
 		View v = findViewById(R.id.num_trips_left_btn);
 		Button b = (Button) v;
-		int endIndex = stops.size();
-		int stopsLeft = endIndex - tripIndex;
+		int stopsLeft = stops.size() - tripIndex;
 		String text;
 		if (tripIndex == TRIP_FINISHED) {
 			text = "Trip finished";
@@ -178,10 +178,30 @@ public class ViewTripActivity extends BasicListenerActivity {
 
 	}
 
+	/*
+	 * called on clicking stops left button
+	 */
+	public void checkDestProximity(View view) {
+		String message = "";
+		Log.d("debug", "tripindex = " + tripIndex);
+		if (tripIndex + 1 == stops.size() - 1) {
+			message = "You are approaching your destination";
+		} else if (tripIndex + 1 == stops.size()) {
+			message = "Next stop is your destination";
+		}
+		speaker.speak(message, speaker.getMode());
+	}
+	
+	public void setViews() {
+		setPrevStop(tripIndex);
+		setNextStop(tripIndex);
+		setNumStopsLeft(tripIndex);
+	}
+	
 	public Speaker getSpeaker() {
 		return speaker;
 	}
-	
+
 	public TransportDAO getDAO() {
 		return transportDAO;
 	}
@@ -189,9 +209,9 @@ public class ViewTripActivity extends BasicListenerActivity {
 	public ArrayList<Date> getTimes() {
 		return times;
 	}
-	
+
 	public ArrayList<String> getStops() {
 		return stops;
 	}
-	
+
 }

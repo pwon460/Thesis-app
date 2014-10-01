@@ -32,4 +32,8 @@ public class Speaker implements OnInitListener {
 	public void shutdown() {
 		tts.shutdown();
 	}
+	
+	public int getMode() {
+		return TextToSpeech.QUEUE_ADD;
+	}
 }

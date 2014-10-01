@@ -20,7 +20,6 @@ public class GPSHandler implements LocationListener {
 	private ViewTripActivity activity;
 	private TransportDAO transportDAO;
 	private LocationManager locationManager;
-	private int tripIndex = 0;
 	private ArrayList<String> stops;
 	private ArrayList<Date> times;
 	private TripTimeHandler tripTimeHandler;
@@ -41,24 +40,19 @@ public class GPSHandler implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
+		int tripIndex = activity.getTripIndex();
 		tripTimeHandler.adjustIndexByTime(new DateTime(times.get(0)), now, tripIndex);
 		if (transportDAO.isValidTrip(location) && tripIndex != ViewTripActivity.TRIP_INVALID) {
 			String nextStop = stops.get(tripIndex);
 			if (transportDAO.isAtNextStop(location, nextStop)) {
-				tripIndex++;
-				setViews();
+				activity.setTripIndex(activity.getTripIndex() + 1);
+				activity.setViews();
 			}
 		} else {
-			tripIndex = ViewTripActivity.TRIP_INVALID;
-			setViews();
+			activity.setTripIndex(tripIndex = ViewTripActivity.TRIP_INVALID);
+			activity.setViews();
 			locationManager.removeUpdates(this);
 		}
-	}
-
-	private void setViews() {
-		activity.setPrevStop(tripIndex);
-		activity.setNextStop(tripIndex);
-		activity.setNumStopsLeft(tripIndex);
 	}
 
 	@Override
