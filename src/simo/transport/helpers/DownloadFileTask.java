@@ -11,7 +11,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.PowerManager;
-import android.util.Log;
 import android.widget.Toast;
 
 public class DownloadFileTask extends AsyncTask<String, Integer, String> {

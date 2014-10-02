@@ -101,13 +101,12 @@ public class MainActivity extends BasicListenerActivity {
 	}
 
 	public void onDownloadClick(View view) {
-		File f = downloadHelper.downloadUpdate(downloadDirectory);
-		if (f != null) {
+		File newFile = downloadHelper.downloadUpdate(downloadDirectory);
+		if (newFile != null) {
 			removeDownloadButton();
 			findViewById(R.id.home).invalidate();
-			storageHelper.removeOldFiles(downloadDirectory, f);
+			storageHelper.removeOldFiles(downloadDirectory, newFile);
 		}
-		
 	}
 
 }
