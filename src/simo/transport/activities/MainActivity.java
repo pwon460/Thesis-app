@@ -7,7 +7,6 @@ import simo.transport.helpers.DownloadHelper;
 import simo.transport.helpers.StorageHelper;
 import simo.transport.templates.BasicListenerActivity;
 import android.annotation.TargetApi;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;

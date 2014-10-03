@@ -26,7 +26,8 @@ public class TimeBroadcastReceiver extends BroadcastReceiver {
 		stops = activity.getStops();
 		tripTimeHandler = new TripTimeHandler();
 		now = tripTimeHandler.roundToNearestMin(DateTime.now());
-		tripTimeHandler.adjustIndexByTime(new DateTime(times.get(0)), now, activity.getTripIndex());
+		tripTimeHandler.adjustIndexByTime(new DateTime(times.get(0)), now,
+				activity.getTripIndex());
 		activity.setViews();
 	}
 
@@ -40,7 +41,8 @@ public class TimeBroadcastReceiver extends BroadcastReceiver {
 			int tripIndex = activity.getTripIndex();
 			if (tripIndex != ViewTripActivity.TRIP_INVALID
 					&& tripIndex != ViewTripActivity.TRIP_FINISHED) {
-				tripTimeHandler.adjustIndexByTime(new DateTime(times.get(0)), now, tripIndex);
+				tripTimeHandler.adjustIndexByTime(new DateTime(times.get(0)),
+						now, tripIndex);
 			}
 
 			if (tripIndex != ViewTripActivity.TRIP_INVALID
@@ -49,14 +51,21 @@ public class TimeBroadcastReceiver extends BroadcastReceiver {
 				DateTime nextStopArrivalTime = new DateTime(
 						times.get(tripIndex));
 
-				int result = tripTimeHandler.compareTimes(now, nextStopArrivalTime);
+				int result = tripTimeHandler.compareTimes(now,
+						nextStopArrivalTime);
 				if (result == 0) { // times are the same
 					if (tripIndex < stops.size() - 1) {
-						speaker.speak("Arriving at " + stops.get(tripIndex),
-								speaker.getMode());
+						if (speaker != null) {
+							speaker.speak(
+									"Arriving at " + stops.get(tripIndex),
+									speaker.getMode());
+						}
 						activity.setTripIndex(activity.getTripIndex() + 1);
 					} else {
-						speaker.speak("Arriving at destination", speaker.getMode());
+						if (speaker != null) {
+							speaker.speak("Arriving at destination",
+									speaker.getMode());
+						}
 						activity.setTripIndex(ViewTripActivity.TRIP_FINISHED);
 					}
 				} else if (result > 0) { // time now, is later than the stop
@@ -65,7 +74,8 @@ public class TimeBroadcastReceiver extends BroadcastReceiver {
 					while (result >= 0 && tripIndex < stops.size() - 1) {
 						activity.setTripIndex(activity.getTripIndex() + 1);
 						nextStopArrivalTime = new DateTime(times.get(tripIndex));
-						result = tripTimeHandler.compareTimes(now, nextStopArrivalTime);
+						result = tripTimeHandler.compareTimes(now,
+								nextStopArrivalTime);
 					}
 				}
 			}
@@ -79,10 +89,12 @@ public class TimeBroadcastReceiver extends BroadcastReceiver {
 		// issue warning 1-2 mins before reaching dest
 		int minsBetween = Minutes.minutesBetween(now, last).getMinutes();
 
-		if (minsBetween == 2) {
-			speaker.speak("2 minutes until destination", speaker.getMode());
-		} else if (minsBetween == 1) {
-			speaker.speak("1 minute until destination", speaker.getMode());
+		if (speaker != null) {
+			if (minsBetween == 2) {
+				speaker.speak("2 minutes until destination", speaker.getMode());
+			} else if (minsBetween == 1) {
+				speaker.speak("1 minute until destination", speaker.getMode());
+			}
 		}
 	}
 

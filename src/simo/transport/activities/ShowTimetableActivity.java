@@ -2,6 +2,7 @@ package simo.transport.activities;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Timer;
 
 import org.joda.time.DateTime;
 import org.joda.time.Hours;
@@ -13,8 +14,13 @@ import simo.transport.backend.TransportDAO;
 import simo.transport.helpers.CustomAdapter;
 import simo.transport.helpers.DAOBuilder;
 import simo.transport.helpers.DisplayedListHandler;
+import simo.transport.helpers.GPSTimerTask;
+import simo.transport.helpers.MyLocationListener;
 import simo.transport.templates.BasicListenerActivity;
+import simo.transport.templates.GPSActivity;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,8 +31,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class ShowTimetableActivity extends BasicListenerActivity implements
-		OnItemClickListener {
+		OnItemClickListener, GPSActivity {
 
+	private static final int LOCATION_REFRESH_TIMER = 120000;
 	private int numItemsShown;
 	private ListView listview;
 	private ArrayList<TimetableItem> timetable;
@@ -34,6 +41,11 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 	private DisplayedListHandler listHandler;
 	private TransportDAO transportDAO;
 	private Bundle bundle;
+	private LocationManager locationManager;
+	private MyLocationListener locationListener;
+	private GPSTimerTask GPSTimerTask;
+	private Timer timer;
+	private boolean scheduled = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +56,7 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 		Intent intent = getIntent();
 		bundle = intent.getExtras();
 		String transport = intent.getStringExtra("transport");
-//		Log.d("debug", "transport type is " + transport);
+		// Log.d("debug", "transport type is " + transport);
 
 		DAOBuilder builder = new DAOBuilder(this);
 		builder.rebuildDAO(intent, transport);
@@ -66,13 +78,6 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 	private void getPrefSettings() {
 		loadColorsFromPrefs();
 		numItemsShown = getNumItemsShown();
-	}
-
-	@Override
-	public void applySettings() {
-		adapter.setTextColor(getTextColor());
-		LinearLayout layout = (LinearLayout) findViewById(R.id.timetable_layout);
-		layout.setBackgroundColor(getBackgroundColor());
 	}
 
 	private void setAdapterToList() {
@@ -192,16 +197,73 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 		String timeDelimiter = " - ";
 		int i = 0;
 		for (String s : parts) {
-//			Log.d("debug", "index " + i + "=" + s);
+			// Log.d("debug", "index " + i + "=" + s);
 			if (s.contains(timeDelimiter)) {
-//				Log.d("debug", "break");
+				// Log.d("debug", "break");
 				break;
 			}
 			i++;
 		}
 		String[] times = parts[i].split(timeDelimiter);
-//		Log.d("debug", times[0] + ", " + times[1]);
+		// Log.d("debug", times[0] + ", " + times[1]);
 		return times[0];
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		if (isGPSEnabled()) {
+			if (locationListener == null) {
+				locationListener = new MyLocationListener(this);
+			}
+
+			locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+			locationManager.requestLocationUpdates(
+					LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
+			if (timer == null) {
+				timer = new Timer();
+			}
+
+			if (GPSTimerTask == null) {
+				GPSTimerTask = new GPSTimerTask(locationManager,
+						locationListener);
+			}
+		}
+
+	}
+
+	@Override
+	public void applySettings() {
+		adapter.setTextColor(getTextColor());
+		LinearLayout layout = (LinearLayout) findViewById(R.id.timetable_layout);
+		layout.setBackgroundColor(getBackgroundColor());
+	}
+
+	/*
+	 * battery-saver: every 2 mins, start listening for updated location instead
+	 * of constantly listening for location forever
+	 */
+	@Override
+	public void onLocationAcquired(Location location) {
+		locationManager.removeUpdates(locationListener);
+		Log.d("debug", "removing listener");
+		if (!scheduled) {
+			Log.d("debug", "scheduling location updates");
+			timer.schedule(GPSTimerTask, LOCATION_REFRESH_TIMER);
+			scheduled = true;
+		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		timer.cancel();
+		scheduled = false;
+		if (locationManager != null) {
+			locationManager.removeUpdates(locationListener);
+			Log.d("debug", "recurring task cancelled, listener removed");
+		}
+	}
 }

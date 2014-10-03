@@ -7,7 +7,7 @@ import simo.transport.R;
 import simo.transport.backend.TransportDAO;
 import simo.transport.backend.TripInfo;
 import simo.transport.helpers.DAOBuilder;
-import simo.transport.helpers.GPSHandler;
+import simo.transport.helpers.LocationHandler;
 import simo.transport.helpers.Speaker;
 import simo.transport.helpers.TimeBroadcastReceiver;
 import simo.transport.templates.BasicListenerActivity;
@@ -20,7 +20,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 
 public class ViewTripActivity extends BasicListenerActivity {
@@ -55,7 +54,7 @@ public class ViewTripActivity extends BasicListenerActivity {
 		if (!isGPSEnabled()) {
 			broadcastReceiver = new TimeBroadcastReceiver(this);
 		} else {
-			new GPSHandler(this);
+			new LocationHandler(this);
 		}
 	}
 
@@ -182,22 +181,25 @@ public class ViewTripActivity extends BasicListenerActivity {
 	 * called on clicking stops left button
 	 */
 	public void checkDestProximity(View view) {
-		String message = "";
-		Log.d("debug", "tripindex = " + tripIndex);
-		if (tripIndex + 1 == stops.size() - 1) {
-			message = "You are approaching your destination";
-		} else if (tripIndex + 1 == stops.size()) {
-			message = "Next stop is your destination";
+		if (speaker != null) {
+			String message = "";
+			Log.d("debug", "tripindex = " + tripIndex);
+			if (tripIndex + 1 == stops.size() - 1) {
+				message = "You are approaching your destination";
+			} else if (tripIndex + 1 == stops.size()) {
+				message = "Next stop is your destination";
+			}
+			speaker.speak(message, speaker.getMode());
 		}
-		speaker.speak(message, speaker.getMode());
 	}
-	
+
 	public void setViews() {
 		setPrevStop(tripIndex);
 		setNextStop(tripIndex);
 		setNumStopsLeft(tripIndex);
+		applySettings();
 	}
-	
+
 	public Speaker getSpeaker() {
 		return speaker;
 	}
