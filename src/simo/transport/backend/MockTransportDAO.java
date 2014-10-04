@@ -237,16 +237,16 @@ public class MockTransportDAO implements TransportDAO {
 	@Override
 	public boolean isValidTrip(Location location) {
 		currLocation  = location;
-		boolean isValid = false;
+		boolean isValid = true;
 
+		
 		
 		return isValid;
 	}
 
 	@Override
 	public boolean isAtNextStop(Location location, String nextStop) {
-		
-		return false;
+		return true;
 	}
 	
 	

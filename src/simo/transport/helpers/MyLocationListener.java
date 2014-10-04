@@ -1,15 +1,15 @@
 package simo.transport.helpers;
 
-import simo.transport.templates.GPSActivity;
+import simo.transport.templates.GPSLocationHandler;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 
 public class MyLocationListener implements LocationListener {
 
-	private GPSActivity activity;
+	private GPSLocationHandler activity;
 
-	public MyLocationListener (GPSActivity activity) {
+	public MyLocationListener (GPSLocationHandler activity) {
 		this.activity = activity;
 	}
 	

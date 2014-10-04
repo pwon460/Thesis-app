@@ -33,6 +33,7 @@ public class ViewTripActivity extends BasicListenerActivity {
 	private ArrayList<Date> times;
 	private TimeBroadcastReceiver broadcastReceiver;
 	private Speaker speaker;
+	private LocationHandler locationHandler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class ViewTripActivity extends BasicListenerActivity {
 		if (!isGPSEnabled()) {
 			broadcastReceiver = new TimeBroadcastReceiver(this);
 		} else {
-			new LocationHandler(this);
+			locationHandler = new LocationHandler(this);
 		}
 	}
 
@@ -68,6 +69,7 @@ public class ViewTripActivity extends BasicListenerActivity {
 			speaker = new Speaker(this);
 			broadcastReceiver.setSpeaker(speaker);
 		}
+		locationHandler.resume();
 		super.onResume();
 	}
 
@@ -79,6 +81,7 @@ public class ViewTripActivity extends BasicListenerActivity {
 		if (speaker != null) {
 			speaker.shutdown();
 		}
+		locationHandler.stopGPSRequests();
 		super.onPause();
 	}
 

@@ -17,7 +17,7 @@ import simo.transport.helpers.DisplayedListHandler;
 import simo.transport.helpers.GPSTimerTask;
 import simo.transport.helpers.MyLocationListener;
 import simo.transport.templates.BasicListenerActivity;
-import simo.transport.templates.GPSActivity;
+import simo.transport.templates.GPSLocationHandler;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
@@ -31,9 +31,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class ShowTimetableActivity extends BasicListenerActivity implements
-		OnItemClickListener, GPSActivity {
+		OnItemClickListener, GPSLocationHandler {
 
-	private static final int LOCATION_REFRESH_TIMER = 120000;
+	private static final int SCHEDULE_LOCATION_REFRESH_TIMER = 120000;
 	private int numItemsShown;
 	private ListView listview;
 	private ArrayList<TimetableItem> timetable;
@@ -73,6 +73,13 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 		listview.setOnItemClickListener(this);
 
 		setAdapterToList();
+
+		if (isGPSEnabled()) {
+			locationListener = new MyLocationListener(this);
+			locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+			timer = new Timer();
+			GPSTimerTask = new GPSTimerTask(locationManager, locationListener);
+		}
 	}
 
 	private void getPrefSettings() {
@@ -214,22 +221,8 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 		super.onResume();
 
 		if (isGPSEnabled()) {
-			if (locationListener == null) {
-				locationListener = new MyLocationListener(this);
-			}
-
-			locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 			locationManager.requestLocationUpdates(
 					LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-
-			if (timer == null) {
-				timer = new Timer();
-			}
-
-			if (GPSTimerTask == null) {
-				GPSTimerTask = new GPSTimerTask(locationManager,
-						locationListener);
-			}
 		}
 
 	}
@@ -251,7 +244,7 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 		Log.d("debug", "removing listener");
 		if (!scheduled) {
 			Log.d("debug", "scheduling location updates");
-			timer.schedule(GPSTimerTask, LOCATION_REFRESH_TIMER);
+			timer.schedule(GPSTimerTask, SCHEDULE_LOCATION_REFRESH_TIMER);
 			scheduled = true;
 		}
 	}
