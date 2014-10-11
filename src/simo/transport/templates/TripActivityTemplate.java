@@ -20,8 +20,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnHoverListener;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.AdapterView;
@@ -31,9 +31,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+@TargetApi(Build.VERSION_CODES.KITKAT)
 public abstract class TripActivityTemplate extends BasicListenerActivity
-		implements OnItemClickListener, OnHoverListener {
+		implements OnItemClickListener {
 
 	public static final String LIST_BTN = "listview";
 	public static final String INDEX_BTN = "index";
@@ -97,12 +97,14 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 		for (int i = 0; i < getNumIndexBtns() - 2; i++) {
 			getLayoutInflater().inflate(R.layout.index_button, layout);
 		}
-		
+
 		getLayoutInflater().inflate(R.layout.down_arrow, layout);
 
 		for (int i = 0; i < getNumIndexBtns(); i++) {
 			View temp = layout.getChildAt(i);
-			temp.setOnHoverListener(this);
+			if (hasHoverListener()) {
+				temp.setOnHoverListener(this);
+			}
 			if (isAccessibilityEnabled()) {
 				temp.setFocusableInTouchMode(true);
 			} else {
@@ -176,8 +178,8 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 
 			// ignore the index button click if it's a blank string
 			if (!btnClickedText.equals("")) {
-				Log.d("debug", "adding index button to stack: "
-						+ btnClickedText);
+				// Log.d("debug", "adding index button to stack: "
+				// + btnClickedText);
 
 				actionStack.add(INDEX_BTN);
 				indexHandler.handleIndexBtnClicked(btnClickedText);
@@ -195,7 +197,7 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 		listHandler.saveCurrListState(); // save list current state
 		// Log.d("debug",
 		// "saving current list state: " + listHandler.getFullList());
-		Log.d("debug", "filtering list by: " + indexHandler.getFilter());
+		// Log.d("debug", "filtering list by: " + indexHandler.getFilter());
 		listHandler.filterList(indexHandler.getFilter());
 		// Log.d("debug", "remaining list: " + listHandler.getFullList());
 		setAdapterToList();
@@ -306,7 +308,7 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 					drawable);
 			states.addState(new int[] { android.R.attr.state_focused },
 					drawable);
-			
+
 			drawable = ButtonBuilder.getBorderedRectangle(this, getTextColor());
 			states.addState(new int[] { -android.R.attr.state_focused },
 					drawable);

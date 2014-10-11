@@ -228,8 +228,8 @@ public class MockTransportDAO implements TransportDAO {
 	}
 
 	@Override
-	public TripInfo getTrip(String transport, String departure) {
-		TripInfo trip = new MockTripInfo(transport, departure, origin,
+	public TripInfo getTrip(String transport, int privateCode) {
+		TripInfo trip = new MockTripInfo(transport, privateCode, origin,
 				dest, route, originStop, destStop);
 		return trip;
 	}

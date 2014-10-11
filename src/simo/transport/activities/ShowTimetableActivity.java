@@ -2,6 +2,7 @@ package simo.transport.activities;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Timer;
 
 import org.joda.time.DateTime;
@@ -46,6 +47,7 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 	private GPSTimerTask GPSTimerTask;
 	private Timer timer;
 	private boolean scheduled = false;
+	private HashMap<String, Integer> map = new HashMap<String, Integer>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +104,7 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 			String temp = timeDiff + item.getDescription() + ", "
 					+ getTime(item.getDepartureTime()) + " - "
 					+ getTime(item.getArrivalTime());
+			map.put(temp, item.getPrivateCode());
 			list.add(temp);
 		}
 
@@ -192,29 +195,28 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 		} else {
 			Intent intent = new Intent(this, ViewTripActivity.class);
 			intent.putExtras(bundle);
-			String time = getDepartureTime(text);
-			intent.putExtra("departure", time);
+			intent.putExtra("pcode", map.get(text));
 			startActivity(intent);
 		}
 	}
 
-	private String getDepartureTime(String text) {
-		Log.d("debug", text);
-		String[] parts = text.split(", ");
-		String timeDelimiter = " - ";
-		int i = 0;
-		for (String s : parts) {
-			// Log.d("debug", "index " + i + "=" + s);
-			if (s.contains(timeDelimiter)) {
-				// Log.d("debug", "break");
-				break;
-			}
-			i++;
-		}
-		String[] times = parts[i].split(timeDelimiter);
-		// Log.d("debug", times[0] + ", " + times[1]);
-		return times[0];
-	}
+//	private String getDepartureTime(String text) {
+//		Log.d("debug", text);
+//		String[] parts = text.split(", ");
+//		String timeDelimiter = " - ";
+//		int i = 0;
+//		for (String s : parts) {
+//			// Log.d("debug", "index " + i + "=" + s);
+//			if (s.contains(timeDelimiter)) {
+//				// Log.d("debug", "break");
+//				break;
+//			}
+//			i++;
+//		}
+//		String[] times = parts[i].split(timeDelimiter);
+//		// Log.d("debug", times[0] + ", " + times[1]);
+//		return times[0];
+//	}
 
 	@Override
 	protected void onResume() {
@@ -252,11 +254,14 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 	@Override
 	public void onPause() {
 		super.onPause();
-		timer.cancel();
-		scheduled = false;
+		if (timer != null) {
+			timer.cancel();
+			scheduled = false;
+		}
 		if (locationManager != null) {
 			locationManager.removeUpdates(locationListener);
 			Log.d("debug", "recurring task cancelled, listener removed");
 		}
 	}
+	
 }

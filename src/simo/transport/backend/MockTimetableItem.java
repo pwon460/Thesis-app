@@ -7,6 +7,7 @@ public class MockTimetableItem implements TimetableItem {
 	private Date departure;
 	private Date arrival;
 	private String description;
+	private int privateCode;
 
 	public Date getDepartureTime() {
 		return departure;
@@ -30,6 +31,11 @@ public class MockTimetableItem implements TimetableItem {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	@Override
+	public int getPrivateCode() {
+		return 0;
 	}
 
 

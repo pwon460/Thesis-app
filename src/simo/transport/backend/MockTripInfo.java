@@ -7,16 +7,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
+import android.util.Log;
+
 public class MockTripInfo implements TripInfo {
 
 	private String tripInfo;
 	private ArrayList<String> orderedStops;
 	private ArrayList<Date> orderedTimes;
-	private String departure;
 
-	public MockTripInfo(String transport, String departure, String origin,
+	public MockTripInfo(String transport, int privateCode, String origin,
 			String dest, String route, String originStop, String destStop) {
-		this.departure = departure;
 		
 		Random rng = new Random();
 		int randNum = rng.nextInt(5) + 1;
@@ -42,14 +42,42 @@ public class MockTripInfo implements TripInfo {
 		int year = cal.get(Calendar.YEAR);
 		int month = cal.get(Calendar.MONTH) + 1; // turn 0-11 to 1-12
 		int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-
+		int hour = cal.get(Calendar.HOUR);
+		String hourStr;
+		
+		if (hour < 10) {
+			hourStr = "0" + hour;
+		} else {
+			hourStr = "" + hour;
+		}
+		
+		int min = (cal.get(Calendar.MINUTE) + 1) % 60;
+		String minStr;
+		
+		if (min < 10) {
+			minStr = "0" + min;
+		} else {
+			minStr = "" + min;
+		}
+		
+		int AM_PM = cal.get(Calendar.AM_PM);
+		String a;
+		
+		if (AM_PM == 0) {
+			a = "AM";
+		} else {
+			a = "PM";
+		}
+		
 		String today = dayOfMonth + "/" + month + "/" + year + " ";
+		String departure = hourStr + ":" + minStr + " " + a;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
 
 		ArrayList<Date> times = new ArrayList<Date>();
 
 		try {
 			String departureDate = today + departure;
+			Log.d("debug", "departureDate = " + departureDate);
 			Date temp = sdf.parse(departureDate);
 			cal.setTime(temp);
 			for (int i = 0; i < departures.length; i++) {

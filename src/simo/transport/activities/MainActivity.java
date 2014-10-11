@@ -6,9 +6,7 @@ import simo.transport.R;
 import simo.transport.helpers.DownloadHelper;
 import simo.transport.helpers.StorageHelper;
 import simo.transport.templates.BasicListenerActivity;
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -16,7 +14,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-@TargetApi(Build.VERSION_CODES.KITKAT)
 public class MainActivity extends BasicListenerActivity {
 
 	private DownloadHelper downloadHelper;
