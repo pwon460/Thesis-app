@@ -34,13 +34,9 @@ public class MainActivity extends BasicListenerActivity {
 		setID(R.id.home);
 		hasDownloadButton = false;
 		downloadDirectory = storageHelper.getDownloadDirectory();
-	}
-
-	@Override
-	protected void onResume() {
 		TDXFile = storageHelper.getTDXData(downloadDirectory);
 		downloadHelper = new DownloadHelper(this);
-
+		
 		if (downloadHelper.isDownloadAvailable()) {
 			String versionTimestamp = downloadHelper.getTDXDataTimestamp();
 			boolean isNewDataAvailable = downloadHelper.isNewDataAvailable(
@@ -56,7 +52,6 @@ public class MainActivity extends BasicListenerActivity {
 					Toast.LENGTH_SHORT).show();
 		}
 
-		super.onResume();
 	}
 
 	private void removeDownloadButton() {

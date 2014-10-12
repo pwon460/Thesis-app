@@ -314,8 +314,7 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 					drawable);
 		}
 
-		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-		if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+		if (getAPIVersion() >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
 			toReplace.setBackground(states);
 		} else {
 			toReplace.setBackgroundDrawable(states);

@@ -89,6 +89,21 @@ public class ViewTripActivity extends BasicListenerActivity {
 		}
 	}
 
+	/*
+	 * override text appearance for large text as it is otherwise too large to
+	 * fit in the text boxes on the screen
+	 */
+	@Override
+	public int getTextStyleID() {
+		int id = super.getTextStyleID();
+
+		if (id == R.style.LargeText) {
+			id = R.style.MediumText;
+		}
+
+		return id;
+	}
+
 	@Override
 	public void onPause() {
 		if (speaker != null) {
@@ -206,9 +221,11 @@ public class ViewTripActivity extends BasicListenerActivity {
 			String message = "";
 			Log.d("debug", "tripindex = " + tripIndex);
 			if (tripIndex + 1 == stops.size() - 1) {
-				message = "You are approaching your destination";
+				message = "Transport nearing your destination";
 			} else if (tripIndex + 1 == stops.size()) {
 				message = "Next stop is your destination";
+			} else if (tripIndex == TRIP_FINISHED) {
+				message = "Destination reached, trip finished";
 			}
 			speaker.speak(message, speaker.getMode());
 		}

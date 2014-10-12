@@ -108,8 +108,7 @@ public class BasicListenerActivity extends ActionBarActivity implements
 					}
 					btn.setTextColor(textColor);
 					btn.setGravity(Gravity.CENTER);
-					btn.setTextAppearance(getApplicationContext(),
-							R.style.SmallText);
+					btn.setTextAppearance(this, getTextStyleID());
 				}
 			}
 		}
@@ -221,9 +220,20 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		return textColor;
 	}
 
-	public int getTextSettings() {
-		return Integer.valueOf(prefs.getString("pref_text_size_key",
+	public int getTextStyleID() {
+		int value = Integer.valueOf(prefs.getString("pref_text_size_key",
 				DEFAULT_PREF_VALUE));
+		int id;
+		
+		if (value == 1) {
+			id = R.style.SmallText;
+		} else if (value == 2) {
+			id = R.style.MediumText;
+		} else {
+			id = R.style.LargeText;
+		}
+		
+		return id;
 	}
 
 	public void setID(int layoutID) {
