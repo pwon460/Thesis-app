@@ -107,7 +107,12 @@ public class CustomAdapter extends ArrayAdapter<String> {
 			tv.setGravity(Gravity.CENTER_VERTICAL);
 			tv.setContentDescription(s);
 		}
+		
+		setTextViewBackground(tv);
 
+	}
+
+	private void setTextViewBackground(TextView tv) {
 		GradientDrawable drawable;
 		StateListDrawable states = new StateListDrawable();
 
@@ -133,17 +138,12 @@ public class CustomAdapter extends ArrayAdapter<String> {
 			drawable = ButtonBuilder.getBorderedRectangle(context, textColor);
 		}
 
-		states.addState(new int[] { -android.R.attr.state_focused }, drawable);
+		states.addState(new int[] { -android.R.attr.state_selected }, drawable);
 
-		setTextViewBackground(tv, states);
-	}
-
-	private void setTextViewBackground(TextView tv, Drawable drawable) {
-		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-		if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-			tv.setBackground(drawable);
+		if (activity.getAPIVersion() >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+			tv.setBackground(states);
 		} else {
-			tv.setBackgroundDrawable(drawable);
+			tv.setBackgroundDrawable(states);
 		}
 	}
 

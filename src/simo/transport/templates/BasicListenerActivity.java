@@ -64,7 +64,6 @@ public class BasicListenerActivity extends ActionBarActivity implements
 			Log.d("debug", "prev view = " + prevView);
 			Log.d("debug", "view = " + v);
 			if (prevView != null && prevView != v) {
-				Log.d("debug", "removing highlighting from " + prevView);
 				prevView.setSelected(false);
 			}
 			v.setSelected(true);
