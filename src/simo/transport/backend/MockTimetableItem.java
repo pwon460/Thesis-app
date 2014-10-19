@@ -8,7 +8,6 @@ public class MockTimetableItem implements TimetableItem {
 	private Date departure;
 	private Date arrival;
 	private String description;
-	private int privateCode;
 
 	public Date getDepartureTime() {
 		return departure;
@@ -48,6 +47,16 @@ public class MockTimetableItem implements TimetableItem {
 		}
 		
 		return temp;
+	}
+
+	@Override
+	public int getOriginId() {
+		return 0;
+	}
+
+	@Override
+	public int getDestId() {
+		return 0;
 	}
 
 }

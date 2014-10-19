@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import android.location.Location;
 
 public interface TransportDAO {
-	
+
 	/*******************************/
 	/*********** getters ***********/
 	/*******************************/
@@ -36,12 +36,10 @@ public interface TransportDAO {
 	// given a suburb, returns a list of all the stops for that suburb
 	public ArrayList<String> getSuburbStops(String suburb);
 
-	
-	
 	/*******************************/
 	/*********** setters ***********/
 	/*******************************/
-	
+
 	/******************************************************************************/
 	/******************************************************************************/
 	/*** these setters will be called before getTimetable or getTrip are called ***/
@@ -66,14 +64,14 @@ public interface TransportDAO {
 
 	// returns the information for the trip that the user selected from the
 	// timetable
-	public TripInfo getTrip(String transport, int privateCode);
-	
-	
+	public TripInfo getTrip(String transport, int privateCode, int originId,
+			int destinationId);
+
 	// GPS functions
-	
+
 	// if within 50 meters of the origin
 	public boolean isValidTrip(Location currLocation);
-	
+
 	// if within 50 meters of the stop provided
 	public boolean isAtNextStop(Location location, String nextStop);
 

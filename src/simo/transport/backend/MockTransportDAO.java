@@ -179,28 +179,28 @@ public class MockTransportDAO implements TransportDAO {
 		ArrayList<TimetableItem> timetable = new ArrayList<TimetableItem>();
 
 		String[] departures = new String[] { "4:00", "5:00", "13:00" };
-//		String[] departures = new String[] { "13:30", "14:00", "15:30"};
-//				"16:00", "17:00", "17:30", "18:00", "19:00", "19:30" };
+		// String[] departures = new String[] { "13:30", "14:00", "15:30"};
+		// "16:00", "17:00", "17:30", "18:00", "19:00", "19:30" };
 		String[] arrivals = new String[] { "4:30", "5:30", "13:30" };
-//		String[] arrivals = new String[] { "13:45", "14:15", "15:45" };
-//				"16:15", "17:15", "17:45", "18:15", "19:15", "19:45" };
+		// String[] arrivals = new String[] { "13:45", "14:15", "15:45" };
+		// "16:15", "17:15", "17:45", "18:15", "19:15", "19:45" };
 		String[] descriptions = new String[] { "platform 1", "platform 2",
 				"platform 3", "platform 4", "platform 5" };
 
-//		Calendar calendar = Calendar.getInstance();
-//		int year = calendar.get(Calendar.YEAR);
-//		int month = calendar.get(Calendar.MONTH) + 1; // turn 0-11 to 1-12
-//		int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+		// Calendar calendar = Calendar.getInstance();
+		// int year = calendar.get(Calendar.YEAR);
+		// int month = calendar.get(Calendar.MONTH) + 1; // turn 0-11 to 1-12
+		// int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-		
-//		String today = dayOfMonth + "/" + month + "/" + year + " ";
-//		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+		// String today = dayOfMonth + "/" + month + "/" + year + " ";
+		// SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
 		for (int i = 0; i < departures.length; i++) {
 			TimetableItem item = new MockTimetableItem();
 			try {
-				item.setDepartureTime(sdf.parse( departures[i]));
+				item.setDepartureTime(sdf.parse(departures[i]));
 				item.setArrivalTime(sdf.parse(arrivals[i]));
 				item.setDescription(descriptions[i % 5]);
 			} catch (ParseException e) {
@@ -218,7 +218,7 @@ public class MockTransportDAO implements TransportDAO {
 		String temp = hours + ":" + mins;
 		mins += 3;
 		String temp2 = hours + ":" + mins;
-		
+
 		try {
 			item.setDepartureTime(sdf.parse(temp));
 			item.setArrivalTime(sdf.parse(temp2));
@@ -227,24 +227,23 @@ public class MockTransportDAO implements TransportDAO {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
+
 		return timetable;
 	}
 
 	@Override
-	public TripInfo getTrip(String transport, int privateCode) {
-		TripInfo trip = new MockTripInfo(transport, privateCode, origin,
-				dest, route, originStop, destStop);
+	public TripInfo getTrip(String transport, int privateCode, int originId,
+			int destId) {
+		TripInfo trip = new MockTripInfo(transport, origin, dest, route,
+				originStop, destStop);
 		return trip;
 	}
 
 	@Override
 	public boolean isValidTrip(Location location) {
-		currLocation  = location;
+		currLocation = location;
 		boolean isValid = true;
 
-		
-		
 		return isValid;
 	}
 
@@ -252,7 +251,5 @@ public class MockTransportDAO implements TransportDAO {
 	public boolean isAtNextStop(Location location, String nextStop) {
 		return true;
 	}
-	
-	
 
 }

@@ -15,7 +15,7 @@ public class MockTripInfo implements TripInfo {
 	private ArrayList<String> orderedStops;
 	private ArrayList<Date> orderedTimes;
 
-	public MockTripInfo(String transport, int privateCode, String origin,
+	public MockTripInfo(String transport, String origin,
 			String dest, String route, String originStop, String destStop) {
 		
 		Random rng = new Random();

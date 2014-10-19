@@ -44,12 +44,13 @@ public class ViewTripActivity extends BasicListenerActivity {
 
 		Intent intent = getIntent();
 		String transport = intent.getStringExtra("transport");
-		int privateCode = intent.getIntExtra("pcode", DEFAULT_VALUE);
+		ArrayList<Integer> codes = intent.getIntegerArrayListExtra("codes");
 
 		DAOBuilder builder = new DAOBuilder(this);
 		builder.rebuildDAO(intent, transport);
 		transportDAO = builder.getDAO();
-		info = transportDAO.getTrip(transport, privateCode);
+		info = transportDAO.getTrip(transport, codes.get(0), codes.get(1),
+				codes.get(2));
 		stops = info.getOrderedStops();
 		times = info.getOrderedTimes();
 		setupTripInfo();

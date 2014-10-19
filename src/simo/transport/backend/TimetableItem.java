@@ -24,7 +24,14 @@ public interface TimetableItem {
 
 	public void setDescription(String description);
 
+	/*
+	 * misc codes/ids to speed up database searching
+	 */
 	public int getPrivateCode();
+
+	public int getOriginId();
+
+	public int getDestId();
 
 	/*
 	 * returns an arraylist containing the days that this particular timetable

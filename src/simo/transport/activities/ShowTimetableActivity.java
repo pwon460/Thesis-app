@@ -49,7 +49,7 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 	private GPSTimerTask GPSTimerTask;
 	private Timer timer;
 	private boolean scheduled = false;
-	private HashMap<String, Integer> map = new HashMap<String, Integer>();
+	private HashMap<String, ArrayList<Integer>> map = new HashMap<String, ArrayList<Integer>>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,11 +105,15 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 			for (TimetableItem item : timetable) {
 				if (item.getDays().get(i)) {
 					String timeDiff = calcDiff(item.getDepartureTime(), i + 1);
-					String temp = timeDiff + item.getDescription() + ", "
+					String text = timeDiff + item.getDescription() + ", "
 							+ getTime(item.getDepartureTime()) + " - "
 							+ getTime(item.getArrivalTime());
-					map.put(temp, item.getPrivateCode());
-					list.add(temp);
+					ArrayList<Integer> codes = new ArrayList<Integer>();
+					codes.add(item.getPrivateCode());
+					codes.add(item.getOriginId());
+					codes.add(item.getDestId());
+					map.put(text, codes);
+					list.add(text);
 				}
 			}
 		}
@@ -232,7 +236,7 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 		} else {
 			Intent intent = new Intent(this, ViewTripActivity.class);
 			intent.putExtras(bundle);
-			intent.putExtra("pcode", map.get(text));
+			intent.putExtra("codes", map.get(text));
 			startActivity(intent);
 		}
 	}
