@@ -152,13 +152,13 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 
 	private String calcDiff(Date departureTime, int itemDayOfWeek) {
 		DateTime now = DateTime.now();
-		DateTime departure = new DateTime(departureTime);
-		MutableDateTime temp = MutableDateTime.now();
-		temp.setHourOfDay(departure.getHourOfDay());
-		temp.setMinuteOfHour(departure.getMinuteOfHour());
-		temp.setDayOfWeek(itemDayOfWeek);
-		int hourDiff = Hours.hoursBetween(now, temp).getHours();
-		int minDiff = Minutes.minutesBetween(now, temp).getMinutes() % 60;
+		DateTime temp = new DateTime(departureTime);
+		MutableDateTime departure = MutableDateTime.now();
+		departure.setHourOfDay(temp.getHourOfDay());
+		departure.setMinuteOfHour(temp.getMinuteOfHour());
+		departure.setDayOfWeek(itemDayOfWeek);
+		int hourDiff = Hours.hoursBetween(now, departure).getHours();
+		int minDiff = Minutes.minutesBetween(now, departure).getMinutes() % 60;
 		boolean isNegative = false;
 
 		if (hourDiff < 0) {
