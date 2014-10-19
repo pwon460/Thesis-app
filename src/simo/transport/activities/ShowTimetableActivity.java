@@ -8,6 +8,7 @@ import java.util.Timer;
 import org.joda.time.DateTime;
 import org.joda.time.Hours;
 import org.joda.time.Minutes;
+import org.joda.time.MutableDateTime;
 
 import simo.transport.R;
 import simo.transport.backend.TimetableItem;
@@ -35,6 +36,7 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 		OnItemClickListener, GPSLocationHandler {
 
 	private static final int SCHEDULE_LOCATION_REFRESH_TIMER = 120000;
+	private static final int DAYS_IN_WEEK = 7;
 	private int numItemsShown;
 	private ListView listview;
 	private ArrayList<TimetableItem> timetable;
@@ -99,13 +101,17 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 	private ArrayList<String> unpackTimetable(String transport) {
 		ArrayList<String> list = new ArrayList<String>();
 
-		for (TimetableItem item : timetable) {
-			String timeDiff = calcDiff(item.getDepartureTime());
-			String temp = timeDiff + item.getDescription() + ", "
-					+ getTime(item.getDepartureTime()) + " - "
-					+ getTime(item.getArrivalTime());
-			map.put(temp, item.getPrivateCode());
-			list.add(temp);
+		for (int i = 0; i < DAYS_IN_WEEK; i++) {
+			for (TimetableItem item : timetable) {
+				if (item.getDays().get(i)) {
+					String timeDiff = calcDiff(item.getDepartureTime(), i + 1);
+					String temp = timeDiff + item.getDescription() + ", "
+							+ getTime(item.getDepartureTime()) + " - "
+							+ getTime(item.getArrivalTime());
+					map.put(temp, item.getPrivateCode());
+					list.add(temp);
+				}
+			}
 		}
 
 		return list;
@@ -144,11 +150,15 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 		return time;
 	}
 
-	private String calcDiff(Date departureTime) {
+	private String calcDiff(Date departureTime, int itemDayOfWeek) {
 		DateTime now = DateTime.now();
 		DateTime departure = new DateTime(departureTime);
-		int hourDiff = Hours.hoursBetween(now, departure).getHours() % 24;
-		int minDiff = Minutes.minutesBetween(now, departure).getMinutes() % 60;
+		MutableDateTime temp = MutableDateTime.now();
+		temp.setHourOfDay(departure.getHourOfDay());
+		temp.setMinuteOfHour(departure.getMinuteOfHour());
+		temp.setDayOfWeek(itemDayOfWeek);
+		int hourDiff = Hours.hoursBetween(now, temp).getHours();
+		int minDiff = Minutes.minutesBetween(now, temp).getMinutes() % 60;
 		boolean isNegative = false;
 
 		if (hourDiff < 0) {
@@ -178,6 +188,33 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 			diff += " left\n";
 		}
 
+		if (itemDayOfWeek > now.getDayOfWeek()) {
+			switch (itemDayOfWeek) {
+			case 1:
+				diff = "Monday";
+				break;
+			case 2:
+				diff = "Tuesday";
+				break;
+			case 3:
+				diff = "Wednesday";
+				break;
+			case 4:
+				diff = "Thursday";
+				break;
+			case 5:
+				diff = "Friday";
+				break;
+			case 6:
+				diff = "Saturday";
+				break;
+			case 7:
+				diff = "Sunday";
+				break;
+			}
+			diff += "\n";
+		}
+
 		return diff;
 	}
 
@@ -200,23 +237,23 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 		}
 	}
 
-//	private String getDepartureTime(String text) {
-//		Log.d("debug", text);
-//		String[] parts = text.split(", ");
-//		String timeDelimiter = " - ";
-//		int i = 0;
-//		for (String s : parts) {
-//			// Log.d("debug", "index " + i + "=" + s);
-//			if (s.contains(timeDelimiter)) {
-//				// Log.d("debug", "break");
-//				break;
-//			}
-//			i++;
-//		}
-//		String[] times = parts[i].split(timeDelimiter);
-//		// Log.d("debug", times[0] + ", " + times[1]);
-//		return times[0];
-//	}
+	// private String getDepartureTime(String text) {
+	// Log.d("debug", text);
+	// String[] parts = text.split(", ");
+	// String timeDelimiter = " - ";
+	// int i = 0;
+	// for (String s : parts) {
+	// // Log.d("debug", "index " + i + "=" + s);
+	// if (s.contains(timeDelimiter)) {
+	// // Log.d("debug", "break");
+	// break;
+	// }
+	// i++;
+	// }
+	// String[] times = parts[i].split(timeDelimiter);
+	// // Log.d("debug", times[0] + ", " + times[1]);
+	// return times[0];
+	// }
 
 	@Override
 	protected void onResume() {
@@ -263,5 +300,5 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 			Log.d("debug", "recurring task cancelled, listener removed");
 		}
 	}
-	
+
 }

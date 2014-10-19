@@ -1,5 +1,6 @@
 package simo.transport.backend;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MockTimetableItem implements TimetableItem {
@@ -38,5 +39,15 @@ public class MockTimetableItem implements TimetableItem {
 		return 0;
 	}
 
+	@Override
+	public ArrayList<Boolean> getDays() {
+		ArrayList<Boolean> temp = new ArrayList<Boolean>();
+		
+		for (int i = 0; i < 7; i++) {
+			temp.add(true);
+		}
+		
+		return temp;
+	}
 
 }
