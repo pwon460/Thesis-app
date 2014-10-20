@@ -24,7 +24,6 @@ import android.widget.Button;
 
 public class ViewTripActivity extends BasicListenerActivity {
 
-	private static final int DEFAULT_VALUE = -1;
 	public static final int TRIP_INVALID = -1;
 	public static final int TRIP_FINISHED = -2;
 	private int tripIndex = 0;
