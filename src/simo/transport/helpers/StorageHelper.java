@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class StorageHelper {
 
-	private static final String TDX_FILE_FORMAT = "\\d{4}-\\d{2}-\\d{2}\\.txt";
+	private static final String TDX_FILE_FORMAT = "simo\\.\\d{8}.zip";
 
 	public File getDownloadDirectory() {
 		File directory;
@@ -46,11 +46,11 @@ public class StorageHelper {
 	public File getTDXData(File directory) {
 		File data = null;
 
-		Log.d("debug", "directory name = " + directory.getName());
+//		Log.d("debug", "directory name = " + directory.getName());
 		File[] filesInDir = directory.listFiles();
 		for (File f : filesInDir) {
 			Log.d("debug", "file looked at = " + f.getName());
-			if (f.getName().matches("\\d{4}-\\d{2}-\\d{2}.txt")) {
+			if (f.getName().matches(TDX_FILE_FORMAT)) {
 				data = f;
 			}
 		}
@@ -58,24 +58,24 @@ public class StorageHelper {
 		return data;
 	}
 
-	public File getSIMOFolder() {
-		File folder;
-
-		if (Environment.getExternalStorageState() != null
-				&& isExternalStorageUsable()) { // has sd card and is usable
-			folder = new File(Environment.getExternalStorageDirectory()
-					+ "/SIMO");
-			if (!folder.exists()) {
-				folder.mkdir();
-			}
-		} else { // doesn't have sd card or unable to use external storage
-			folder = new File(Environment.getDataDirectory() + "/SIMO");
-			if (!folder.exists()) {
-				folder.mkdir();
-			}
-		}
-		return folder;
-	}
+//	public File getSIMOFolder() {
+//		File folder;
+//
+//		if (Environment.getExternalStorageState() != null
+//				&& isExternalStorageUsable()) { // has sd card and is usable
+//			folder = new File(Environment.getExternalStorageDirectory()
+//					+ "/SIMO");
+//			if (!folder.exists()) {
+//				folder.mkdir();
+//			}
+//		} else { // doesn't have sd card or unable to use external storage
+//			folder = new File(Environment.getDataDirectory() + "/SIMO");
+//			if (!folder.exists()) {
+//				folder.mkdir();
+//			}
+//		}
+//		return folder;
+//	}
 
 	public void removeOldFiles(File downloadDirectory, File newFile) {
 

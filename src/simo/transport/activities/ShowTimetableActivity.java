@@ -67,7 +67,6 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 		transportDAO = builder.getDAO();
 
 		timetable = transportDAO.getTimetable(transport);
-		unpackTimetable(transport);
 
 		listHandler = new DisplayedListHandler();
 		listHandler.setNumItemsShown(numItemsShown);
@@ -161,6 +160,7 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 		departure.setHourOfDay(temp.getHourOfDay());
 		departure.setMinuteOfHour(temp.getMinuteOfHour());
 		departure.setDayOfWeek(itemDayOfWeek);
+		Log.d("debug", "testing date, DoM = " + departure.getDayOfMonth());
 		int hourDiff = Hours.hoursBetween(now, departure).getHours();
 		int minDiff = Minutes.minutesBetween(now, departure).getMinutes() % 60;
 		boolean isNegative = false;
