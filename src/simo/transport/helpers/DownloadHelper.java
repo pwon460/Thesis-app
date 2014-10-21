@@ -80,7 +80,7 @@ public class DownloadHelper {
 			String fileName = TDXFile.getName();
 			String[] parts = fileName.split("\\.");
 			String fileTimestamp = parts[parts.length - 2];
-			 Log.d("debug", "file timestamp = " + fileTimestamp);
+			Log.d("debug", "file timestamp = " + fileTimestamp);
 			LocalDate localCopyTimestamp = dtf.parseLocalDate(fileTimestamp);
 			Log.d("debug", "server timestamp = " + serverDate.toString());
 			Log.d("debug",
@@ -106,7 +106,8 @@ public class DownloadHelper {
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		progressDialog.setCancelable(true);
 
-		final DownloadFileTask task = new DownloadFileTask(ctx, downloadDirectory, progressDialog);
+		final DownloadFileTask task = new DownloadFileTask(ctx,
+				downloadDirectory, progressDialog);
 		task.execute(url);
 
 		progressDialog
@@ -124,7 +125,7 @@ public class DownloadHelper {
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
-		
+
 		return f;
 	}
 
