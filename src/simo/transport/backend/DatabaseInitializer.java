@@ -508,7 +508,7 @@ public class DatabaseInitializer {
 	
 	// To decrease size of database, vacuum is required but this will be done in updatedException function.
 	// Hence, this function should be called after updatedException function.
-	public void updateInitialDatabase (Context context, String file) {
+	public void applyPatch (Context context, String file) {
 
 		SQLiteDatabase bus_db = new MySQLiteHelper(context, MySQLiteHelper.BUS_DATABASE).getWritableDatabase();
 		SQLiteDatabase rail_db = new MySQLiteHelper(context, MySQLiteHelper.RAIL_DATABASE).getWritableDatabase();

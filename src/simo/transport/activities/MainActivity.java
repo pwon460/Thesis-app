@@ -6,6 +6,7 @@ import simo.transport.R;
 import simo.transport.helpers.DownloadHelper;
 import simo.transport.helpers.StorageHelper;
 import simo.transport.templates.BasicListenerActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -36,7 +37,28 @@ public class MainActivity extends BasicListenerActivity {
 		downloadDirectory = storageHelper.getDownloadDirectory();
 		TDXFile = storageHelper.getTDXData(downloadDirectory);
 		downloadHelper = new DownloadHelper(this);
-		
+
+		// TODO: Better to suggest only one database update button. 
+		if (!downloadHelper.fileExistance("simo.initialized")) {
+			if (downloadHelper.isInitialDBAvailable()) {
+				// download initial data file
+				// pass it to DownloadInitializer initializeDatabase(Context context, String file)
+			}
+		}
+		if (!downloadHelper.isPatchAvailable()) {
+			File patch = downloadHelper.patchFileExistance();
+			if (patch != null) {
+				String versionTimestamp = downloadHelper.getPatchTimestamp();
+				boolean isNewDataAvailalbe = downloadHelper.isNewDataAvailable(versionTimestamp, patch);
+				// download patch file
+				// pass it to DownloadInitializer applyPatch(Context context, String file)
+				//if (isNewDataAvailable && !hasDownloadButton) {
+				//	addDownloadButton();
+				//}				
+			} else {
+				System.err.println("There's no patch flag fils. Something goes wrong.");
+			}
+		}
 		if (downloadHelper.isDownloadAvailable()) {
 			String versionTimestamp = downloadHelper.getTDXDataTimestamp();
 			boolean isNewDataAvailable = downloadHelper.isNewDataAvailable(
