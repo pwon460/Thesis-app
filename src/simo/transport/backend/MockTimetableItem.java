@@ -1,5 +1,6 @@
 package simo.transport.backend;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MockTimetableItem implements TimetableItem {
@@ -30,6 +31,30 @@ public class MockTimetableItem implements TimetableItem {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	@Override
+	public int getPrivateCode() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getOriginId() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getDestId() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public ArrayList<Boolean> getDays() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
