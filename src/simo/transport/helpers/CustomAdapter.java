@@ -3,9 +3,11 @@ package simo.transport.helpers;
 import java.util.ArrayList;
 
 import simo.transport.R;
+import simo.transport.templates.BasicListenerActivity;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,10 +32,12 @@ public class CustomAdapter extends ArrayAdapter<String> {
 	private int background;
 	private boolean isInverted;
 	private int itemHeight;
+	private BasicListenerActivity activity;
 
 	public CustomAdapter(Context context, int resource,
 			ArrayList<String> values, int numItemsShown) {
 		super(context, resource, values);
+		this.activity = (BasicListenerActivity) context;
 		this.resource = resource;
 		this.context = context;
 		this.values = values;
@@ -66,6 +70,7 @@ public class CustomAdapter extends ArrayAdapter<String> {
 		itemHeight = (parent.getMeasuredHeight() - PADDING) / numItemsShown;
 		rowView.setLayoutParams(new AbsListView.LayoutParams(
 				LayoutParams.MATCH_PARENT, itemHeight));
+		rowView.setOnHoverListener(activity);
 
 		// Log.d("debug", "list view item height = " + itemHeight);
 		// configure view holder
@@ -78,8 +83,10 @@ public class CustomAdapter extends ArrayAdapter<String> {
 
 	private void populateRowView(ViewGroup parent, ViewHolder holder, String s) {
 		TextView tv = holder.getTextView();
+
 		tv.setTextColor(textColor);
 		tv.setTextAppearance(context, R.style.VerySmallText);
+
 		if (s.equals("up")) {
 			tv.setText("^");
 			tv.setGravity(Gravity.CENTER);
@@ -95,22 +102,44 @@ public class CustomAdapter extends ArrayAdapter<String> {
 					NO_PADDING);
 			tv.setGravity(Gravity.CENTER_VERTICAL);
 			tv.setContentDescription(s);
-			if (isInverted) {
-				setTextViewBackground(tv, ButtonBuilder.getBorderedRectangle(
-						context, textColor, background));
-			} else {
-				setTextViewBackground(tv,
-						ButtonBuilder.getBorderedRectangle(context, textColor));
-			}
 		}
+		
+		setTextViewBackground(tv);
+
 	}
 
-	private void setTextViewBackground(TextView tv, Drawable drawable) {
-		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-		if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-			tv.setBackground(drawable);
+	private void setTextViewBackground(TextView tv) {
+		GradientDrawable drawable;
+		StateListDrawable states = new StateListDrawable();
+
+		/*
+		 * set highlighted states
+		 */
+		if (isInverted) {
+			drawable = ButtonBuilder.getHighlightedBorderedRectangle(context,
+					background, textColor);
 		} else {
-			tv.setBackgroundDrawable(drawable);
+			drawable = ButtonBuilder.getHighlightedBorderedRectangle(context,
+					textColor, background);
+		}
+
+		states.addState(new int[] { android.R.attr.state_pressed }, drawable);
+		states.addState(new int[] { android.R.attr.state_selected }, drawable);
+
+		// set non highlighted state
+		if (isInverted) {
+			drawable = ButtonBuilder.getBorderedRectangle(context, textColor,
+					background);
+		} else {
+			drawable = ButtonBuilder.getBorderedRectangle(context, textColor);
+		}
+
+		states.addState(new int[] { -android.R.attr.state_selected }, drawable);
+
+		if (activity.getAPIVersion() >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+			tv.setBackground(states);
+		} else {
+			tv.setBackgroundDrawable(states);
 		}
 	}
 
@@ -133,5 +162,5 @@ public class CustomAdapter extends ArrayAdapter<String> {
 	public int getNumItemsShown() {
 		return numItemsShown;
 	}
-
+	
 }

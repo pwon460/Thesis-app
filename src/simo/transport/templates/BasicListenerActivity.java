@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 public class BasicListenerActivity extends ActionBarActivity implements
 		OnSharedPreferenceChangeListener, OnHoverListener {
 
+	private int currentAPIVersion = android.os.Build.VERSION.SDK_INT;
 	private static final String DEFAULT_PREF_VALUE = "1";
 	private static final int NUM_ARROW_BTNS = 2;
 	private SharedPreferences prefs; // the preferences in the xml file
@@ -35,6 +36,7 @@ public class BasicListenerActivity extends ActionBarActivity implements
 	private int background; // background color selected by user
 	private int id;
 	private int numBtns;
+	private View prevView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,14 +57,26 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		super.onPause();
 		prefs.unregisterOnSharedPreferenceChangeListener(this);
 	}
-	
+
 	@Override
 	public boolean onHover(View v, MotionEvent event) {
-		if (!v.isFocused()) {
-//			Log.d("debug", "focused new item");
-			v.requestFocus();
+		if (event.getAction() == MotionEvent.ACTION_HOVER_ENTER) {
+			Log.d("debug", "prev view = " + prevView);
+			Log.d("debug", "view = " + v);
+			if (prevView != null && prevView != v) {
+				prevView.setSelected(false);
+			}
+			v.setSelected(true);
+			prevView = v;
+			Log.d("debug", "setting new prevView = " + prevView);
 		}
 		return false;
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) {
+		applySettings();
 	}
 
 	public void applySettings() {
@@ -82,23 +96,18 @@ public class BasicListenerActivity extends ActionBarActivity implements
 			if (v.getId() != R.id.padding) {
 				btn = (Button) v;
 
-				if (btn.isFocused()) {
-					btn.clearFocus();
-				}
-
-				if (!isAccessibilityEnabled()) {
-					btn.setFocusableInTouchMode(false);
-				} else {
-					btn.setFocusableInTouchMode(true);
+				if (btn.isSelected()) {
+					btn.setSelected(false);
 				}
 
 				if (btn.getText().length() > 0) {
 					setViewNormalBackground(btn);
-					btn.setOnHoverListener(this);
+					if (hasHoverListener()) {
+						btn.setOnHoverListener(this);
+					}
 					btn.setTextColor(textColor);
 					btn.setGravity(Gravity.CENTER);
-					btn.setTextAppearance(getApplicationContext(),
-							R.style.SmallText);
+					btn.setTextAppearance(this, getTextStyleID());
 				}
 			}
 		}
@@ -106,11 +115,33 @@ public class BasicListenerActivity extends ActionBarActivity implements
 
 	}
 
+	public boolean hasHoverListener() {
+		return (currentAPIVersion > android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH);
+	}
+
+	private void setViewNormalBackground(View view) {
+		GradientDrawable highlightedDrawable = ButtonBuilder
+				.getHighlightedBorderedRectangle(this, textColor, background);
+		StateListDrawable states = new StateListDrawable();
+		states.addState(new int[] { android.R.attr.state_pressed },
+				highlightedDrawable);
+		states.addState(new int[] { android.R.attr.state_selected },
+				highlightedDrawable);
+		states.addState(new int[] { -android.R.attr.state_selected },
+				ButtonBuilder.getBorderedRectangle(this, textColor, background));
+
+		if (currentAPIVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+			view.setBackground(states);
+		} else {
+			view.setBackgroundDrawable(states);
+		}
+	}
+
 	public boolean isAccessibilityEnabled() {
 		AccessibilityManager manager = (AccessibilityManager) getSystemService(Context.ACCESSIBILITY_SERVICE);
 		return manager.isEnabled();
 	}
-	
+
 	public void loadColorsFromPrefs() {
 		// The attributes you want retrieved
 		int[] attrs = { android.R.attr.textColor, android.R.attr.background };
@@ -180,33 +211,6 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		return numItemsShown;
 	}
 
-	private void setViewNormalBackground(View view) {
-		GradientDrawable highlightedDrawable = ButtonBuilder
-				.getHighlightedBorderedRectangle(this, textColor, background);
-		StateListDrawable states = new StateListDrawable();
-		states.addState(new int[] { android.R.attr.state_pressed },
-				highlightedDrawable);
-		states.addState(new int[] { android.R.attr.state_selected },
-				highlightedDrawable);
-		states.addState(new int[] { android.R.attr.state_focused },
-				highlightedDrawable);
-		states.addState(new int[] { -android.R.attr.state_focused },
-				ButtonBuilder.getBorderedRectangle(this, textColor, background));
-
-		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-		if (currentapiVersion >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-			view.setBackground(states);
-		} else {
-			view.setBackgroundDrawable(states);
-		}
-	}
-
-	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
-		applySettings();
-	}
-
 	public int getBackgroundColor() {
 		return background;
 	}
@@ -215,9 +219,20 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		return textColor;
 	}
 
-	public int getTextSettings() {
-		return Integer.valueOf(prefs.getString("pref_text_size_key",
+	public int getTextStyleID() {
+		int value = Integer.valueOf(prefs.getString("pref_text_size_key",
 				DEFAULT_PREF_VALUE));
+		int id;
+		
+		if (value == 1) {
+			id = R.style.SmallText;
+		} else if (value == 2) {
+			id = R.style.MediumText;
+		} else {
+			id = R.style.LargeText;
+		}
+		
+		return id;
 	}
 
 	public void setID(int layoutID) {
@@ -244,10 +259,14 @@ public class BasicListenerActivity extends ActionBarActivity implements
 	public int getNumIndexBtns() {
 		return numBtns;
 	}
-	
-	public boolean isGPSEnabled () {
+
+	public boolean isGPSEnabled() {
 		LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+	}
+
+	public int getAPIVersion() {
+		return currentAPIVersion;
 	}
 
 }

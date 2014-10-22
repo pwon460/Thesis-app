@@ -31,6 +31,7 @@ public class LocationHandler implements GPSLocationHandler {
 	private Timer timer;
 	private GPSTimerTask GPSTimerTask;
 	private boolean scheduled = false;
+	private Speaker speaker;
 
 	public LocationHandler(ViewTripActivity activity) {
 		this.activity = activity;
@@ -97,7 +98,7 @@ public class LocationHandler implements GPSLocationHandler {
 		}
 	}
 
-	public void resume() {
+	public void resumeLocationRequests() {
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
 				MIN_LOCATION_REFRESH_TIME, MIN_LOCATION_REFRESH_DIST,
 				locationListener);
@@ -107,6 +108,13 @@ public class LocationHandler implements GPSLocationHandler {
 		Log.d("debug", "location received!");
 		String nextStop = stops.get(tripIndex);
 		if (transportDAO.isAtNextStop(location, nextStop)) {
+			if (tripIndex == stops.size() - 1) {
+				speaker.speak("Arriving at destination", speaker.getMode());
+			} else if (tripIndex == stops.size() - 2) {
+				speaker.speak("Arriving at second last stop: " + nextStop, speaker.getMode());
+			} else {
+				speaker.speak("Arriving at " + nextStop, speaker.getMode());
+			}
 			int tripIndex = activity.getTripIndex();
 			Log.d("debug", "pre increment trip index = " + tripIndex);
 			if (tripIndex < stops.size() - 1) {
@@ -118,11 +126,15 @@ public class LocationHandler implements GPSLocationHandler {
 			activity.setViews();
 		}
 	}
-
+	
 	public void stopGPSRequests() {
 		timer.cancel();
 		scheduled = false;
 		locationManager.removeUpdates(locationListener);
+	}
+
+	public void setSpeaker(Speaker speaker) {
+		this.speaker = speaker;
 	}
 
 }

@@ -32,8 +32,8 @@ public class ViewTripActivity extends BasicListenerActivity {
 	private ArrayList<String> stops;
 	private ArrayList<Date> times;
 	private TimeBroadcastReceiver broadcastReceiver;
-	private Speaker speaker;
 	private LocationHandler locationHandler;
+	private Speaker speaker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,45 +43,78 @@ public class ViewTripActivity extends BasicListenerActivity {
 
 		Intent intent = getIntent();
 		String transport = intent.getStringExtra("transport");
-		String departureTime = intent.getStringExtra("departure");
+		ArrayList<Integer> codes = intent.getIntegerArrayListExtra("codes");
 
 		DAOBuilder builder = new DAOBuilder(this);
 		builder.rebuildDAO(intent, transport);
 		transportDAO = builder.getDAO();
-		info = transportDAO.getTrip(transport, departureTime);
+		info = transportDAO.getTrip(transport, codes.get(0), codes.get(1),
+				codes.get(2));
 		stops = info.getOrderedStops();
 		times = info.getOrderedTimes();
 		setupTripInfo();
-		if (!isGPSEnabled()) {
-			broadcastReceiver = new TimeBroadcastReceiver(this);
+		if (stops == null || stops.isEmpty() || times == null
+				|| times.isEmpty()) {
+			tripIndex = TRIP_INVALID;
+			setViews();
 		} else {
-			locationHandler = new LocationHandler(this);
+			if (!isGPSEnabled()) {
+				broadcastReceiver = new TimeBroadcastReceiver(this);
+			} else {
+				locationHandler = new LocationHandler(this);
+			}
 		}
 	}
 
 	@Override
 	protected void onResume() {
-		if (broadcastReceiver != null) {
-			registerReceiver(broadcastReceiver, new IntentFilter(
-					Intent.ACTION_TIME_TICK));
-		}
-		if (isAccessibilityEnabled()) {
-			speaker = new Speaker(this);
-			broadcastReceiver.setSpeaker(speaker);
-		}
-		locationHandler.resume();
 		super.onResume();
+		if (tripIndex != TRIP_INVALID) {
+			if (broadcastReceiver != null) {
+				registerReceiver(broadcastReceiver, new IntentFilter(
+						Intent.ACTION_TIME_TICK));
+			}
+			if (isAccessibilityEnabled()) {
+				Log.d("debug", "creating speaker");
+				speaker = new Speaker(this);
+				if (!isGPSEnabled()) {
+					broadcastReceiver.setSpeaker(speaker);
+				} else {
+					locationHandler.setSpeaker(speaker);
+				}
+			}
+			if (locationHandler != null) {
+				locationHandler.resumeLocationRequests();
+			}
+		}
+	}
+
+	/*
+	 * override text appearance for large text as it is otherwise too large to
+	 * fit in the text boxes on the screen
+	 */
+	@Override
+	public int getTextStyleID() {
+		int id = super.getTextStyleID();
+
+		if (id == R.style.LargeText) {
+			id = R.style.MediumText;
+		}
+
+		return id;
 	}
 
 	@Override
 	public void onPause() {
-		if (broadcastReceiver != null) {
-			unregisterReceiver(broadcastReceiver);
-		}
 		if (speaker != null) {
 			speaker.shutdown();
 		}
-		locationHandler.stopGPSRequests();
+		if (broadcastReceiver != null) {
+			unregisterReceiver(broadcastReceiver);
+		}
+		if (locationHandler != null) {
+			locationHandler.stopGPSRequests();
+		}
 		super.onPause();
 	}
 
@@ -188,9 +221,11 @@ public class ViewTripActivity extends BasicListenerActivity {
 			String message = "";
 			Log.d("debug", "tripindex = " + tripIndex);
 			if (tripIndex + 1 == stops.size() - 1) {
-				message = "You are approaching your destination";
+				message = "Transport nearing your destination";
 			} else if (tripIndex + 1 == stops.size()) {
 				message = "Next stop is your destination";
+			} else if (tripIndex == TRIP_FINISHED) {
+				message = "Destination reached, trip finished";
 			}
 			speaker.speak(message, speaker.getMode());
 		}
@@ -201,10 +236,6 @@ public class ViewTripActivity extends BasicListenerActivity {
 		setNextStop(tripIndex);
 		setNumStopsLeft(tripIndex);
 		applySettings();
-	}
-
-	public Speaker getSpeaker() {
-		return speaker;
 	}
 
 	public TransportDAO getDAO() {

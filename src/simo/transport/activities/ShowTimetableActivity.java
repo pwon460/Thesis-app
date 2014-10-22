@@ -2,11 +2,13 @@ package simo.transport.activities;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Timer;
 
 import org.joda.time.DateTime;
 import org.joda.time.Hours;
 import org.joda.time.Minutes;
+import org.joda.time.MutableDateTime;
 
 import simo.transport.R;
 import simo.transport.backend.TimetableItem;
@@ -34,6 +36,7 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 		OnItemClickListener, GPSLocationHandler {
 
 	private static final int SCHEDULE_LOCATION_REFRESH_TIMER = 120000;
+	private static final int DAYS_IN_WEEK = 7;
 	private int numItemsShown;
 	private ListView listview;
 	private ArrayList<TimetableItem> timetable;
@@ -46,6 +49,7 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 	private GPSTimerTask GPSTimerTask;
 	private Timer timer;
 	private boolean scheduled = false;
+	private HashMap<String, ArrayList<Integer>> map = new HashMap<String, ArrayList<Integer>>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +67,6 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 		transportDAO = builder.getDAO();
 
 		timetable = transportDAO.getTimetable(transport);
-		unpackTimetable(transport);
 
 		listHandler = new DisplayedListHandler();
 		listHandler.setNumItemsShown(numItemsShown);
@@ -97,12 +100,23 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 	private ArrayList<String> unpackTimetable(String transport) {
 		ArrayList<String> list = new ArrayList<String>();
 
-		for (TimetableItem item : timetable) {
-			String timeDiff = calcDiff(item.getDepartureTime());
-			String temp = timeDiff + item.getDescription() + ", "
-					+ getTime(item.getDepartureTime()) + " - "
-					+ getTime(item.getArrivalTime());
-			list.add(temp);
+		for (int i = 0; i < DAYS_IN_WEEK; i++) {
+			for (TimetableItem item : timetable) {
+				if (item.getDays().get(i)) {
+					String timeDiff = calcDiff(item.getDepartureTime(), i + 1);
+					if (timeDiff != null) {
+						String text = timeDiff + item.getDescription() + ", "
+								+ getTime(item.getDepartureTime()) + " - "
+								+ getTime(item.getArrivalTime());
+						ArrayList<Integer> codes = new ArrayList<Integer>();
+						codes.add(item.getPrivateCode());
+						codes.add(item.getOriginId());
+						codes.add(item.getDestId());
+						map.put(text, codes);
+						list.add(text);
+					}
+				}
+			}
 		}
 
 		return list;
@@ -141,10 +155,15 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 		return time;
 	}
 
-	private String calcDiff(Date departureTime) {
+	private String calcDiff(Date departureTime, int itemDayOfWeek) {
 		DateTime now = DateTime.now();
-		DateTime departure = new DateTime(departureTime);
-		int hourDiff = Hours.hoursBetween(now, departure).getHours() % 24;
+		DateTime temp = new DateTime(departureTime);
+		MutableDateTime departure = MutableDateTime.now();
+		departure.setHourOfDay(temp.getHourOfDay());
+		departure.setMinuteOfHour(temp.getMinuteOfHour());
+		departure.setDayOfWeek(itemDayOfWeek);
+		Log.d("debug", "testing date, DoM = " + departure.getDayOfMonth());
+		int hourDiff = Hours.hoursBetween(now, departure).getHours();
 		int minDiff = Minutes.minutesBetween(now, departure).getMinutes() % 60;
 		boolean isNegative = false;
 
@@ -153,26 +172,60 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 			isNegative = true;
 		}
 
-		if (minDiff < 0) {
-			minDiff = 0 - minDiff;
-			isNegative = true;
-		}
-
 		String diff;
-		if (hourDiff > 0) {
-			diff = hourDiff + " hrs, " + minDiff + " mins";
+		/*
+		 * if diff is more than 10 hours into the past, disregard examined item
+		 */
+		if (isNegative && hourDiff > 10) {
+			diff = null;
 		} else {
-			if (minDiff == 0) {
-				diff = "< 1 min";
-			} else {
-				diff = minDiff + " mins";
+			if (minDiff < 0) {
+				minDiff = 0 - minDiff;
+				isNegative = true;
 			}
-		}
 
-		if (isNegative) {
-			diff += " ago\n";
-		} else {
-			diff += " left\n";
+			if (hourDiff > 0) {
+				diff = hourDiff + " hrs, " + minDiff + " mins";
+			} else {
+				if (minDiff == 0) {
+					diff = "< 1 min";
+				} else {
+					diff = minDiff + " mins";
+				}
+			}
+
+			if (isNegative) {
+				diff += " ago\n";
+			} else {
+				diff += " left\n";
+			}
+
+			if (itemDayOfWeek > now.getDayOfWeek()) {
+				switch (itemDayOfWeek) {
+				case 1:
+					diff = "Monday";
+					break;
+				case 2:
+					diff = "Tuesday";
+					break;
+				case 3:
+					diff = "Wednesday";
+					break;
+				case 4:
+					diff = "Thursday";
+					break;
+				case 5:
+					diff = "Friday";
+					break;
+				case 6:
+					diff = "Saturday";
+					break;
+				case 7:
+					diff = "Sunday";
+					break;
+				}
+				diff += "\n";
+			}
 		}
 
 		return diff;
@@ -192,29 +245,28 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 		} else {
 			Intent intent = new Intent(this, ViewTripActivity.class);
 			intent.putExtras(bundle);
-			String time = getDepartureTime(text);
-			intent.putExtra("departure", time);
+			intent.putExtra("codes", map.get(text));
 			startActivity(intent);
 		}
 	}
 
-	private String getDepartureTime(String text) {
-		Log.d("debug", text);
-		String[] parts = text.split(", ");
-		String timeDelimiter = " - ";
-		int i = 0;
-		for (String s : parts) {
-			// Log.d("debug", "index " + i + "=" + s);
-			if (s.contains(timeDelimiter)) {
-				// Log.d("debug", "break");
-				break;
-			}
-			i++;
-		}
-		String[] times = parts[i].split(timeDelimiter);
-		// Log.d("debug", times[0] + ", " + times[1]);
-		return times[0];
-	}
+	// private String getDepartureTime(String text) {
+	// Log.d("debug", text);
+	// String[] parts = text.split(", ");
+	// String timeDelimiter = " - ";
+	// int i = 0;
+	// for (String s : parts) {
+	// // Log.d("debug", "index " + i + "=" + s);
+	// if (s.contains(timeDelimiter)) {
+	// // Log.d("debug", "break");
+	// break;
+	// }
+	// i++;
+	// }
+	// String[] times = parts[i].split(timeDelimiter);
+	// // Log.d("debug", times[0] + ", " + times[1]);
+	// return times[0];
+	// }
 
 	@Override
 	protected void onResume() {
@@ -252,11 +304,14 @@ public class ShowTimetableActivity extends BasicListenerActivity implements
 	@Override
 	public void onPause() {
 		super.onPause();
-		timer.cancel();
-		scheduled = false;
+		if (timer != null) {
+			timer.cancel();
+			scheduled = false;
+		}
 		if (locationManager != null) {
 			locationManager.removeUpdates(locationListener);
 			Log.d("debug", "recurring task cancelled, listener removed");
 		}
 	}
+
 }

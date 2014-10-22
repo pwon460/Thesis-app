@@ -25,10 +25,6 @@ public class Speaker implements OnInitListener {
 		tts.speak(message, mode, null);
 	}
 	
-	public boolean isSpeaking() {
-		return tts.isSpeaking();
-	}
-	
 	public void shutdown() {
 		tts.shutdown();
 	}

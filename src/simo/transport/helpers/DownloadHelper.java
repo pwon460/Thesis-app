@@ -48,7 +48,7 @@ public class DownloadHelper {
 		}
 		Log.d("debug", "post formatted response string is: " + responseString);
 
-		if (responseString.matches("/.*/\\d{4}-\\d{2}-\\d{2}\\.txt")) {
+		if (responseString.matches("/.*/simo\\.\\d{8}\\.zip")) {
 			Log.d("debug", "download available");
 			return true;
 		} else {
@@ -65,12 +65,12 @@ public class DownloadHelper {
 		String[] path = responseString.split("/");
 		String fileName = path[path.length - 1];
 		String[] parts = fileName.split("\\.");
-		return parts[0];
+		return parts[parts.length - 2];
 	}
 
 	public boolean isNewDataAvailable(String serverTimestamp, File TDXFile) {
 		boolean isAvailable = false;
-		DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
+		DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyyMMdd");
 		LocalDate serverDate = dtf.parseLocalDate(serverTimestamp);
 
 		if (TDXFile == null) { // no prior file exists
@@ -79,8 +79,8 @@ public class DownloadHelper {
 		} else {
 			String fileName = TDXFile.getName();
 			String[] parts = fileName.split("\\.");
-			String fileTimestamp = parts[0];
-			 Log.d("debug", "file timestamp = " + fileTimestamp);
+			String fileTimestamp = parts[parts.length - 2];
+			Log.d("debug", "file timestamp = " + fileTimestamp);
 			LocalDate localCopyTimestamp = dtf.parseLocalDate(fileTimestamp);
 			Log.d("debug", "server timestamp = " + serverDate.toString());
 			Log.d("debug",
@@ -106,7 +106,8 @@ public class DownloadHelper {
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		progressDialog.setCancelable(true);
 
-		final DownloadFileTask task = new DownloadFileTask(ctx, downloadDirectory, progressDialog);
+		final DownloadFileTask task = new DownloadFileTask(ctx,
+				downloadDirectory, progressDialog);
 		task.execute(url);
 
 		progressDialog
@@ -124,6 +125,10 @@ public class DownloadHelper {
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7656b5577bb07c1395562293fce583d95d0fa9c6
 		return f;
 	}
 
