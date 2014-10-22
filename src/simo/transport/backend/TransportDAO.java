@@ -3,11 +3,10 @@ package simo.transport.backend;
 import java.util.ArrayList;
 
 import android.location.Location;
-import android.os.Bundle;
 
 public interface TransportDAO {
-	
-	/*******************************/
+
+	/************************/
 	/*********** getters ***********/
 	/*******************************/
 

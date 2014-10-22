@@ -124,8 +124,76 @@ public class DownloadHelper {
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
-		
 		return f;
+	}
+
+	public boolean fileExistance(String fname){
+	    File file = ctx.getFileStreamPath(fname);
+	    return file.exists();
+	}
+	
+	public boolean isInitialDBAvailable() {
+		String serverURL = PROTOCOL + SERVER_AUTHORITY + PATH;
+
+		RequestTask task = new RequestTask();
+		task.execute(serverURL);
+		responseString = "";
+		try {
+			responseString = task.get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+
+		Log.d("debug", "pre formatted response string is: " + responseString);
+		// if id is 1 then the content of p tags include a initial database file link
+		Pattern pattern = Pattern.compile("<p id=1>(/.*?)</p>");
+		Matcher matcher = pattern.matcher(responseString);
+		if (matcher.find()) {
+			responseString = matcher.group(1);
+		}
+		Log.d("debug", "post formatted response string is: " + responseString);
+
+		if (responseString.matches("/.*/simo.init.zip")) {
+			Log.d("debug", "download available");
+			return true;
+		} else {
+			Log.d("debug", "download not available");
+			return false;
+		}
+	}
+
+	public boolean isPatchAvailable() {
+		String serverURL = PROTOCOL + SERVER_AUTHORITY + PATH;
+
+		RequestTask task = new RequestTask();
+		task.execute(serverURL);
+		responseString = "";
+		try {
+			responseString = task.get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+
+		Log.d("debug", "pre formatted response string is: " + responseString);
+		// if id is 2 then the content of p tags include a initial database patch file
+		Pattern pattern = Pattern.compile("<p id=2>(/.*?)</p>");
+		Matcher matcher = pattern.matcher(responseString);
+		if (matcher.find()) {
+			responseString = matcher.group(1);
+		}
+		Log.d("debug", "post formatted response string is: " + responseString);
+
+		if (responseString.matches("/.*/simo.patch.[0-9]{8}.zip")) {
+			Log.d("debug", "download available");
+			return true;
+		} else {
+			Log.d("debug", "download not available");
+			return false;
+		}
 	}
 
 }
