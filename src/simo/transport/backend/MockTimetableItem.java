@@ -35,15 +35,10 @@ public class MockTimetableItem implements TimetableItem {
 
 	@Override
 	public int getPrivateCode() {
-<<<<<<< HEAD
-		// TODO Auto-generated method stub
-=======
->>>>>>> 7656b5577bb07c1395562293fce583d95d0fa9c6
 		return 0;
 	}
 
 	@Override
-<<<<<<< HEAD
 	public int getOriginId() {
 		// TODO Auto-generated method stub
 		return 0;
@@ -52,7 +47,9 @@ public class MockTimetableItem implements TimetableItem {
 	@Override
 	public int getDestId() {
 		// TODO Auto-generated method stub
-=======
+		return 0;
+	}
+	
 	public ArrayList<Boolean> getDays() {
 		ArrayList<Boolean> temp = new ArrayList<Boolean>();
 		
@@ -62,24 +59,5 @@ public class MockTimetableItem implements TimetableItem {
 		
 		return temp;
 	}
-
-	@Override
-	public int getOriginId() {
->>>>>>> 7656b5577bb07c1395562293fce583d95d0fa9c6
-		return 0;
-	}
-
-	@Override
-<<<<<<< HEAD
-	public ArrayList<Boolean> getDays() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-=======
-	public int getDestId() {
-		return 0;
-	}
->>>>>>> 7656b5577bb07c1395562293fce583d95d0fa9c6
 
 }

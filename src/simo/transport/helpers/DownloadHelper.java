@@ -125,10 +125,6 @@ public class DownloadHelper {
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
-<<<<<<< HEAD
-=======
-
->>>>>>> 7656b5577bb07c1395562293fce583d95d0fa9c6
 		return f;
 	}
 
