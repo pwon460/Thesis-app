@@ -788,14 +788,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 			cursor.close();
 			cursor = db.rawQuery("Select mon, tue, wed, thu, fri, sat, sun from DAYS_VARIATION "
 					 + "where dayId = ?", new String[] {String.valueOf(dto.getDayId())});
+
 			if (cursor.moveToFirst()) {
-				boolean[] days = {cursor.getInt(0) != 1,
-								  cursor.getInt(1) != 1,
-								  cursor.getInt(2) != 1,
-								  cursor.getInt(3) != 1,
-								  cursor.getInt(4) != 1,
-								  cursor.getInt(5) != 1,
-								  cursor.getInt(6) != 1};
+				ArrayList<Boolean> days = new ArrayList<Boolean>();
+				for (int d = 0; d < 7; d++) {
+					days.add(cursor.getInt(d) != 1);
+				}
 				dto.setDays(days);
 				String departAt = String.valueOf(dto.getDepartureTime());
 				while (departAt.length() < 6) {
@@ -857,6 +855,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 			item.setPrivateCode(c.getPrivateCode());
 			item.setOriginId(c.getOriginId());
 			item.setDestId(c.getDestId());
+			item.setDays(c.getDays());
 			cursor = db.rawQuery("Select lineName from ROUTES_NAMES where routeID = ?",
 					 new String[] {String.valueOf(c.getRouteID())});
 			if (cursor.moveToFirst()) {

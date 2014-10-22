@@ -1,26 +1,42 @@
 package simo.transport.backend;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public interface TimetableItem {
 
 	/*
-	 * All dates are to be in 'dd/MM/yyyy HH:mm' format where HH is in
-	 * 24 hour time
+	 * All dates are to be in 'dd/MM/yyyy HH:mm' format where HH is in 24 hour
+	 * time
 	 */
-	public abstract Date getDepartureTime();
+	public Date getDepartureTime();
 
-	public abstract void setDepartureTime(Date departure);
+	public void setDepartureTime(Date departure);
 
-	public abstract Date getArrivalTime();
+	public Date getArrivalTime();
 
-	public abstract void setArrivalTime(Date arrival);
+	public void setArrivalTime(Date arrival);
 
 	/*
 	 * store station platform number, bus stand number, wharf number etc
 	 */
-	public abstract String getDescription();
+	public String getDescription();
 
-	public abstract void setDescription(String description);
+	public void setDescription(String description);
+
+	/*
+	 * misc codes/ids to speed up database searching
+	 */
+	public int getPrivateCode();
+
+	public int getOriginId();
+
+	public int getDestId();
+
+	/*
+	 * returns an arraylist containing the days that this particular timetable
+	 * item occurs on
+	 */
+	public ArrayList<Boolean> getDays();
 
 }

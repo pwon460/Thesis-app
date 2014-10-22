@@ -1,5 +1,6 @@
 package simo.transport.backend;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class CalendarDTO {
@@ -7,7 +8,7 @@ public class CalendarDTO {
 	private int privateCode;
 	private int routeID;
 	private int dayId;
-	private boolean[] days;
+	private ArrayList<Boolean> days;
 	private int departureTime;
 	private int originArrival;
 	private int destArrival;
@@ -44,11 +45,11 @@ public class CalendarDTO {
 		this.dayId = dayId;
 	}
 
-	public boolean[] getDays() {
-		return days;
+	public ArrayList<Boolean> getDays() {
+		return this.days;
 	}
 
-	public void setDays(boolean[] days) {
+	public void setDays(ArrayList<Boolean> days) {
 		this.days = days;
 	}
 

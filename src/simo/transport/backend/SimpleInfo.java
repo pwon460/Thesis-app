@@ -1,5 +1,6 @@
 package simo.transport.backend;
 
+import java.util.ArrayList;
 import java.util.Date;
 // last second page
 public class SimpleInfo implements TimetableItem {
@@ -10,7 +11,8 @@ public class SimpleInfo implements TimetableItem {
 	private int privateCode;
 	private int originId;
 	private int destId;
-	
+	private ArrayList<Boolean> days;
+
 	public SimpleInfo() {
 		// TODO Auto-generated constructor stub
 	}
@@ -67,5 +69,15 @@ public class SimpleInfo implements TimetableItem {
 	public void setDestId(int destId) {
 		this.destId = destId;
 	}
+	public void setDays(ArrayList<Boolean> days) {
+		this.days = days;
+	}
+
+	@Override
+	public ArrayList<Boolean> getDays() {
+		return this.days;
+	}
+	
+	
 
 }
