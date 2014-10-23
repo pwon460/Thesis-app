@@ -67,13 +67,13 @@ public class MainActivity extends BasicListenerActivity {
 			if (isNewDataAvailable) {
 				isDownloadAvailable = true;
 			}
-		} else {
-			Toast.makeText(this, "Connection to server failed",
-					Toast.LENGTH_SHORT).show();
 		}
 
 		if (isDownloadAvailable) {
 			addDownloadButton();
+		} else {
+			Toast.makeText(this, "Connection to server failed",
+					Toast.LENGTH_SHORT).show();
 		}
 
 	}
