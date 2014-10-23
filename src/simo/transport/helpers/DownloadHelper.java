@@ -1,6 +1,7 @@
 package simo.transport.helpers;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -133,6 +134,33 @@ public class DownloadHelper {
 	    return file.exists();
 	}
 	
+	public File patchFileExistance() {
+		File f = this.ctx.getFilesDir();
+		if (f.exists() && f.isDirectory()){
+		    final Pattern p = Pattern.compile("simo\\.patch\\.\\d{8}\\.zip");
+		    File[] flists = f.listFiles(new FileFilter() {
+		        @Override
+		        public boolean accept(File file) {
+		            return p.matcher(file.getName()).matches();
+
+		        }
+		    });
+		    if (flists.length == 1) {
+		    	return flists[0];
+		    } else {
+		    	System.err.println("multiple patch file records exists");
+		    }
+		}
+		return null;
+	}
+
+	public String getPatchTimestamp() {
+		String[] path = responseString.split("/");
+		String fileName = path[path.length - 1];
+		String[] parts = fileName.split("\\.");
+		return parts[parts.length - 2];
+	}
+
 	public boolean isInitialDBAvailable() {
 		String serverURL = PROTOCOL + SERVER_AUTHORITY + PATH;
 
@@ -156,7 +184,7 @@ public class DownloadHelper {
 		}
 		Log.d("debug", "post formatted response string is: " + responseString);
 
-		if (responseString.matches("/.*/simo.init.zip")) {
+		if (responseString.matches("/.*/simo\\.init\\.zip")) {
 			Log.d("debug", "download available");
 			return true;
 		} else {
@@ -188,7 +216,7 @@ public class DownloadHelper {
 		}
 		Log.d("debug", "post formatted response string is: " + responseString);
 
-		if (responseString.matches("/.*/simo.patch.[0-9]{8}.zip")) {
+		if (responseString.matches("/.*/simo\\.patch\\.\\d{8}\\.zip")) {
 			Log.d("debug", "download available");
 			return true;
 		} else {

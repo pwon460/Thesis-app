@@ -138,7 +138,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		// query = "CREATE INDEX idx ON";
 		// copyDatabase();
 	}	
-	
+
+	public String getDbName() {
+		return dbName;
+	}
+
+	// TODO: This function can be removed after implement DatabaseInitializer
+	/*
 	private void copyDatabase() {
 		SQLiteDatabase db = this.getWritableDatabase();
 		// Insert stop information to the STOPS
@@ -389,6 +395,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 			e.printStackTrace();
 		}
 	}
+	*/
 
 	@Override
 	// Drop old talbes or create new tables.
