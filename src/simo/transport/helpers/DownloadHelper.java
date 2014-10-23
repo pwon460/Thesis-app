@@ -115,16 +115,16 @@ public class DownloadHelper {
 		return parts[parts.length - 2];
 	}
 
-	public boolean isNewDataAvailable(String serverTimestamp, File TDXFile) {
+	public boolean isNewDataAvailable(String serverTimestamp, File file) {
 		boolean isAvailable = false;
 		DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyyMMdd");
 		LocalDate serverDate = dtf.parseLocalDate(serverTimestamp);
 
-		if (TDXFile == null) { // no prior file exists
+		if (file == null) { // no prior file exists
 			Log.d("debug", "tdx file is null");
 			isAvailable = true;
 		} else {
-			String fileName = TDXFile.getName();
+			String fileName = file.getName();
 			String[] parts = fileName.split("\\.");
 			String fileTimestamp = parts[parts.length - 2];
 			Log.d("debug", "file timestamp = " + fileTimestamp);

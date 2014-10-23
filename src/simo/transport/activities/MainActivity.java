@@ -36,7 +36,7 @@ public class MainActivity extends BasicListenerActivity {
 		downloadDirectory = storageHelper.getDownloadDirectory();
 		TDXFile = storageHelper.getTDXData(downloadDirectory);
 		downloadHelper = new DownloadHelper(this);
-		
+
 		boolean isDownloadAvailable = false;
 
 		if (!storageHelper.fileExists("simo.initialized")) {
@@ -44,20 +44,22 @@ public class MainActivity extends BasicListenerActivity {
 				isDownloadAvailable = true;
 			}
 		}
-		
+
 		if (!downloadHelper.isPatchAvailable()) {
 			File patch = storageHelper.patchFileExists();
 			if (patch != null) {
 				String versionTimestamp = downloadHelper.getPatchTimestamp();
-				boolean isNewDataAvailable = downloadHelper.isNewDataAvailable(versionTimestamp, patch);
+				boolean isNewDataAvailable = downloadHelper.isNewDataAvailable(
+						versionTimestamp, patch);
 				if (isNewDataAvailable) {
 					isDownloadAvailable = true;
-				}				
+				}
 			} else {
-				System.err.println("There's no patch flag file. Something is wrong.");
+				System.err
+						.println("There's no patch flag file. Something is wrong.");
 			}
 		}
-		
+
 		if (downloadHelper.isWeeklyDataAvailable()) {
 			String versionTimestamp = downloadHelper.getTDXDataTimestamp();
 			boolean isNewDataAvailable = downloadHelper.isNewDataAvailable(
@@ -69,7 +71,7 @@ public class MainActivity extends BasicListenerActivity {
 			Toast.makeText(this, "Connection to server failed",
 					Toast.LENGTH_SHORT).show();
 		}
-		
+
 		if (isDownloadAvailable) {
 			addDownloadButton();
 		}
@@ -88,7 +90,7 @@ public class MainActivity extends BasicListenerActivity {
 		paddingLayout.setLayoutParams(params);
 		layout.addView(paddingLayout);
 	}
-	
+
 	public void goSettings(View view) {
 		Intent intent = new Intent(this, SettingsActivity.class);
 		startActivity(intent);
@@ -106,30 +108,33 @@ public class MainActivity extends BasicListenerActivity {
 		File initDBFile;
 		File patchFile;
 		File weeklyFile;
-		
+
 		if (init != null) {
 			initDBFile = downloadHelper.downloadUpdate(downloadDirectory, init);
 			Log.d("debug", "init db = " + initDBFile);
 		}
-		
+
 		if (patch != null) {
 			patchFile = downloadHelper.downloadUpdate(downloadDirectory, patch);
 			Log.d("debug", "patch = " + patchFile);
 		}
-		
+
 		if (weekly != null) {
-			weeklyFile = downloadHelper.downloadUpdate(downloadDirectory, weekly);
+			weeklyFile = downloadHelper.downloadUpdate(downloadDirectory,
+					weekly);
 			storageHelper.removeOldFiles(downloadDirectory, weeklyFile);
 			Log.d("debug", "weekly = " + weeklyFile);
 		}
-		
+
 		removeDownloadButton();
 		findViewById(R.id.home).invalidate();
-		
-		// pass initDBFile to DownloadInitializer initializeDatabase(Context context, String file)
-		// pass patchFile to DownloadInitializer applyPatch(Context context, String file)
+
+		// pass initDBFile to DownloadInitializer initializeDatabase(Context
+		// context, String file)
+		// pass patchFile to DownloadInitializer applyPatch(Context context,
+		// String file)
 	}
-	
+
 	private void removeDownloadButton() {
 		LinearLayout layout = (LinearLayout) findViewById(R.id.home);
 		Button downloadBtn = (Button) layout.findViewById(R.id.download_btn);
