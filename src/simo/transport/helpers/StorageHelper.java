@@ -1,13 +1,21 @@
 package simo.transport.helpers;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.util.regex.Pattern;
 
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
 public class StorageHelper {
 
 	private static final String TDX_FILE_FORMAT = "simo\\.\\d{8}.zip";
+	private Context ctx;
+
+	public StorageHelper(Context ctx) {
+		this.ctx = ctx;
+	}
 
 	public File getDownloadDirectory() {
 		File directory;
@@ -86,6 +94,31 @@ public class StorageHelper {
 				f.delete();
 			}
 		}
+	}
+	
+	public boolean fileExists(String fname){
+	    File file = ctx.getFileStreamPath(fname);
+	    return file.exists();
+	}
+	
+	public File patchFileExists() {
+		File f = this.ctx.getFilesDir();
+		if (f.exists() && f.isDirectory()){
+		    final Pattern p = Pattern.compile("simo\\.patch\\.\\d{8}\\.zip");
+		    File[] flists = f.listFiles(new FileFilter() {
+		        @Override
+		        public boolean accept(File file) {
+		            return p.matcher(file.getName()).matches();
+
+		        }
+		    });
+		    if (flists.length == 1) {
+		    	return flists[0];
+		    } else {
+		    	System.err.println("multiple patch file records exists");
+		    }
+		}
+		return null;
 	}
 
 }
