@@ -42,7 +42,7 @@ public class MainActivity extends BasicListenerActivity {
 		if (!downloadHelper.fileExistance("simo.initialized")) {
 			if (downloadHelper.isInitialDBAvailable()) {
 				// download initial data file
-				// pass it to DownloadInitializer initializeDatabase(Context context, String file)
+				// pass it to DownloadInitializer initializeDatabase(Context context, String filePath)
 			}
 		}
 		if (!downloadHelper.isPatchAvailable()) {
@@ -51,7 +51,7 @@ public class MainActivity extends BasicListenerActivity {
 				String versionTimestamp = downloadHelper.getPatchTimestamp();
 				boolean isNewDataAvailalbe = downloadHelper.isNewDataAvailable(versionTimestamp, patch);
 				// download patch file
-				// pass it to DownloadInitializer applyPatch(Context context, String file)
+				// pass it to DownloadInitializer applyPatch(Context context, String filePath)
 				//if (isNewDataAvailable && !hasDownloadButton) {
 				//	addDownloadButton();
 				//}				
