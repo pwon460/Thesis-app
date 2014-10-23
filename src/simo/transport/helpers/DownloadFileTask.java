@@ -21,10 +21,10 @@ public class DownloadFileTask extends AsyncTask<String, Integer, String> {
 	private ProgressDialog progressDialog;
 
 	public DownloadFileTask(Context ctx, File downloadDirectory,
-			ProgressDialog mProgressDialog) {
+			ProgressDialog progressDialog) {
 		this.ctx = ctx;
 		this.downloadDirectory = downloadDirectory;
-		this.progressDialog = mProgressDialog;
+		this.progressDialog = progressDialog;
 	}
 
 	@Override
@@ -69,9 +69,6 @@ public class DownloadFileTask extends AsyncTask<String, Integer, String> {
 				long total = 0;
 				int count;
 				while ((count = input.read(data)) != -1) {
-					if (isCancelled()) {
-						break;
-					}
 					total += count;
 
 					if (fileLength > 0) {
@@ -105,10 +102,7 @@ public class DownloadFileTask extends AsyncTask<String, Integer, String> {
 	protected void onPostExecute(String result) {
 		wakeLock.release();
 		progressDialog.dismiss();
-		if (isCancelled()) {
-			Toast.makeText(ctx, "Download cancelled", Toast.LENGTH_SHORT)
-			.show();
-		} else if (result != null) {
+		if (result != null) {
 			Toast.makeText(ctx, "File downloaded", Toast.LENGTH_SHORT).show();
 //			Log.d("debug", result);
 		} else {

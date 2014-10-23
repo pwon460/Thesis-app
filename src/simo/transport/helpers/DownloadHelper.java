@@ -1,7 +1,6 @@
 package simo.transport.helpers;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,17 +16,29 @@ import android.util.Log;
 
 public class DownloadHelper {
 
+	private static final String PATCH_FILENAME = "/.*/simo\\.patch\\.\\d{8}\\.zip";
+	private static final String INIT_DB_FILENAME = "/.*/simo\\.init\\.zip";
+	private static final String WEEKLY_DATA_FILENAME = "/.*/simo\\.\\d{8}\\.zip";
+	private static final String PATCH_TAG_REGEX = "<p id=2>(/.*?)</p>";
+	private static final String INITDB_TAG_REGEX = "<p id=1>(/.*?)</p>";
+	private static final String WEEKLY_TAG_REGEX = "<p>(/.*?)</p>";
 	private static final String PROTOCOL = "http://";
 	private static final String SERVER_AUTHORITY = "10.10.1.216:8080";
 	private static final String PATH = "/Thesis/IntermediaryServlet";
-	private static String responseString;
 	private Context ctx;
+	private String responseString;
+	private String weeklyDataPath;
+	private String TDXTimestamp;
+	private String patchTimestamp;
+	private String initDBPath;
+	private String patchPath;
 
 	public DownloadHelper(Context ctx) {
 		this.ctx = ctx;
+		checkServer();
 	}
 
-	public boolean isDownloadAvailable() {
+	private void checkServer() {
 		String serverURL = PROTOCOL + SERVER_AUTHORITY + PATH;
 
 		RequestTask task = new RequestTask();
@@ -40,30 +51,65 @@ public class DownloadHelper {
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
+	}
 
-		Log.d("debug", "pre formatted response string is: " + responseString);
-		Pattern pattern = Pattern.compile("<p>(/.*?)</p>");
+	public boolean isWeeklyDataAvailable() {
+		Pattern pattern = Pattern.compile(WEEKLY_TAG_REGEX);
 		Matcher matcher = pattern.matcher(responseString);
+		boolean isAvailable = false;
+		weeklyDataPath = null;
+		
 		if (matcher.find()) {
-			responseString = matcher.group(1);
+			weeklyDataPath = matcher.group(1);
+			if (weeklyDataPath.matches(WEEKLY_DATA_FILENAME)) {
+				isAvailable = true;
+				TDXTimestamp = extractTimestamp(weeklyDataPath);
+			}
 		}
-		Log.d("debug", "post formatted response string is: " + responseString);
-
-		if (responseString.matches("/.*/simo\\.\\d{8}\\.zip")) {
-			Log.d("debug", "download available");
-			return true;
-		} else {
-			Log.d("debug", "download not available");
-			return false;
-		}
+		Log.d("debug", "weekly available? " + isAvailable);
+		return isAvailable;
 	}
 
-	public String getResponseString() {
-		return responseString;
+	public boolean isInitialDBAvailable() {
+		// if id is 1 then the content of p tags include a initial database file
+		// link
+		Pattern pattern = Pattern.compile(INITDB_TAG_REGEX);
+		Matcher matcher = pattern.matcher(responseString);
+		boolean isAvailable = false;
+		initDBPath = null;
+		
+		if (matcher.find()) {
+			initDBPath = matcher.group(1);
+			if (initDBPath.matches(INIT_DB_FILENAME)) {
+				isAvailable = true;
+			}
+		}
+
+		Log.d("debug", "init db available? " + isAvailable);
+		return isAvailable;
 	}
 
-	public String getTDXDataTimestamp() {
-		String[] path = responseString.split("/");
+	public boolean isPatchAvailable() {
+		// if id is 2 then the content of p tags include a initial database
+		// patch file
+		Pattern pattern = Pattern.compile(PATCH_TAG_REGEX);
+		Matcher matcher = pattern.matcher(responseString);
+		boolean isAvailable = false;
+
+		if (matcher.find()) {
+			patchPath = matcher.group(1);
+			if (patchPath.matches(PATCH_FILENAME)) {
+				isAvailable = true;
+				patchTimestamp = extractTimestamp(patchPath);
+			}
+		}
+
+		Log.d("debug", "patch available? " + isAvailable);
+		return isAvailable;
+	}
+
+	public String extractTimestamp(String temp) {
+		String[] path = temp.split("/");
 		String fileName = path[path.length - 1];
 		String[] parts = fileName.split("\\.");
 		return parts[parts.length - 2];
@@ -94,9 +140,11 @@ public class DownloadHelper {
 		return isAvailable;
 	}
 
-	public File downloadUpdate(File downloadDirectory) {
+	public File downloadUpdate(File downloadDirectory, String path) {
 		File f = null;
-		String url = PROTOCOL + SERVER_AUTHORITY + responseString;
+		String url = PROTOCOL + SERVER_AUTHORITY + path;
+		
+		Log.d("debug", "downloading from " + url);
 
 		ProgressDialog progressDialog;
 
@@ -105,7 +153,7 @@ public class DownloadHelper {
 		progressDialog.setMessage("Downloading file...");
 		progressDialog.setIndeterminate(true);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		progressDialog.setCancelable(true);
+		progressDialog.setCancelable(false);
 
 		final DownloadFileTask task = new DownloadFileTask(ctx,
 				downloadDirectory, progressDialog);
@@ -128,101 +176,25 @@ public class DownloadHelper {
 		}
 		return f;
 	}
-
-	public boolean fileExistance(String fname){
-	    File file = ctx.getFileStreamPath(fname);
-	    return file.exists();
+	
+	public String getWeeklyDataPath() {
+		return weeklyDataPath;
 	}
 	
-	public File patchFileExistance() {
-		File f = this.ctx.getFilesDir();
-		if (f.exists() && f.isDirectory()){
-		    final Pattern p = Pattern.compile("simo\\.patch\\.\\d{8}\\.zip");
-		    File[] flists = f.listFiles(new FileFilter() {
-		        @Override
-		        public boolean accept(File file) {
-		            return p.matcher(file.getName()).matches();
-
-		        }
-		    });
-		    if (flists.length == 1) {
-		    	return flists[0];
-		    } else {
-		    	System.err.println("multiple patch file records exists");
-		    }
-		}
-		return null;
+	public String getInitDBPath() {
+		return initDBPath;
+	}
+	
+	public String getPatchPath() {
+		return patchPath;
 	}
 
+	public String getTDXDataTimestamp() {
+		return TDXTimestamp;
+	}
+	
 	public String getPatchTimestamp() {
-		String[] path = responseString.split("/");
-		String fileName = path[path.length - 1];
-		String[] parts = fileName.split("\\.");
-		return parts[parts.length - 2];
-	}
-
-	public boolean isInitialDBAvailable() {
-		String serverURL = PROTOCOL + SERVER_AUTHORITY + PATH;
-
-		RequestTask task = new RequestTask();
-		task.execute(serverURL);
-		responseString = "";
-		try {
-			responseString = task.get();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		}
-
-		Log.d("debug", "pre formatted response string is: " + responseString);
-		// if id is 1 then the content of p tags include a initial database file link
-		Pattern pattern = Pattern.compile("<p id=1>(/.*?)</p>");
-		Matcher matcher = pattern.matcher(responseString);
-		if (matcher.find()) {
-			responseString = matcher.group(1);
-		}
-		Log.d("debug", "post formatted response string is: " + responseString);
-
-		if (responseString.matches("/.*/simo\\.init\\.zip")) {
-			Log.d("debug", "download available");
-			return true;
-		} else {
-			Log.d("debug", "download not available");
-			return false;
-		}
-	}
-
-	public boolean isPatchAvailable() {
-		String serverURL = PROTOCOL + SERVER_AUTHORITY + PATH;
-
-		RequestTask task = new RequestTask();
-		task.execute(serverURL);
-		responseString = "";
-		try {
-			responseString = task.get();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		}
-
-		Log.d("debug", "pre formatted response string is: " + responseString);
-		// if id is 2 then the content of p tags include a initial database patch file
-		Pattern pattern = Pattern.compile("<p id=2>(/.*?)</p>");
-		Matcher matcher = pattern.matcher(responseString);
-		if (matcher.find()) {
-			responseString = matcher.group(1);
-		}
-		Log.d("debug", "post formatted response string is: " + responseString);
-
-		if (responseString.matches("/.*/simo\\.patch\\.\\d{8}\\.zip")) {
-			Log.d("debug", "download available");
-			return true;
-		} else {
-			Log.d("debug", "download not available");
-			return false;
-		}
+		return patchTimestamp;
 	}
 
 }
