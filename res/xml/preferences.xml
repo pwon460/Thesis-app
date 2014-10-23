@@ -1,62 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory
-        android:key="pref_accessibility_key"
-        android:title="@string/pref_accessibility" >
-        <ListPreference
-            android:defaultValue="@integer/first"
-            android:entries="@array/colorArray"
-            android:entryValues="@array/colorValues"
-            android:key="pref_color_key"
-            android:summary="%s"
-            android:title="@string/colors" />
-        <ListPreference
-            android:defaultValue="@integer/first"
-            android:entries="@array/textSizeArray"
-            android:entryValues="@array/textSizeValues"
-            android:key="pref_text_size_key"
-            android:summary="%s"
-            android:title="@string/textsize" />
-        <ListPreference
-            android:defaultValue="@integer/first"
-            android:entries="@array/mainHandArray"
-            android:entryValues="@array/mainHandValues"
-            android:key="pref_main_hand_key"
-            android:summary="%s"
-            android:title="@string/handedness" />
-        <ListPreference
-            android:defaultValue="@integer/first"
-            android:entries="@array/inverseColorArray"
-            android:entryValues="@array/inverseColorValues"
-            android:key="pref_invert_color_key"
-            android:summary="%s"
-            android:title="@string/invertColor" />
-        <ListPreference
-            android:defaultValue="@integer/fifth"
-            android:entries="@array/numIndexBtnArray"
-            android:entryValues="@array/numIndexBtnValues"
-            android:key="pref_index_btns_key"
-            android:summary="%s"
-            android:title="@string/numIndexBtns" />
-        <ListPreference
-            android:defaultValue="@integer/first"
-            android:entries="@array/maxListItemsArray"
-            android:entryValues="@array/maxListItemsValues"
-            android:key="pref_num_list_items"
-            android:summary="%s"
-            android:title="@string/numListItems" />
-
-        <Preference android:title="@string/accessibilitySettings" >
-            <intent android:action="android.settings.ACCESSIBILITY_SETTINGS" />
-        </Preference>
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:key="pref_other_key"
-        android:title="@string/pref_others" >
-        <Preference android:title="@string/pref_gps" >
-            <intent android:action="android.settings.LOCATION_SOURCE_SETTINGS" />
-        </Preference>
-    </PreferenceCategory>
+    <ListPreference
+        android:defaultValue="@integer/first"
+        android:entries="@array/colorArray"
+        android:entryValues="@array/colorValues"
+        android:key="pref_color_key"
+        android:summary="%s"
+        android:title="@string/colors" />
+    <ListPreference
+        android:defaultValue="@integer/first"
+        android:entries="@array/textSizeArray"
+        android:entryValues="@array/textSizeValues"
+        android:key="pref_text_size_key"
+        android:summary="%s"
+        android:title="@string/textsize" />
+    <ListPreference
+        android:defaultValue="@integer/first"
+        android:entries="@array/mainHandArray"
+        android:entryValues="@array/mainHandValues"
+        android:key="pref_main_hand_key"
+        android:summary="%s"
+        android:title="@string/handedness" />
+    <ListPreference
+        android:defaultValue="@integer/first"
+        android:entries="@array/inverseColorArray"
+        android:entryValues="@array/inverseColorValues"
+        android:key="pref_invert_color_key"
+        android:summary="%s"
+        android:title="@string/invertColor" />
+    <ListPreference
+        android:defaultValue="@integer/fifth"
+        android:entries="@array/numIndexBtnArray"
+        android:entryValues="@array/numIndexBtnValues"
+        android:key="pref_index_btns_key"
+        android:summary="%s"
+        android:title="@string/numIndexBtns" />
+    <ListPreference
+        android:defaultValue="@integer/first"
+        android:entries="@array/maxListItemsArray"
+        android:entryValues="@array/maxListItemsValues"
+        android:key="pref_num_list_items"
+        android:summary="%s"
+        android:title="@string/numListItems" />
+    <Preference android:title="@string/accessibilitySettings" >
+        <intent android:action="android.settings.ACCESSIBILITY_SETTINGS" />
+    </Preference>
+    <Preference android:title="@string/pref_gps" >
+        <intent android:action="android.settings.LOCATION_SOURCE_SETTINGS" />
+    </Preference>
 
 </PreferenceScreen>
