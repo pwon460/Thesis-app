@@ -49,8 +49,7 @@ public class MainActivity extends BasicListenerActivity {
 			File patch = storageHelper.patchFileExists();
 			if (patch != null) {
 				String versionTimestamp = downloadHelper.getPatchTimestamp();
-				boolean isNewDataAvailable = downloadHelper.isNewDataAvailable(
-						versionTimestamp, patch);
+				boolean isNewDataAvailable = downloadHelper.isNewDataAvailable(versionTimestamp, patch);
 				if (isNewDataAvailable) {
 					isDownloadAvailable = true;
 				}

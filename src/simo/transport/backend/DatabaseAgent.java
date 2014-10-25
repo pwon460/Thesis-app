@@ -107,8 +107,23 @@ public class DatabaseAgent implements TransportDAO {
 	// TODO: transport parameter is not required.
 	// 		 Check transport parameter values is one of MySQLiteDastabse database name.
 	public ArrayList<TimetableItem> getTimetable(String transport) {
+		if (transport.equals("Bus")) {
+			mode = MySQLiteHelper.BUS_DATABASE;
+		} else if (transport.equals("Train")) {
+			mode = MySQLiteHelper.RAIL_DATABASE;
+		} else if (transport.equals("Ferry")) {
+			mode = MySQLiteHelper.FERRY_DATABASE;
+		} else if (transport.equals("Light Rail")) {
+			mode = MySQLiteHelper.TRAM_DATABASE;
+		}
+		if (helper == null) {
+			helper = new MySQLiteHelper(this.context, mode);
+		} else if (!helper.getDbName().equals(mode)) {
+			helper.close();
+			helper = new MySQLiteHelper(this.context, mode);
+		}
 		mode = transport;
-		return helper.getTimetable(transport);
+		return helper.getTimetable(mode);
 	}
 
 	@Override
@@ -117,7 +132,24 @@ public class DatabaseAgent implements TransportDAO {
 	public TripInfo getTrip(String transport, int privateCode, int originId,
 			int destinationId) {
 		// mode = transport;
-		return helper.getTrip(transport, privateCode, originId, destinationId);
+		/*
+		if (mode.equals("Bus")) {
+			dbName = MySQLiteHelper.BUS_DATABASE;
+		} else if (mode.equals("Train")) {
+			dbName = MySQLiteHelper.RAIL_DATABASE;
+		} else if (mode.equals("Ferry")) {
+			dbName = MySQLiteHelper.FERRY_DATABASE;
+		} else if (mode.equals("Light Rail")) {
+			dbName = MySQLiteHelper.TRAM_DATABASE;
+		}
+		if (helper == null) {
+			helper = new MySQLiteHelper(this.context, dbName);
+		} else if (!helper.getDbName().equals(dbName)) {
+			helper.close();
+			helper = new MySQLiteHelper(this.context, dbName);
+		}
+		 */
+		return helper.getTrip(mode, privateCode, originId, destinationId);
 	}
 
 	@Override
