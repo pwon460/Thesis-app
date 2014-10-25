@@ -15,5 +15,12 @@ public class SettingsActivity extends Activity {
 		getFragmentManager().beginTransaction()
 				.replace(android.R.id.content, new SettingsFragment()).commit();
 	}
-	
+
+	@Override
+	protected void onResume() {
+		getFragmentManager().beginTransaction()
+				.replace(android.R.id.content, new SettingsFragment()).commit();
+		super.onResume();
+	}
+
 }

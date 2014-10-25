@@ -11,12 +11,10 @@ import simo.transport.helpers.ButtonBuilder;
 import simo.transport.helpers.CustomAdapter;
 import simo.transport.helpers.DisplayedListHandler;
 import simo.transport.helpers.IndexButtonHandler;
-import android.annotation.TargetApi;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -30,7 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-@TargetApi(Build.VERSION_CODES.KITKAT)
 public abstract class TripActivityTemplate extends BasicListenerActivity
 		implements OnItemClickListener {
 
@@ -104,11 +101,6 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 			if (hasHoverListener()) {
 				temp.setOnHoverListener(this);
 			}
-			if (isAccessibilityEnabled()) {
-				temp.setFocusableInTouchMode(true);
-			} else {
-				temp.setFocusableInTouchMode(false);
-			}
 		}
 	}
 
@@ -160,7 +152,6 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 
 	// filter list of stations/routes/suburbs/etc in the listview
 	public void onIndexButtonClick(View view) {
-		getCurrentFocus().clearFocus();
 		if (view.getId() == R.id.up_button) {
 			// Log.d("debug", "up button pressed");
 			indexHandler.handleUpClick();
@@ -182,8 +173,10 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 
 				actionStack.add(INDEX_BTN);
 				indexHandler.handleIndexBtnClicked(btnClickedText);
+				view.announceForAccessibility("filtering list");
 				filterList();
 				setAdapterToList();
+				dispatchAccessibilityEvent(view);
 			}
 		}
 	}
@@ -247,34 +240,54 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 		for (int i = 1; i < numButtons - 1; i++) {
 			Button temp = (Button) group.getChildAt(i);
 
+			// handle empty index buttons
 			if (i - 1 >= btnsToShow.size()
 					|| indexHandler.getFilter().length() == 2) {
 				temp.setText("");
 				temp.setContentDescription("");
 				temp.setClickable(false);
 				temp.setFocusable(false);
-				temp.setFocusableInTouchMode(false);
 				setBtnBackground(temp, true);
-			} else {
+			} else { // handle index buttons with text
 				String text = btnsToShow.get(i - 1);
-				temp.setContentDescription(text.toUpperCase(Locale.ENGLISH)
-						+ ", index ");
-				text = text.replace(" to ", "-");
-				temp.setText(text);
+				temp.setText(text.replace(" to ", "-"));
+				temp.setContentDescription(assembleDescription(text));
 				temp.setClickable(true);
 				temp.setFocusable(true);
-				if (isAccessibilityEnabled()) {
-					temp.setFocusableInTouchMode(true);
-				} else {
-					temp.setFocusableInTouchMode(false);
-				}
 				temp.setGravity(Gravity.CENTER);
 				temp.setTextAppearance(this, R.style.IndexBtnText);
 				temp.setTextColor(getTextColor());
-				temp.setBackgroundColor(getBackgroundColor());
 				setBtnBackground(temp, false);
 			}
 		}
+	}
+
+	private String assembleDescription(String text) {
+		StringBuilder sb = new StringBuilder();
+		String twoLetters = "\\w{2}";
+		char[] chars = text.toUpperCase(Locale.ENGLISH).toCharArray();
+
+		if (text.matches(twoLetters)) {
+			sb.append(chars[0]).append(",").append(chars[1]);
+		} else {
+			/*
+			 * string will be in the form "ab to cd" or single letter
+			 */
+			for (int i = 0; i < chars.length; i++) {
+				char c = chars[i];
+				sb.append(c);
+
+				if (i == 0 || i == chars.length - 2) {
+					sb.append(",");
+				} else if (i == 1 || i == chars.length - 4) {
+					sb.append(" ");
+				}
+			}
+		}
+
+		sb.append(", index ");
+		Log.d("debug", sb.toString());
+		return sb.toString();
 	}
 
 	private void setArrowColor() {
@@ -305,19 +318,13 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 					drawable);
 			states.addState(new int[] { android.R.attr.state_selected },
 					drawable);
-			states.addState(new int[] { android.R.attr.state_focused },
-					drawable);
 
 			drawable = ButtonBuilder.getBorderedRectangle(this, getTextColor());
-			states.addState(new int[] { -android.R.attr.state_focused },
+			states.addState(new int[] { -android.R.attr.state_selected },
 					drawable);
 		}
 
-		if (getAPIVersion() >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-			toReplace.setBackground(states);
-		} else {
-			toReplace.setBackgroundDrawable(states);
-		}
+		toReplace.setBackground(states);
 	}
 
 	public TransportDAO getDataAccessObject() {
@@ -366,5 +373,5 @@ public abstract class TripActivityTemplate extends BasicListenerActivity
 		getWindow().getDecorView().sendAccessibilityEvent(
 				AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
 	}
-	
+
 }

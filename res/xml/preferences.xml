@@ -30,7 +30,7 @@
         android:summary="%s"
         android:title="@string/invertColor" />
     <ListPreference
-        android:defaultValue="@integer/fifth"
+        android:defaultValue="@integer/first"
         android:entries="@array/numIndexBtnArray"
         android:entryValues="@array/numIndexBtnValues"
         android:key="pref_index_btns_key"

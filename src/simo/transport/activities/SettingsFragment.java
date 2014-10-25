@@ -1,10 +1,8 @@
 package simo.transport.activities;
 
 import simo.transport.R;
-import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -45,5 +43,5 @@ public class SettingsFragment extends PreferenceFragment implements
 			pref.setSummary(listPref.getEntry());
 		}
 	}
-
+	
 }

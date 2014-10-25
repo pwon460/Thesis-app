@@ -2,7 +2,6 @@ package simo.transport.templates;
 
 import simo.transport.R;
 import simo.transport.helpers.ButtonBuilder;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -11,7 +10,6 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
@@ -24,7 +22,6 @@ import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-@TargetApi(Build.VERSION_CODES.KITKAT)
 public class BasicListenerActivity extends ActionBarActivity implements
 		OnSharedPreferenceChangeListener, OnHoverListener {
 
@@ -248,6 +245,7 @@ public class BasicListenerActivity extends ActionBarActivity implements
 			isRightHandMode = false;
 		}
 
+		Log.d("debug", "isRightHandMode = " + isRightHandMode + ", mode = " + mode);
 		return isRightHandMode;
 	}
 
@@ -265,8 +263,11 @@ public class BasicListenerActivity extends ActionBarActivity implements
 		return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 	}
 
-	public int getAPIVersion() {
-		return currentAPIVersion;
-	}
+	/*
+	 * TODO: for future development that accounts for backward compatibility
+	 */
+//	public int getAPIVersion() {
+//		return currentAPIVersion;
+//	}
 
 }

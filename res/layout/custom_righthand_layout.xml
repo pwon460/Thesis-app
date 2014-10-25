@@ -7,24 +7,13 @@
     android:orientation="horizontal" >
 
     <LinearLayout
-        android:id="@+id/index_view"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginRight="@dimen/listview_index_margin"
-        android:layout_weight="1"
-        android:focusableInTouchMode="true"
-        android:gravity="left"
-        android:orientation="vertical" >
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/mainview"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/listview_index_margin"
+        android:layout_marginRight="@dimen/listview_index_margin"
         android:layout_weight="6"
-        android:focusableInTouchMode="true"
         android:gravity="center"
+        android:focusableInTouchMode="true"
         android:orientation="vertical" >
 
         <ListView
@@ -32,6 +21,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/index_view"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/listview_index_margin"
+        android:layout_weight="1"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        android:gravity="right" >
+
+        
     </LinearLayout>
 
 </LinearLayout>

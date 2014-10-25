@@ -1159,12 +1159,12 @@ containing a value of this type.
         public static final int icon=0x7f07002a;
         public static final int ifRoom=0x7f07000a;
         public static final int image=0x7f070027;
-        public static final int index_view=0x7f07004b;
+        public static final int index_view=0x7f070049;
         public static final int light_rail_btn=0x7f070053;
         public static final int listMode=0x7f070001;
         public static final int list_item=0x7f070029;
-        public static final int list_view=0x7f07004a;
-        public static final int mainview=0x7f070049;
+        public static final int list_view=0x7f07004b;
+        public static final int mainview=0x7f07004a;
         public static final int middle=0x7f070012;
         public static final int never=0x7f070009;
         public static final int next_stop_btn=0x7f070046;

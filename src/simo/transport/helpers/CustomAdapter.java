@@ -103,7 +103,7 @@ public class CustomAdapter extends ArrayAdapter<String> {
 			tv.setGravity(Gravity.CENTER_VERTICAL);
 			tv.setContentDescription(s);
 		}
-		
+
 		setTextViewBackground(tv);
 
 	}
@@ -136,11 +136,7 @@ public class CustomAdapter extends ArrayAdapter<String> {
 
 		states.addState(new int[] { -android.R.attr.state_selected }, drawable);
 
-		if (activity.getAPIVersion() >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-			tv.setBackground(states);
-		} else {
-			tv.setBackgroundDrawable(states);
-		}
+		tv.setBackground(states);
 	}
 
 	public void setTextColor(int color) {
@@ -162,5 +158,5 @@ public class CustomAdapter extends ArrayAdapter<String> {
 	public int getNumItemsShown() {
 		return numItemsShown;
 	}
-	
+
 }
