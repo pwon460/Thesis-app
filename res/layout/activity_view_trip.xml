@@ -13,6 +13,7 @@
         android:layout_marginLeft="@dimen/activity_custom_margin"
         android:layout_marginRight="@dimen/activity_custom_margin"
         android:layout_marginTop="@dimen/activity_custom_margin"
+        android:clickable="false"
         android:layout_weight="1"/>
 
     <Button
@@ -22,6 +23,8 @@
         android:layout_marginTop="@dimen/activity_custom_margin"
         android:layout_marginLeft="@dimen/activity_custom_margin"
         android:layout_marginRight="@dimen/activity_custom_margin"
+        android:onClick="readPrevStop"
+        android:clickable="false"
         android:layout_weight="1"/>
 
     <Button
@@ -31,6 +34,8 @@
         android:layout_marginTop="@dimen/activity_custom_margin"
         android:layout_marginLeft="@dimen/activity_custom_margin"
         android:layout_marginRight="@dimen/activity_custom_margin"
+        android:onClick="readNextStop"
+        android:clickable="false"
         android:layout_weight="1"/>
 
     <Button
@@ -39,6 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_custom_margin"
         android:layout_weight="1"
+        android:clickable="false"
         android:onClick="checkDestProximity"/>
 
 </LinearLayout>

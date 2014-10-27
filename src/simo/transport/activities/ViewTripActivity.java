@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 public class ViewTripActivity extends BasicListenerActivity {
 
@@ -40,6 +41,16 @@ public class ViewTripActivity extends BasicListenerActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_trip);
 		setID(R.id.view_trip);
+		
+		if (isAccessibilityEnabled()) {
+			LinearLayout layout = (LinearLayout) findViewById(R.id.view_trip);
+			for (int i = 0; i < layout.getChildCount(); i++) {
+				View v = layout.getChildAt(i);
+				if (!v.isClickable()) {
+					v.setClickable(true);
+				}
+			}
+		}
 
 		Intent intent = getIntent();
 		String transport = intent.getStringExtra("transport");
@@ -144,7 +155,7 @@ public class ViewTripActivity extends BasicListenerActivity {
 		} else if (tripIndex == TRIP_FINISHED) {
 			text = "Destination reached";
 		} else if (tripIndex < stops.size()) {
-			text = "Next stop: " + stops.get(tripIndex);
+			text = "Next stop: Stop " + (tripIndex + 1);
 		} else {
 			Log.d("error", "tripIndex error");
 			text = "Next stop: None";
@@ -158,7 +169,7 @@ public class ViewTripActivity extends BasicListenerActivity {
 		Button b = (Button) v;
 		String text;
 		if (tripIndex > 0) {
-			text = "Previous stop: " + stops.get(tripIndex - 1);
+			text = "Previous stop: Stop " + tripIndex;
 		} else {
 			text = "Previous stop: None";
 		}
@@ -225,10 +236,51 @@ public class ViewTripActivity extends BasicListenerActivity {
 			} else if (tripIndex + 1 == stops.size()) {
 				message = "Next stop is your destination";
 			} else if (tripIndex == TRIP_FINISHED) {
-				message = "Destination reached, trip finished";
+				message = "Trip finished, to select new trip, press back";
+			} else if (tripIndex == TRIP_INVALID) {
+				message = "Invalid trip, go back and select different time";
+			} else {
+				message = "Not near destination yet";
 			}
 			speaker.speak(message, speaker.getMode());
 		}
+	}
+
+	/*
+	 * called on clicking next stop button
+	 */
+	public void readNextStop(View view) {
+		if (speaker != null) {
+			String message = "";
+			if (tripIndex == TRIP_FINISHED) {
+				message = "Destination reached, no more next stops";
+			} else if (tripIndex == TRIP_INVALID) {
+				message = "Invalid trip, no next stop";
+			} else {
+				message = "Next stop is " + stops.get(tripIndex);
+			}
+			speaker.speak(message, speaker.getMode());
+		}
+	}
+
+	/*
+	 * called on clicking prev stop button
+	 */
+	public void readPrevStop(View view) {
+		if (speaker != null) {
+			String message = "";
+			if (tripIndex == TRIP_FINISHED) {
+				message = "Destination reached, prev stop N/A";
+			} else if (tripIndex == TRIP_INVALID) {
+				message = "Invalid trip, no previous stop";
+			} else if (tripIndex > 0) {
+				message = "Previous stop is " + stops.get(tripIndex - 1);
+			} else {
+				message = "No previous stop, trip not started";
+			}
+			speaker.speak(message, speaker.getMode());
+		}
+		
 	}
 
 	public void setViews() {
